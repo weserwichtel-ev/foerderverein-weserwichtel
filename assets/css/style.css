@@ -2,9 +2,36 @@
    Förderverein der Kita Weserwichtel e.V. - Stylesheet
    ========================================================================== */
 
-/* Smooth scroll behavior */
+/* Prevent horizontal scrolling, sideways drag, and elastic bounce on mobile */
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure consistent box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Ensure media and embedded elements never exceed container width */
+img, svg, video, audio, iframe {
+  max-width: 100%;
 }
 
 /* Signature Pad Canvas Styling */
@@ -31,6 +58,7 @@ html {
 canvas#signatureCanvas {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: 180px;
   cursor: crosshair;
   touch-action: none; /* Prevents scroll while signing on touchscreens */
