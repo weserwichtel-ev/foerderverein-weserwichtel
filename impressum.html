@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="de" class="h-full bg-slate-50 overflow-x-hidden">
+<html lang="de" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Impressum - Förderverein der Kita Weserwichtel e.V.</title>
-  <meta name="description" content="Impressum und gesetzliche Pflichtangaben des Fördervereins der Kita Weserwichtel e.V. in Bremen." />
-  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg" />
+  <meta name="description" content="Impressum und gesetzliche Pflichtangaben des Fördervereins der Kita Weserwichtel e.V. in Berlin." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/wichtel-icon.svg" />
+
+  <!-- Google Fonts: Plus Jakarta Sans (DESIGN.md) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,14 +18,17 @@
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
           colors: {
             brand: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
+              50: '#FDFBF7',
+              100: '#E8F5E9',
+              500: '#1B4D3E',
+              600: '#1B4D3E',
+              700: '#003629',
+              800: '#002117',
             }
           }
         }
@@ -29,34 +37,34 @@
   </script>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body class="min-h-full flex flex-col text-slate-800 antialiased selection:bg-brand-500 selection:text-white overflow-x-hidden relative w-full max-w-full">
+<body class="min-h-full flex flex-col text-[#1F2937] bg-[#FDFBF7] antialiased selection:bg-[#1B4D3E] selection:text-white relative w-full max-w-full">
 
   <!-- Header Navigation -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm w-full">
+  <header class="sticky top-0 z-40 bg-[#FFFFFF]/95 backdrop-blur border-b border-[#E6E1D5] shadow-sm w-full">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
       <a href="index.html" class="flex items-center gap-2 sm:gap-3 group shrink-0">
-        <img src="assets/img/logo.svg" alt="Logo Weserwichtel" class="h-9 sm:h-12 w-auto max-w-[160px] sm:max-w-none transition-transform group-hover:scale-105" />
+        <img src="assets/img/logo.svg" alt="Kindertagesstätte Weserwichtel Schild" class="h-10 sm:h-14 w-auto max-w-[210px] sm:max-w-[290px] transition-transform group-hover:scale-105" />
       </a>
-      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium shrink-0">
-        <a href="index.html" class="text-slate-600 hover:text-slate-900 transition-colors">Startseite<span class="hidden sm:inline"> / Antrag</span></a>
-        <a href="impressum.html" class="text-brand-700 font-semibold">Impressum</a>
-        <a href="datenschutz.html" class="text-slate-600 hover:text-slate-900 transition-colors">Datenschutz</a>
+      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold shrink-0">
+        <a href="index.html" class="text-[#404945] hover:text-[#121c2a] transition-colors">Startseite<span class="hidden sm:inline"> / Antrag</span></a>
+        <a href="impressum.html" class="text-[#1B4D3E] font-bold">Impressum</a>
+        <a href="datenschutz.html" class="text-[#404945] hover:text-[#121c2a] transition-colors">Datenschutz</a>
       </nav>
     </div>
   </header>
 
   <!-- Page Title Banner -->
-  <div class="bg-gradient-to-b from-sky-50 via-slate-50 to-slate-50 py-10 border-b border-slate-200">
+  <div class="bg-gradient-to-b from-[#F7F4EC] via-[#FDFBF7] to-[#FDFBF7] py-10 border-b border-[#E6E1D5]">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Impressum</h1>
-      <p class="mt-2 text-sm text-slate-600">Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG / ehemals TMG)</p>
+      <h1 class="text-3xl font-extrabold text-[#1B4D3E] tracking-tight">Impressum</h1>
+      <p class="mt-2 text-sm text-[#404945]">Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG / ehemals TMG)</p>
     </div>
   </div>
 
   <!-- Content -->
   <main class="flex-grow py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-10 lg:p-12 space-y-8 text-sm leading-relaxed text-slate-700">
+      <div class="bg-white rounded-2xl sign-card-frame p-5 sm:p-10 lg:p-12 space-y-8 text-sm leading-relaxed text-[#2d3732]">
         
         <section>
           <h2 class="text-lg font-bold text-slate-900 mb-2">Angaben zum Verein</h2>
@@ -75,8 +83,8 @@
 
         <section>
           <h2 class="text-lg font-bold text-slate-900 mb-2">Kontakt</h2>
-          <p>E-Mail: <a href="mailto:FoerdervereinKitaWeserwichtel@gmail.com" class="text-brand-600 underline hover:text-brand-800">FoerdervereinKitaWeserwichtel@gmail.com</a></p>
-          <p>Website: <a href="index.html" class="text-brand-600 underline hover:text-brand-800">foerderverein-weserwichtel.de</a></p>
+          <p>E-Mail: <a href="mailto:foerdervereinweserwichtel@gmail.com" data-verein-email class="text-brand-600 underline hover:text-brand-800">foerdervereinweserwichtel@gmail.com</a></p>
+          <p>Website: <a href="index.html" class="text-brand-600 underline hover:text-brand-800">Förderverein der Kita Weserwichtel e.V.</a></p>
         </section>
 
         <section>
@@ -109,7 +117,7 @@
           <h2 class="text-lg font-bold text-slate-900 mb-2">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p>Förderverein der Kita Weserwichtel e.V.</p>
           <p>c/o Kita Weserwichtel, Weserstr. 106, 12059 Berlin</p>
-          <p>E-Mail: <a href="mailto:FoerdervereinKitaWeserwichtel@gmail.com" class="text-brand-600 underline">FoerdervereinKitaWeserwichtel@gmail.com</a></p>
+          <p>E-Mail: <a href="mailto:foerdervereinweserwichtel@gmail.com" data-verein-email class="text-brand-600 underline">foerdervereinweserwichtel@gmail.com</a></p>
         </section>
 
         <section class="pt-4 border-t border-slate-200">
@@ -138,23 +146,21 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-10 mt-auto w-full">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-500">
-      <div class="flex items-center gap-3">
-        <img src="assets/img/logo.svg" alt="Weserwichtel Logo" class="h-8 w-auto opacity-80" />
-        <div>
-          <p class="font-bold text-slate-800">Förderverein der Kita Weserwichtel e.V.</p>
-          <p>Amtsgericht Charlottenburg VR 42469 B • Berlin</p>
-        </div>
+  <footer class="bg-[#FFFFFF] border-t border-[#E6E1D5] py-10 mt-auto w-full">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-[#57605b]">
+      <div class="text-center sm:text-left">
+        <p class="font-bold text-[#1B4D3E]">Förderverein der Kita Weserwichtel e.V.</p>
+        <p>Amtsgericht Charlottenburg VR 42469 B • Weserstr. 106, 12059 Berlin</p>
       </div>
-      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-x-5 gap-y-2 text-center sm:text-right max-w-full">
-        <a href="index.html" class="hover:text-slate-900 transition-colors">Startseite</a>
-        <a href="impressum.html" class="hover:text-slate-900 font-semibold text-slate-800 transition-colors">Impressum</a>
-        <a href="datenschutz.html" class="hover:text-slate-900 transition-colors">Datenschutz</a>
-        <a href="mailto:FoerdervereinKitaWeserwichtel@gmail.com" class="hover:text-brand-600 transition-colors break-all">FoerdervereinKitaWeserwichtel@gmail.com</a>
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-x-5 gap-y-2 text-center sm:text-right max-w-full font-medium">
+        <a href="index.html" class="hover:text-[#121c2a] transition-colors">Startseite</a>
+        <a href="impressum.html" class="text-[#1B4D3E] font-bold">Impressum</a>
+        <a href="datenschutz.html" class="hover:text-[#121c2a] transition-colors">Datenschutz</a>
+        <a href="mailto:foerdervereinweserwichtel@gmail.com" data-verein-email class="hover:text-[#1B4D3E] transition-colors break-all">foerdervereinweserwichtel@gmail.com</a>
       </div>
     </div>
   </footer>
 
+  <script src="assets/js/config.js"></script>
 </body>
 </html>

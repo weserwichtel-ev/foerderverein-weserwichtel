@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Vorstands-Portal · Förderverein der Kita Weserwichtel e.V.</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/wichtel-icon.svg" />
+
+  <!-- Progressive Web App (PWA) Manifest & Standalone App Shell -->
+  <link rel="manifest" href="admin.webmanifest" />
+  <meta name="theme-color" content="#1B4D3E" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Vorstand" />
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            botanical: {
+              surface: '#FDFBF7',
+              cream: '#F7F4EC',
+              border: '#E6E1D5',
+              pine: '#1B4D3E',
+              pineDark: '#003629',
+              pineLight: '#2A6654',
+              honey: '#D97706',
+              honeyLight: '#FEF3C7',
+              terracotta: '#E06D53',
+              slate: '#1F2937',
+              slateLight: '#475569'
+            }
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-full flex flex-col font-sans text-slate-800 bg-[#FDFBF7] antialiased">
+
+  <!-- ========================================================================= -->
+  <!-- SÄULE 2 & 3: SICHERES LOGIN-GATE (KEIN VERWIRRENDER DEMO-MODUS BEIM START)-->
+  <!-- ========================================================================= -->
+  <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#FDFBF7] flex flex-col items-center justify-center p-4 overflow-y-auto">
+    <div class="max-w-md w-full bg-white rounded-2xl border border-[#E6E1D5] shadow-xl overflow-hidden">
+      <div class="bg-[#1B4D3E] px-6 py-6 text-white text-center">
+        <img src="assets/img/icon-192.png" alt="Weserwichtel Icon" class="w-14 h-14 rounded-2xl mx-auto mb-3 shadow-md bg-white p-1" />
+        <h1 class="text-lg font-extrabold tracking-tight">Vorstands- & Schatzmeister-Portal</h1>
+        <p class="text-xs text-emerald-100 mt-1">Förderverein der Kita Weserwichtel e.V. · Geschützter Tresor</p>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <div id="loginErrorBox" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-800 font-medium"></div>
+        <div id="loginInfoBox" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium"></div>
+
+        <!-- Standard Password Login Form -->
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="loginPasswordInput" class="block text-xs font-bold text-slate-700 mb-1.5">
+              Vorstands-Passwort ODER 6-stelliger E-Mail-PIN:
+            </label>
+            <input
+              type="password"
+              id="loginPasswordInput"
+              required
+              autocomplete="current-password"
+              placeholder="Passwort oder 6-stelligen PIN eingeben..."
+              class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#1B4D3E] focus:border-[#1B4D3E]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="loginSubmitBtn"
+            class="w-full py-2.5 px-4 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>🔓 Sicher anmelden & Mitgliederdaten laden</span>
+          </button>
+        </form>
+
+        <!-- 1-Click Email PIN Fallback (So Treasurer never gets stuck if he forgets the password) -->
+        <div class="pt-4 border-t border-slate-100 text-center space-y-2">
+          <p class="text-[11px] text-slate-500">Passwort nicht zur Hand?</p>
+          <button
+            type="button"
+            id="requestEmailPinBtn"
+            class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
+          >
+            📧 6-stelligen Einmal-PIN an Vereins-E-Mail senden
+          </button>
+          <p class="text-[10px] text-slate-400">
+            Sendet einen 15 Min. gültigen Code an <em>foerdervereinweserwichtel@gmail.com</em>
+          </p>
+        </div>
+
+        <!-- Discreet Developer / Offline Preview Button for Gaston -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <span>🔒 4-Säulen DSGVO-Schutz</span>
+          <button type="button" id="enterDemoModeBtn" class="hover:text-slate-600 underline">
+            Offline-Testansicht (Gaston)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOP HEADER / NAVIGATION                                                   -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E6E1D5] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <img src="assets/img/icon-192.png" alt="Logo" class="w-9 h-9 rounded-xl border border-[#1B4D3E]/20 shadow-2xs shrink-0" />
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">Vorstands-Portal</h1>
+            <span id="connectionStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span id="connectionStatusLabel">Verbunden mit Google Drive</span>
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500">Förderverein der Kita Weserwichtel e.V. · Schatzmeister & Mitgliederverwaltung</p>
+        </div>
+      </div>
+
+      <!-- Top Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- 1. Inbox PDF Scanner -->
+        <button id="scanInboxBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-colors" title="Durchsucht das Vereins-Postfach automatisch nach neuen unterschriebenen Antrags-PDFs">
+          <span>📥</span>
+          <span>E-Mail-Postfach nach PDFs scannen</span>
+        </button>
+
+        <!-- 2. Locked Google Drive Folders Quick Access -->
+        <button id="openFoldersModalBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-semibold transition-colors" title="Zeigt die fest verdrahteten Google Drive Ordner">
+          <span>📁</span>
+          <span class="hidden sm:inline">Google Drive Ordner</span>
+        </button>
+
+        <!-- 3. Install as Desktop/Mobile App -->
+        <button id="installAppBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#1B4D3E] border border-emerald-200 text-xs font-bold transition-colors">
+          <span>📲</span>
+          <span class="hidden md:inline">Als App installieren</span>
+        </button>
+
+        <!-- 4. Refresh -->
+        <button id="refreshDataBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-2xs transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Aktualisieren</span>
+        </button>
+
+        <!-- 5. Logout -->
+        <button id="logoutBtn" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors text-xs" title="Sicher abmelden">
+          🔒
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Guided 3-Step Workflow Explainer Bar -->
+  <aside aria-label="3-Schritte-Leitplanke" class="bg-emerald-950 text-emerald-50 border-b border-emerald-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-4">
+        <span class="font-bold text-emerald-300 uppercase tracking-wider text-[10px]">Fester 3-Schritte-Ablauf:</span>
+        <span class="inline-flex items-center gap-1"><strong class="text-white">1.</strong> 📄 Unterschriebenes PDF im Drive</span>
+        <span class="text-emerald-500">➔</span>
+        <span class="inline-flex items-center gap-1"><strong class="text-white">2.</strong> ✉️ Vorab-Mail (Pre-Notification) senden</span>
+        <span class="text-emerald-500">➔</span>
+        <span class="inline-flex items-center gap-1"><strong class="text-white">3.</strong> 🏦 SEPA-XML für GLS Bank erstellen</span>
+      </div>
+      <span class="text-[11px] text-emerald-300">Alle Dateien werden automatisch richtig benannt & im Google Drive abgelegt.</span>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl border border-[#E6E1D5] shadow-2xs">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Aktive Mitglieder</span>
+          <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold">Stimmberechtigt</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="kpiActiveCount" class="text-2xl font-extrabold text-slate-900">0</span>
+          <span class="text-xs text-slate-500">bestätigte Mandate</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-[#E6E1D5] shadow-2xs">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Jahresbeitragssumme</span>
+          <span class="px-2 py-0.5 rounded-md bg-[#1B4D3E]/10 text-[#1B4D3E] text-xs font-bold">SEPA-Volumen</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="kpiAnnualSum" class="text-2xl font-extrabold text-[#1B4D3E]">0,00 €</span>
+          <span class="text-xs text-slate-500">pro Beitragsjahr</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-[#E6E1D5] shadow-2xs">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Offene Aufgaben (Schritt 1 & 2)</span>
+          <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-xs font-bold">Handlungsbedarf</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="kpiPendingCount" class="text-2xl font-extrabold text-amber-700">0</span>
+          <span class="text-xs text-slate-500">Anträge warten auf Freigabe</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-[#E6E1D5] shadow-2xs">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Einzugsbereit (<span id="kpiCurrentYearLabel">2026</span>)</span>
+          <span class="px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 text-xs font-bold">Schritt 3</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="kpiReadyForSepaCount" class="text-2xl font-extrabold text-slate-900">0</span>
+          <span class="text-xs text-slate-500">noch nicht für <span class="kpiYearText">2026</span> eingezogen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="bg-white rounded-2xl border border-[#E6E1D5] shadow-xs overflow-hidden">
+
+      <!-- Toolbar: Search, Task Filters, and Big GLS SEPA XML Button -->
+      <div class="p-4 sm:p-5 border-b border-[#E6E1D5] bg-slate-50/60 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+          <div class="relative flex-1 max-w-sm">
+            <input
+              type="text"
+              id="memberSearchInput"
+              placeholder="Name, Kind, Gruppe, IBAN oder Mandatsreferenz..."
+              class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#1B4D3E] bg-white"
+            />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="filterButtonGroup">
+            <button data-filter="ALL" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-[#1B4D3E] text-white transition-colors">
+              Alle (<span id="countFilterAll">0</span>)
+            </button>
+            <button data-filter="PENDING" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200 transition-colors">
+              🔔 Neue Anträge (<span id="countFilterPending">0</span>)
+            </button>
+            <button data-filter="ACTIVE" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200 transition-colors">
+              ✅ Aktiv (<span id="countFilterActive">0</span>)
+            </button>
+            <button data-filter="CANCELLED" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200 transition-colors">
+              🚪 Gekündigt (<span id="countFilterCancelled">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="openSepaModalBtn" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-sm transition-colors">
+            <span>🏦</span>
+            <span>3. SEPA-Lastschrift (XML) für GLS Bank erstellen</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Members Table with 3-Step Guardrails -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-100/90 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+              <th class="py-3.5 px-4">Mitglied & Kind</th>
+              <th class="py-3.5 px-4">Beitrag & Bank (IBAN)</th>
+              <th class="py-3.5 px-4">Schritt 1: Antrags-PDF im Drive</th>
+              <th class="py-3.5 px-4">Schritt 2: Aufnahme & Vorab-Mail</th>
+              <th class="py-3.5 px-4">Schritt 3: Beitrags-Einzug</th>
+              <th class="py-3.5 px-4 text-right">Verwalten / Kündigung</th>
+            </tr>
+          </thead>
+          <tbody id="membersTableBody" class="divide-y divide-slate-200">
+            <!-- Rendered dynamically by admin.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden p-12 text-center">
+        <p class="text-sm font-bold text-slate-700">Keine Einträge für diesen Filter vorhanden</p>
+        <p class="text-xs text-slate-500 mt-1">Wechseln Sie oben den Filter-Tab oder passen Sie die Suche an.</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 border-t border-slate-200 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+        <div>
+          Angezeigt: <span id="displayedCount" class="font-bold text-slate-700">0</span> von <span id="totalCount" class="font-bold text-slate-700">0</span> Mitgliedern
+          · <span class="text-[11px]">Gläubiger-ID: <code class="font-mono text-slate-700">DE83ZZZ00002910027</code></span>
+        </div>
+        <div class="flex items-center gap-4 text-[11px]">
+          <button type="button" id="openMaintainerModalBtn" class="text-slate-400 hover:text-slate-700 underline">
+            🔧 Fernwartung & System-Log (Gaston)
+          </button>
+          <span id="appVersionBadge" class="font-mono text-slate-400">v2.0.0</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Hidden File Input for 1-Click / Drag-and-Drop PDF Filing -->
+  <input type="file" id="hiddenPdfFileInput" accept="application/pdf" class="hidden" />
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: SCHRITT 2 – VORAB-MAIL PRÜFEN & ÜBER VEREINSKONTO SENDEN         -->
+  <!-- ========================================================================= -->
+  <div id="emailModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">✉️ Schritt 2: Aufnahmebestätigung & SEPA-Vorabinformation senden</h3>
+          <p class="text-xs text-slate-500">Wird offiziell über das Vereinskonto versendet & automatisch als Beleg im Google Drive gespeichert</p>
+        </div>
+        <button id="closeEmailModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
+      </div>
+
+      <div class="px-6 py-3 bg-emerald-50 border-b border-emerald-100 text-xs text-emerald-950 flex items-start gap-2.5">
+        <span class="font-bold">ℹ️</span>
+        <div>
+          <strong>Warum dieser Schritt wichtig ist:</strong> Nach Art. 4 SEPA-Regelwerk muss das Mitglied vor dem ersten Bankeinzug über die Mandatsreferenz und Gläubiger-ID informiert werden. Wenn Sie unten auf <em>„Jetzt über Vereinskonto senden“</em> klicken, verschickt das System diese E-Mail direkt vom offiziellen Vereinskonto (erscheint im „Gesendet“-Ordner des Vereins) und legt eine Belegkopie in <code>02_MITGLIEDERVERWALTUNG/Gesendete_SEPA_Vorabinformationen/</code> ab.
+        </div>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">An (Mitglieds-E-Mail):</label>
+            <input type="email" id="emailModalRecipient" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 font-mono" readonly />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Antwort an (Reply-To):</label>
+            <input type="text" id="emailModalReplyTo" data-verein-email value="foerdervereinweserwichtel@gmail.com" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 font-mono text-slate-500" readonly />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Betreff:</label>
+          <input type="text" id="emailModalSubject" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1B4D3E]" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nachrichtentext (vor dem Senden frei anpassbar):</label>
+          <textarea id="emailModalBody" rows="11" class="w-full text-xs p-3 border border-slate-300 rounded-lg font-mono focus:ring-2 focus:ring-[#1B4D3E] leading-relaxed"></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2">
+            <button type="button" id="openMailAppBtn" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors" title="Alternativ im lokalen E-Mail-Programm öffnen">
+              Nur in lokalem Mail-Programm öffnen
+            </button>
+            <button type="button" id="copyEmailTextBtn" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors">
+              📋 Kopieren
+            </button>
+          </div>
+
+          <button type="button" id="sendViaVereinAccountBtn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-sm transition-colors">
+            <span>✉️ Jetzt über Vereinskonto senden & Mitglied aktivieren</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: SCHRITT 3 – SEPA-SAMMELLASTSCHRIFT (GLS BANK + DRIVE ARCHIV)     -->
+  <!-- ========================================================================= -->
+  <div id="sepaModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">🏦 Schritt 3: SEPA-Sammellastschrift (pain.008) für GLS Bank</h3>
+          <p class="text-xs text-slate-500">Automatischer Doppel-Einzugs-Schutz & automatische Archivierung im Google Drive</p>
+        </div>
+        <button id="closeSepaModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
+      </div>
+
+      <div class="px-6 py-3 bg-amber-50 border-b border-amber-100 text-xs text-amber-950 flex items-start gap-2.5">
+        <span class="font-bold">🛡️</span>
+        <div>
+          <strong>Doppel-Einzugs-Schutz aktiv:</strong> Mitglieder, deren Beitrag für das gewählte Beitragsjahr bereits eingezogen wurde (oder bei denen PDF / Vorab-Mail noch fehlen), sind automatisch abgewählt. So können Sie jederzeit unterjährig neue Mitglieder nachziehen, ohne bestehende Mitglieder doppelt zu belasten!
+        </div>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs">
+          <div>
+            <label for="sepaCollectionYear" class="text-slate-500 block font-semibold">Beitragsjahr:</label>
+            <select id="sepaCollectionYear" class="mt-1 w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg font-bold bg-white">
+              <option value="2026">Beitragsjahr 2026</option>
+              <option value="2027">Beitragsjahr 2027</option>
+              <option value="2028">Beitragsjahr 2028</option>
+            </select>
+          </div>
+          <div>
+            <label for="sepaExecutionDate" class="text-slate-500 block font-semibold">Fälligkeitstag (GLS):</label>
+            <input type="date" id="sepaExecutionDate" class="mt-1 w-full px-2 py-1 text-xs border border-slate-300 rounded-lg font-semibold bg-white" />
+          </div>
+          <div>
+            <span class="text-slate-500 block">Ausgewählte Einzüge:</span>
+            <span id="sepaSelectedCount" class="font-extrabold text-slate-900 text-base mt-1 block">0 Mitglieder</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block">Gesamtsumme:</span>
+            <span id="sepaTotalSum" class="font-extrabold text-[#1B4D3E] text-base mt-1 block">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Member checklist -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-700">Mitglieder für diesen Einzugslauf:</span>
+            <div class="flex gap-2">
+              <button type="button" id="selectAllSepaBtn" class="text-[11px] text-[#1B4D3E] hover:underline font-bold">Alle Fälligen auswählen</button>
+              <span class="text-slate-300">|</span>
+              <button type="button" id="deselectAllSepaBtn" class="text-[11px] text-slate-500 hover:underline font-medium">Keine</button>
+            </div>
+          </div>
+          <div class="max-h-60 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100 text-xs" id="sepaMemberList"></div>
+        </div>
+
+        <div class="flex items-start gap-2 bg-emerald-50/70 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-950">
+          <input type="checkbox" id="sepaMarkCollectedCheck" checked class="mt-0.5 rounded border-emerald-400 text-[#1B4D3E]" />
+          <label for="sepaMarkCollectedCheck">
+            <strong>Im Google Drive archivieren & als „Eingezogen“ markieren:</strong> Speichert die XML-Datei + Einzugsliste automatisch in <code>03_FINANZEN_&_BUCHHALTUNG/<span class="kpiYearText">2026</span>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/</code> und schützt diese Mitglieder vor einem doppelten Einzug im selben Jahr.
+          </label>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between gap-3">
+          <button type="button" id="cancelSepaModalBtn" class="text-xs text-slate-600 hover:text-slate-800 px-3 py-2 font-medium">
+            Abbrechen
+          </button>
+          <button type="button" id="downloadSepaXmlBtn" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-sm transition-colors">
+            <span>📥 pain.008 XML herunterladen & im Drive archivieren</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: MITGLIED BEARBEITEN / KÜNDIGUNG (EINSCHULUNG / BANKWECHSEL)      -->
+  <!-- ========================================================================= -->
+  <div id="manageMemberModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900" id="manageMemberTitle">Mitglied verwalten</h3>
+          <p class="text-xs text-slate-500">Bankdaten/Beitrag ändern oder Kündigung (Einschulung) eintragen</p>
+        </div>
+        <button id="closeManageMemberModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
+      </div>
+
+      <form id="manageMemberForm" class="p-6 space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Vorname:</label>
+            <input type="text" id="editFirstName" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nachname:</label>
+            <input type="text" id="editLastName" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Kind:</label>
+            <input type="text" id="editChildName" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Kita-Gruppe:</label>
+            <input type="text" id="editChildGroup" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Jahresbeitrag (€):</label>
+            <input type="number" step="0.01" min="12" id="editFee" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-bold" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">E-Mail:</label>
+            <input type="email" id="editEmail" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">IBAN (bei Kontowechsel):</label>
+          <input type="text" id="editIban" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Notizen / Änderungsvermerk:</label>
+          <input type="text" id="editNotes" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
+        </div>
+
+        <!-- Guided Cancellation Box -->
+        <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-rose-950">🚪 Kündigung eintragen (z. B. Einschulung):</span>
+            <label class="inline-flex items-center gap-1.5 font-bold text-rose-800 cursor-pointer">
+              <input type="checkbox" id="editCancelCheck" class="rounded border-rose-400 text-rose-700" />
+              <span>Jetzt kündigen & SEPA sperren</span>
+            </label>
+          </div>
+          <p class="text-[11px] text-rose-800">
+            Optional: Kündigungs-PDF auswählen. Es wird automatisch als <code>JJJJ-MM-TT_Nachname_Vorname_Kuendigung.pdf</code> in <code>02_MITGLIEDERVERWALTUNG/Kuendigungen_und_Aenderungen/</code> gespeichert.
+          </p>
+          <input type="file" id="editCancellationPdfInput" accept="application/pdf" class="text-[11px] text-rose-900" />
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" id="cancelManageMemberBtn" class="text-slate-600 hover:text-slate-800 px-3 py-2 font-medium">
+            Abbrechen
+          </button>
+          <button type="submit" id="saveManageMemberBtn" class="px-4 py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white font-bold shadow-xs">
+            💾 Änderungen speichern
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: FEST VERDRAHTETE GOOGLE DRIVE ORDNER & REMOTE-WARTUNG (GASTON)   -->
+  <!-- ========================================================================= -->
+  <div id="foldersModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">📁 Fest verdrahtete Google Drive Ordner & Fernwartung</h3>
+          <p class="text-xs text-slate-500">Automatisch verwaltete Vereinsstruktur – Nichts kann verloren gehen</p>
+        </div>
+        <button id="closeFoldersModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
+      </div>
+
+      <div class="p-6 space-y-5 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="driveFolderLinksContainer">
+          <a id="linkFolderSheet" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors">
+            <div>
+              <div class="font-bold text-slate-900">📊 Google Tabelle (Mitglieder)</div>
+              <div class="text-[11px] text-slate-500">Zentrale Datenbank</div>
+            </div>
+            <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
+          </a>
+          <a id="linkFolderAntraege" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors">
+            <div>
+              <div class="font-bold text-slate-900">📄 Eingegangene Antrags-PDFs</div>
+              <div class="text-[11px] text-slate-500">02_MITGLIEDERVERWALTUNG/</div>
+            </div>
+            <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
+          </a>
+          <a id="linkFolderPreNotifs" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors">
+            <div>
+              <div class="font-bold text-slate-900">✉️ Gesendete SEPA-Vorab-Mails</div>
+              <div class="text-[11px] text-slate-500">02_MITGLIEDERVERWALTUNG/</div>
+            </div>
+            <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
+          </a>
+          <a id="linkFolderKuendigungen" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors">
+            <div>
+              <div class="font-bold text-slate-900">🚪 Kündigungen & Änderungen</div>
+              <div class="text-[11px] text-slate-500">02_MITGLIEDERVERWALTUNG/</div>
+            </div>
+            <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
+          </a>
+          <a id="linkFolderSepaArchiv" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors sm:col-span-2">
+            <div>
+              <div class="font-bold text-slate-900">🏦 Archivierte GLS SEPA-Lastschriften (pain.008 XML & Einzugslisten)</div>
+              <div class="text-[11px] text-slate-500">03_FINANZEN_&_BUCHHALTUNG/&lt;Jahr&gt;/02_Einnahmen_und_Spenden/SEPA_Lastschriften/</div>
+            </div>
+            <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
+          </a>
+        </div>
+
+        <!-- Remote Maintainer Tools (Gaston) -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-bold text-slate-800">🔧 Fernwartung & Diagnose (Für Maintainer Gaston):</span>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="healFoldersBtn" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold">
+                🛠️ Ordnerstruktur prüfen & reparieren
+              </button>
+              <button type="button" id="loadSystemLogsBtn" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold">
+                📜 System-Log laden
+              </button>
+            </div>
+          </div>
+
+          <!-- Domain Readiness Status Box -->
+          <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+            <div>
+              <span class="font-bold text-slate-800">🌐 Domain-Status:</span>
+              <span id="domainStatusText" class="text-amber-900 font-medium ml-1">Wartet auf Kauf von foerderverein-weserwichtel.de (Gmail aktiv)</span>
+            </div>
+            <button type="button" id="toggleCustomDomainBtn" class="shrink-0 px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-950 border border-amber-300 font-bold transition-colors">
+              Auf eigene Domain umschalten
+            </button>
+          </div>
+
+          <!-- Remote Password Changer Box (Zero Secrets in GitHub - Stored in Google ScriptProperties) -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+            <div class="flex-1">
+              <label for="newAdminPasswordInput" class="font-bold text-slate-800 block mb-1">
+                🔑 Vorstands-Passwort ändern (wird verschlüsselt in Google gespeichert, nie auf GitHub):
+              </label>
+              <input
+                type="password"
+                id="newAdminPasswordInput"
+                placeholder="Neues Passwort (mind. 8 Zeichen)..."
+                class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs"
+              />
+            </div>
+            <button type="button" id="saveAdminPasswordBtn" class="shrink-0 px-3 py-1.5 rounded-lg bg-[#1B4D3E] hover:bg-[#003629] text-white font-bold transition-colors self-end sm:self-center mt-1 sm:mt-4">
+              💾 Passwort speichern
+            </button>
+          </div>
+
+          <div id="systemLogsBox" class="hidden max-h-40 overflow-y-auto bg-slate-900 text-slate-100 p-3 rounded-xl font-mono text-[10px] space-y-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 5: PWA APP INSTALLATION GUIDANCE                                    -->
+  <!-- ========================================================================= -->
+  <div id="installModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <img src="assets/img/icon-192.png" alt="Icon" class="w-9 h-9 rounded-xl shadow-xs" />
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Portal als eigenständige App nutzen</h3>
+            <p class="text-[11px] text-slate-500">Immer automatisch aktuell über GitHub</p>
+          </div>
+        </div>
+        <button id="closeInstallModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
+      </div>
+
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-950">
+          <p class="font-bold text-xs mb-1">🍏 Auf dem Mac in Safari:</p>
+          <p class="text-[11px]">Menü <strong>Ablage (File) ➔ „Zum Dock hinzufügen…“</strong></p>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800">
+          <p class="font-bold text-xs mb-1">🌐 In Google Chrome / Edge:</p>
+          <p class="text-[11px]">Rechts in der Adresszeile auf das <strong>Installieren-Symbol (⊕)</strong> klicken.</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+        <button type="button" id="dismissInstallModalBtn" class="text-xs text-slate-500 hover:text-slate-800 font-medium">Schließen</button>
+        <button type="button" id="triggerNativeInstallBtn" class="hidden px-4 py-2 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold">Jetzt installieren</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-xs">
+      <span id="toastIcon" class="text-emerald-400 font-bold">✓</span>
+      <span id="toastMessage">Benachrichtigung</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

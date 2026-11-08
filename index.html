@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="de" class="h-full bg-slate-50 overflow-x-hidden">
+<html lang="de" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Förderverein der Kita Weserwichtel e.V. - Mitgliedsantrag</title>
   <meta name="description" content="Digitaler Mitgliedsantrag des Fördervereins der Kita Weserwichtel e.V. in Berlin (Neukölln). Unterstützen Sie die Kita-Kinder mit Ausflügen, Spielgeräten und Projekten." />
-  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/wichtel-icon.svg" />
+
+  <!-- Google Fonts: Plus Jakarta Sans (DESIGN.md) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,18 +18,41 @@
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
           colors: {
             brand: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
+              50: '#FDFBF7',
+              100: '#E8F5E9',
+              500: '#1B4D3E',
+              600: '#1B4D3E',
+              700: '#003629',
+              800: '#002117',
+            },
+            botanical: {
+              surface: '#FDFBF7',
+              cream: '#F7F4EC',
+              border: '#E6E1D5',
+              borderInput: '#D4CEBE',
+              pine: '#1B4D3E',
+              pineDark: '#003629',
+              honey: '#D97706',
+              honeyLight: '#FEF3C7',
+              terracotta: '#E06D53',
+              slate: '#1F2937',
+              slateLight: '#404945'
             },
             accent: {
-              500: '#f97316',
-              600: '#ea580c',
+              500: '#D97706',
+              600: '#B45309',
+            },
+            wichtel: {
+              burgundy: '#1B4D3E',
+              cap: '#D97706',
+              green: '#1B4D3E',
+              blue: '#003629',
+              shadow: '#E6E1D5'
             }
           }
         }
@@ -35,56 +63,56 @@
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body class="min-h-full flex flex-col text-slate-800 antialiased selection:bg-brand-500 selection:text-white overflow-x-hidden relative w-full max-w-full">
+<body class="min-h-full flex flex-col text-slate-800 antialiased selection:bg-brand-500 selection:text-white relative w-full max-w-full">
 
   <!-- Header Navigation -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm w-full">
+  <header class="sticky top-0 z-40 bg-[#FFFFFF]/95 backdrop-blur border-b border-[#E6E1D5] shadow-sm w-full">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
       <a href="index.html" class="flex items-center gap-2 sm:gap-3 group shrink-0">
-        <img src="assets/img/logo.svg" alt="Logo Weserwichtel" class="h-9 sm:h-12 w-auto max-w-[160px] sm:max-w-none transition-transform group-hover:scale-105" />
+        <img src="assets/img/logo.svg" alt="Kindertagesstätte Weserwichtel Schild" class="h-10 sm:h-14 w-auto max-w-[210px] sm:max-w-[290px] transition-transform group-hover:scale-105" />
       </a>
-      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium shrink-0">
-        <a href="#mitgliedsantrag" class="hidden sm:inline-block text-brand-700 hover:text-brand-800 font-semibold">Mitgliedsantrag</a>
-        <a href="impressum.html" class="text-slate-600 hover:text-slate-900 transition-colors">Impressum</a>
-        <a href="datenschutz.html" class="text-slate-600 hover:text-slate-900 transition-colors">Datenschutz</a>
+      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold shrink-0">
+        <a href="#mitgliedsantrag" class="hidden sm:inline-block text-[#1B4D3E] hover:text-[#003629] font-bold">Mitgliedsantrag</a>
+        <a href="impressum.html" class="text-[#404945] hover:text-[#121c2a] transition-colors">Impressum</a>
+        <a href="datenschutz.html" class="text-[#404945] hover:text-[#121c2a] transition-colors">Datenschutz</a>
       </nav>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="bg-gradient-to-b from-sky-50 via-slate-50 to-slate-50 py-12 sm:py-16 border-b border-slate-200">
+  <section class="bg-gradient-to-b from-[#F7F4EC] via-[#FDFBF7] to-[#FDFBF7] py-12 sm:py-16 border-b border-[#E6E1D5]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-brand-700 mb-4">
-        ✨ Gemeinsam stark für unsere Kinder
+      <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-[#E8F5E9] text-[#1B4D3E] border border-[#C0C9C3] mb-4 shadow-sm">
+        🌱 Gemeinsam stark für unsere Kinder in Berlin-Neukölln
       </span>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#1B4D3E] tracking-tight">
         Förderverein der Kita Weserwichtel e.V.
       </h1>
-      <p class="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-        Mit Ihrer Mitgliedschaft ermöglichen Sie zusätzliche Ausflüge, hochwertige Spielgeräte, Feste und pädagogische Projekte für alle Kinder der Kita Weserwichtel.
+      <p class="mt-4 text-base sm:text-lg text-[#404945] max-w-2xl mx-auto leading-relaxed">
+        Mit Ihrer Mitgliedschaft ermöglichen Sie zusätzliche Ausflüge, hochwertige Spielgeräte, Feste und pädagogische Projekte für alle Kinder der Kita Weserwichtel (Weserstraße 106).
       </p>
 
-      <!-- Key Benefits Grid -->
-      <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
-          <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600 font-bold text-lg">🎈</div>
+      <!-- Key Benefits Grid (Warm Botanical Cards) -->
+      <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
+        <div class="bg-white p-5 rounded-2xl sign-benefit-card flex items-start gap-3.5">
+          <div class="p-2.5 rounded-xl bg-[#FEF3C7] text-lg font-bold">🎈</div>
           <div>
-            <h3 class="font-bold text-sm text-slate-900">100% für die Kinder</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Alle Beiträge und Spenden fließen direkt in Anschaffungen und Aktionen.</p>
+            <h3 class="font-bold text-sm text-[#1B4D3E]">100% für die Kinder</h3>
+            <p class="text-xs text-[#57605b] mt-1 leading-normal">Alle Beiträge und Spenden fließen direkt in Anschaffungen und Aktionen.</p>
           </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
-          <div class="p-2 rounded-lg bg-sky-50 text-sky-600 font-bold text-lg">💶</div>
+        <div class="bg-white p-5 rounded-2xl sign-benefit-card flex items-start gap-3.5">
+          <div class="p-2.5 rounded-xl bg-[#E8F5E9] text-lg font-bold">💶</div>
           <div>
-            <h3 class="font-bold text-sm text-slate-900">Ab 12 € / Jahr</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Schon ab 1 € pro Monat – als gemeinnütziger Beitrag steuerlich absetzbar.</p>
+            <h3 class="font-bold text-sm text-[#1B4D3E]">Ab 12 € / Jahr</h3>
+            <p class="text-xs text-[#57605b] mt-1 leading-normal">Schon ab 1 € pro Monat – als gemeinnütziger Beitrag steuerlich absetzbar.</p>
           </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex items-start gap-3">
-          <div class="p-2 rounded-lg bg-amber-50 text-amber-600 font-bold text-lg">✍️</div>
+        <div class="bg-white p-5 rounded-2xl sign-benefit-card flex items-start gap-3.5">
+          <div class="p-2.5 rounded-xl bg-[#ffdad2] text-lg font-bold">✍️</div>
           <div>
-            <h3 class="font-bold text-sm text-slate-900">100% Digital & Sicher</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Direkt am Smartphone oder PC unterschreiben. PDF wird sofort erstellt.</p>
+            <h3 class="font-bold text-sm text-[#1B4D3E]">100% Digital & Sicher</h3>
+            <p class="text-xs text-[#57605b] mt-1 leading-normal">Direkt am Smartphone oder PC unterschreiben. PDF wird sofort erstellt.</p>
           </div>
         </div>
       </div>
@@ -92,210 +120,280 @@
   </section>
 
   <!-- Main Content: Application Form -->
-  <main id="mitgliedsantrag" class="flex-grow py-10 sm:py-14">
+  <main id="mitgliedsantrag" class="flex-grow py-8 sm:py-14">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       
-      <!-- Form Container Card -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <!-- Form Container Card (Level 1 Cream/White with Warm Botanical Elevation) -->
+      <div class="bg-white rounded-2xl sign-card-frame overflow-hidden">
         
-        <!-- Form Header -->
-        <div class="bg-slate-900 text-white px-6 sm:px-8 py-6">
-          <h2 class="text-xl sm:text-2xl font-bold">Online-Mitgliedsantrag & SEPA-Mandat</h2>
-          <p class="text-slate-300 text-sm mt-1">
-            Bitte füllen Sie die nachfolgenden Felder aus und unterschreiben Sie digital im Unterschriftenfeld.
+        <!-- Form Header (Forest Green Pine Bar) -->
+        <div class="bg-[#1B4D3E] text-white px-5 sm:px-8 py-6 border-b-4 border-[#D97706]">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E8F5E9]/20 text-[#baeed9] border border-[#baeed9]/30 mb-2.5">
+            ⚡ In ca. 30 Sekunden ausgefüllt • Smartphone AutoFill-optimiert
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Online-Mitgliedsantrag & SEPA-Mandat</h2>
+          <p class="text-[#baeed9] text-xs sm:text-sm mt-1">
+            Einfach ausfüllen, mit dem Finger oder der Maus unterschreiben und das fertige PDF absenden.
           </p>
         </div>
 
-        <form id="membershipForm" class="p-6 sm:p-8 space-y-10" novalidate>
+        <form id="membershipForm" class="p-5 sm:p-8 space-y-9" novalidate>
           
-          <!-- Section 1: Persönliche Angaben -->
+          <!-- Section 1: Mitgliedsbeitrag (First for fast 1-tap momentum) -->
           <div>
-            <div class="flex items-center gap-2 pb-3 mb-6 border-b border-slate-200">
-              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs">1</span>
-              <h3 class="text-lg font-bold text-slate-900">Persönliche Angaben des Mitglieds</h3>
+            <div class="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-[#E6E1D5]">
+              <div class="flex items-center gap-2">
+                <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8F5E9] text-[#1B4D3E] font-bold text-xs shrink-0">1</span>
+                <h3 class="text-base sm:text-lg font-bold text-[#1B4D3E]">Jahresbeitrag wählen</h3>
+              </div>
+              <span class="text-[11px] font-semibold text-[#1B4D3E] bg-[#E8F5E9] border border-[#C0C9C3] px-2.5 py-0.5 rounded-full">Steuerlich absetzbar</span>
+            </div>
+            <p class="text-xs text-[#57605b] mb-4">
+              Der Mindestbeitrag beträgt 12,00 € pro Jahr (nur 1,00 € / Monat). Jeder Euro fließt zu 100 % in Projekte für die Kinder.
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+              <label class="fee-card cursor-pointer border border-[#D4CEBE] bg-[#FFFFFF] rounded-xl p-2.5 sm:p-3 text-center transition-all hover:border-[#1B4D3E] has-[:checked]:border-[#1B4D3E] has-[:checked]:bg-[#E8F5E9] has-[:checked]:ring-2 has-[:checked]:ring-[#1B4D3E]/20 flex flex-col justify-center items-center">
+                <input type="radio" name="feePreset" value="12" class="sr-only" />
+                <span class="block text-lg sm:text-xl font-black text-[#121c2a] leading-tight">12 €</span>
+                <span class="block text-[11px] text-[#57605b] mt-1 leading-none">1 € / Monat</span>
+              </label>
+
+              <label class="fee-card relative cursor-pointer border border-[#D4CEBE] bg-[#FFFFFF] rounded-xl p-2.5 sm:p-3 text-center transition-all hover:border-[#1B4D3E] has-[:checked]:border-[#1B4D3E] has-[:checked]:bg-[#E8F5E9] has-[:checked]:ring-2 has-[:checked]:ring-[#1B4D3E]/20 flex flex-col justify-center items-center">
+                <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#D97706] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide whitespace-nowrap shadow-sm">Beliebt</span>
+                <input type="radio" name="feePreset" value="24" checked class="sr-only" />
+                <span class="block text-lg sm:text-xl font-black text-[#121c2a] leading-tight">24 €</span>
+                <span class="block text-[11px] text-[#1B4D3E] font-semibold mt-1 leading-none">2 € / Monat</span>
+              </label>
+
+              <label class="fee-card cursor-pointer border border-[#D4CEBE] bg-[#FFFFFF] rounded-xl p-2.5 sm:p-3 text-center transition-all hover:border-[#1B4D3E] has-[:checked]:border-[#1B4D3E] has-[:checked]:bg-[#E8F5E9] has-[:checked]:ring-2 has-[:checked]:ring-[#1B4D3E]/20 flex flex-col justify-center items-center">
+                <input type="radio" name="feePreset" value="48" class="sr-only" />
+                <span class="block text-lg sm:text-xl font-black text-[#121c2a] leading-tight">48 €</span>
+                <span class="block text-[11px] text-[#57605b] mt-1 leading-none">4 € / Monat</span>
+              </label>
+
+              <label id="customCardLabel" class="fee-card cursor-pointer border border-[#D4CEBE] bg-[#FFFFFF] rounded-xl p-2.5 sm:p-3 text-center transition-all hover:border-[#1B4D3E] has-[:checked]:border-[#1B4D3E] has-[:checked]:bg-[#E8F5E9] has-[:checked]:ring-2 has-[:checked]:ring-[#1B4D3E]/20 flex flex-col justify-center items-center">
+                <input type="radio" name="feePreset" value="custom" class="sr-only" />
+                <span id="customCardText" class="block text-xl sm:text-2xl font-black text-[#121c2a] leading-tight">Frei</span>
+                <div id="customCardInputWrapper" class="hidden w-full flex-col items-center justify-center">
+                  <div class="flex items-center justify-center gap-1 w-full">
+                    <input
+                      type="number"
+                      id="customAmount"
+                      name="customAmount"
+                      inputmode="numeric"
+                      min="12"
+                      step="1"
+                      value="60"
+                      class="fee-custom-input w-16 sm:w-20 text-center font-black text-lg sm:text-xl text-[#121c2a] bg-white border border-[#1B4D3E] rounded-lg py-0.5 px-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20"
+                      placeholder="60"
+                    />
+                    <span class="font-bold text-base sm:text-lg text-[#121c2a]">€</span>
+                  </div>
+                  <span id="customMonthlyHint" class="block text-[11px] text-[#1B4D3E] font-semibold mt-1 leading-none truncate max-w-full">5,00 € / Monat</span>
+                </div>
+              </label>
+            </div>
+            <p id="customAmountError" class="text-xs text-rose-600 font-medium mt-2 hidden text-right sm:text-left">Bitte wählen Sie mindestens 12 € Jahresbeitrag.</p>
+          </div>
+
+          <!-- Section 2: Persönliche Angaben -->
+          <div>
+            <div class="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-[#E6E1D5]">
+              <div class="flex items-center gap-2">
+                <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8F5E9] text-[#1B4D3E] font-bold text-xs shrink-0">2</span>
+                <h3 class="text-base sm:text-lg font-bold text-[#1B4D3E]">Persönliche Angaben</h3>
+              </div>
+              <span class="text-[11px] text-[#707974] hidden sm:inline">AutoFill unterstützt</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-              <div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="min-w-0">
                 <label for="firstName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Vorname *</label>
-                <input type="text" id="firstName" name="firstName" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="Max" />
+                <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Max" />
+                <p id="firstNameError" class="text-xs text-rose-600 mt-1 hidden">Bitte geben Sie Ihren Vornamen ein.</p>
               </div>
-              <div>
+              <div class="min-w-0">
                 <label for="lastName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nachname *</label>
-                <input type="text" id="lastName" name="lastName" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="Mustermann" />
+                <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Mustermann" />
+                <p id="lastNameError" class="text-xs text-rose-600 mt-1 hidden">Bitte geben Sie Ihren Nachnamen ein.</p>
               </div>
 
-              <div>
-                <label for="birthDate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Geburtsdatum (optional)</label>
-                <input type="date" id="birthDate" name="birthDate" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" />
-              </div>
-              <div>
-                <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Telefonnummer</label>
-                <input type="tel" id="phone" name="phone" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="0421 1234567" />
-              </div>
-
-              <div class="sm:col-span-2">
+              <div class="sm:col-span-2 min-w-0">
                 <label for="email" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">E-Mail-Adresse *</label>
-                <input type="email" id="email" name="email" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="max.mustermann@beispiel.de" />
+                <input type="email" id="email" name="email" autocomplete="email" inputmode="email" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="max.mustermann@beispiel.de" />
+                <p id="emailError" class="text-xs text-rose-600 mt-1 hidden">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>
               </div>
 
+              <!-- Two separate fields for Street and House Number (with smart autofill split) -->
               <div class="sm:col-span-2 grid grid-cols-3 gap-3">
                 <div class="col-span-2 min-w-0">
                   <label for="street" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Straße *</label>
-                  <input type="text" id="street" name="street" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="Weserstraße" />
+                  <input type="text" id="street" name="street" autocomplete="address-line1" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Weserstraße" />
+                  <p id="streetError" class="text-xs text-rose-600 mt-1 hidden">Bitte Straße eingeben.</p>
                 </div>
                 <div class="min-w-0">
                   <label for="houseNumber" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Haus-Nr. *</label>
-                  <input type="text" id="houseNumber" name="houseNumber" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="42" />
+                  <input type="text" id="houseNumber" name="houseNumber" autocomplete="address-line2" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="42" />
+                  <p id="houseNumberError" class="text-xs text-rose-600 mt-1 hidden">Haus-Nr. fehlt.</p>
                 </div>
               </div>
 
               <div class="min-w-0">
                 <label for="zip" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">PLZ *</label>
-                <input type="text" id="zip" name="zip" required maxlength="5" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="12059" />
+                <input type="text" id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" required maxlength="5" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="12059" />
+                <p id="zipError" class="text-xs text-rose-600 mt-1 hidden">Bitte 5-stellige PLZ eingeben.</p>
               </div>
               <div class="min-w-0">
                 <label for="city" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Ort *</label>
-                <input type="text" id="city" name="city" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" value="Berlin" />
+                <input type="text" id="city" name="city" autocomplete="address-level2" enterkeyhint="next" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" value="Berlin" />
+                <p id="cityError" class="text-xs text-rose-600 mt-1 hidden">Bitte Ort eingeben.</p>
+              </div>
+
+              <!-- Optional Personal Fields Expander (with fast numeric TT.MM.JJJJ date input inside) -->
+              <div class="sm:col-span-2 pt-1">
+                <details id="optionalPersonalDetails" class="group bg-slate-50/80 border border-slate-200/90 rounded-xl overflow-hidden">
+                  <summary class="flex items-center justify-between px-4 py-3 cursor-pointer select-none text-xs font-semibold text-slate-600 hover:text-brand-700 transition-colors">
+                    <span class="flex items-center gap-2">
+                      <span class="text-brand-600 font-bold text-sm">+</span>
+                      <span>Optional: Telefonnummer & Geburtsdatum hinzufügen</span>
+                    </span>
+                    <svg class="w-4 h-4 text-slate-400 expander-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div class="p-4 pt-2 border-t border-slate-200/70 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white">
+                    <div class="min-w-0">
+                      <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Telefonnummer (optional)</label>
+                      <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" enterkeyhint="next" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="z. B. 0176 12345678" />
+                    </div>
+                    <div class="min-w-0">
+                      <label for="birthDate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Geburtsdatum (optional)</label>
+                      <input type="text" id="birthDate" name="birthDate" autocomplete="bday" inputmode="numeric" maxlength="10" enterkeyhint="next" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm font-mono" placeholder="TT.MM.JJJJ (z.B. 14.05.1988)" />
+                      <p class="text-[11px] text-slate-400 mt-1">Punkte werden beim Tippen automatisch gesetzt.</p>
+                    </div>
+                  </div>
+                </details>
               </div>
             </div>
           </div>
 
-          <!-- Section 2: Bezug zur Kita -->
+          <!-- Section 3: Bezug zur Kita (optional) -->
           <div>
-            <div class="flex items-center gap-2 pb-3 mb-6 border-b border-slate-200">
-              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs">2</span>
-              <h3 class="text-lg font-bold text-slate-900">Bezug zur Kita (optional)</h3>
+            <div class="flex items-center gap-2 pb-3 mb-3 border-b border-[#E6E1D5]">
+              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8F5E9] text-[#1B4D3E] font-bold text-xs shrink-0">3</span>
+              <h3 class="text-base sm:text-lg font-bold text-[#1B4D3E]">Bezug zur Kita <span class="text-xs font-normal text-[#707974]">(optional)</span></h3>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              Falls Ihr Kind die Kita Weserwichtel besucht, erleichtert uns dies die Zuordnung. Förderer ohne Kind in der Einrichtung können diese Felder frei lassen.
+            <p class="text-xs text-[#57605b] mb-4">
+              Falls Ihr Kind die Kita Weserwichtel besucht, hilft uns dies bei der Zuordnung.
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="min-w-0">
                 <label for="childName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Name des Kindes</label>
-                <input type="text" id="childName" name="childName" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="Vor- und Nachname des Kindes" />
+                <input type="text" id="childName" name="childName" enterkeyhint="next" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Vorname des Kindes" />
               </div>
               <div class="min-w-0">
                 <label for="childGroup" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kita-Gruppe</label>
-                <input type="text" id="childGroup" name="childGroup" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="z. B. Wichtelgruppe, Sonnengruppe" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 3: Mitgliedsbeitrag -->
-          <div>
-            <div class="flex items-center gap-2 pb-3 mb-6 border-b border-slate-200">
-              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs">3</span>
-              <h3 class="text-lg font-bold text-slate-900">Mitgliedsbeitrag</h3>
-            </div>
-            <p class="text-xs text-slate-600 mb-4">
-              Der Mindestbeitrag beträgt 12,00 € pro Jahr (1,00 €/Monat). Sie können freiwillig einen höheren Förderbeitrag wählen.
-            </p>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-              <label class="cursor-pointer border border-slate-300 rounded-xl p-2.5 sm:p-3.5 text-center transition-all hover:border-brand-500 has-[:checked]:border-brand-600 has-[:checked]:bg-sky-50 has-[:checked]:ring-2 has-[:checked]:ring-brand-100">
-                <input type="radio" name="feePreset" value="12" class="sr-only" />
-                <span class="block text-base sm:text-lg font-black text-slate-900">12 €</span>
-                <span class="block text-[11px] sm:text-xs text-slate-500 mt-0.5">Mindestbeitrag</span>
-              </label>
-
-              <label class="cursor-pointer border border-slate-300 rounded-xl p-2.5 sm:p-3.5 text-center transition-all hover:border-brand-500 has-[:checked]:border-brand-600 has-[:checked]:bg-sky-50 has-[:checked]:ring-2 has-[:checked]:ring-brand-100">
-                <input type="radio" name="feePreset" value="24" checked class="sr-only" />
-                <span class="block text-base sm:text-lg font-black text-slate-900">24 €</span>
-                <span class="block text-[11px] sm:text-xs text-brand-700 font-semibold mt-0.5">Empfohlen (2 €/M.)</span>
-              </label>
-
-              <label class="cursor-pointer border border-slate-300 rounded-xl p-2.5 sm:p-3.5 text-center transition-all hover:border-brand-500 has-[:checked]:border-brand-600 has-[:checked]:bg-sky-50 has-[:checked]:ring-2 has-[:checked]:ring-brand-100">
-                <input type="radio" name="feePreset" value="50" class="sr-only" />
-                <span class="block text-base sm:text-lg font-black text-slate-900">50 €</span>
-                <span class="block text-[11px] sm:text-xs text-slate-500 mt-0.5">Förderer</span>
-              </label>
-
-              <label class="cursor-pointer border border-slate-300 rounded-xl p-2.5 sm:p-3.5 text-center transition-all hover:border-brand-500 has-[:checked]:border-brand-600 has-[:checked]:bg-sky-50 has-[:checked]:ring-2 has-[:checked]:ring-brand-100">
-                <input type="radio" name="feePreset" value="custom" class="sr-only" />
-                <span class="block text-base sm:text-lg font-black text-slate-900">Frei</span>
-                <span class="block text-[11px] sm:text-xs text-slate-500 mt-0.5">Wunschbetrag</span>
-              </label>
-            </div>
-
-            <!-- Custom amount input -->
-            <div class="mt-4">
-              <label for="customAmount" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Wunschbeitrag in € pro Jahr</label>
-              <div class="relative max-w-xs">
-                <input type="number" id="customAmount" name="customAmount" min="12" step="1" disabled value="24" class="w-full pl-3.5 pr-8 py-2.5 rounded-lg border border-slate-300 disabled:bg-slate-100 disabled:text-slate-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm font-semibold" placeholder="24" />
-                <span class="absolute right-3.5 top-2.5 text-sm font-bold text-slate-400">€ / Jahr</span>
+                <input type="text" id="childGroup" name="childGroup" enterkeyhint="next" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="z. B. Wichtelgruppe" />
               </div>
             </div>
           </div>
 
           <!-- Section 4: SEPA-Basislastschriftmandat -->
           <div>
-            <div class="flex items-center gap-2 pb-3 mb-6 border-b border-slate-200">
-              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs">4</span>
-              <h3 class="text-lg font-bold text-slate-900">SEPA-Basislastschriftmandat</h3>
+            <div class="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-[#E6E1D5]">
+              <div class="flex items-center gap-2">
+                <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8F5E9] text-[#1B4D3E] font-bold text-xs shrink-0">4</span>
+                <h3 class="text-base sm:text-lg font-bold text-[#1B4D3E]">SEPA-Lastschriftmandat</h3>
+              </div>
+              <span class="text-[11px] font-medium text-[#57605b]">🔒 Jährlicher Einzug</span>
             </div>
 
-            <!-- Creditor identifier banner -->
-            <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-              <div class="break-words">
-                <span class="font-bold text-slate-900">Gläubiger-Identifikationsnummer:</span>
-                <span class="font-mono font-bold text-brand-700 text-sm ml-1 inline-block break-all">DE83ZZZ00002910027</span>
+            <!-- Compact Creditor & Mandate Info with Expandable Full Legal Text -->
+            <div class="bg-[#F7F4EC] border border-[#E6E1D5] rounded-xl p-3.5 mb-5 text-xs text-[#404945]">
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-2 mb-2 border-b border-[#E6E1D5]">
+                <div>
+                  <span class="font-semibold text-[#121c2a]">Gläubiger-ID:</span>
+                  <span class="font-mono font-bold text-[#1B4D3E] ml-1">DE83ZZZ00002910027</span>
+                </div>
+                <span class="text-[11px] text-[#707974]">Mandatsreferenz wird separat mitgeteilt</span>
               </div>
-              <div class="text-slate-500 shrink-0">
-                Mandatsreferenz: <span class="italic">wird separat mitgeteilt</span>
-              </div>
-            </div>
-
-            <!-- Legal mandate text -->
-            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-xs text-slate-600 leading-relaxed">
-              <p class="font-semibold text-slate-800 mb-1">Ermächtigung zum Lastschrifteinzug:</p>
-              Ich ermächtige den Förderverein der Kita Weserwichtel e.V., Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die vom Förderverein der Kita Weserwichtel e.V. auf mein Konto gezogenen Lastschriften einzulösen.
-              <p class="mt-1.5 text-slate-500 italic">
-                Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.
+              <p class="leading-relaxed">
+                Ich ermächtige den <strong>Förderverein der Kita Weserwichtel e.V.</strong>, den gewählten Jahresbeitrag mittels Lastschrift von meinem Konto einzuziehen (8 Wochen Erstattungsrecht gemäß Bankbedingungen).
               </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-              <div class="sm:col-span-2">
+            <div class="space-y-4">
+              <!-- IBAN Primary Input (Bank & BIC are detected automatically!) -->
+              <div class="min-w-0">
                 <div class="flex items-center justify-between mb-1.5">
-                  <label for="accountHolder" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Name des Kontoinhabers *</label>
-                  <label class="inline-flex items-center gap-1.5 text-xs text-brand-700 cursor-pointer">
-                    <input type="checkbox" id="sameAsMember" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
-                    <span>Entspricht Mitglied</span>
-                  </label>
+                  <label for="iban" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">IBAN *</label>
+                  <span id="ibanStatusBadge" class="text-[11px] font-medium text-slate-400">DE + 20 Ziffern</span>
                 </div>
-                <input type="text" id="accountHolder" name="accountHolder" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="Vorname Nachname des Kontoinhabers" />
+                <input type="text" id="iban" name="iban" required maxlength="34" autocomplete="off" spellcheck="false" enterkeyhint="done" class="w-full min-w-0 font-mono uppercase tracking-wider px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="DE00 0000 0000 0000 0000 00" />
+                <p id="ibanError" class="text-xs text-rose-600 mt-1 hidden">Bitte prüfen Sie Ihre IBAN (22 Zeichen bei deutschen Konten, gültige Prüfsumme).</p>
+
+                <!-- Auto-Detected Bank Pill -->
+                <div id="detectedBankBanner" class="mt-2 hidden items-center justify-between gap-2 px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-sm shrink-0">🏦</span>
+                    <span id="detectedBankText" class="font-semibold truncate">Bank automatisch erkannt</span>
+                  </div>
+                  <span class="text-[11px] text-emerald-700 font-mono shrink-0" id="detectedBicText"></span>
+                </div>
               </div>
 
-              <div class="sm:col-span-2">
-                <label for="iban" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">IBAN *</label>
-                <input type="text" id="iban" name="iban" required maxlength="34" class="w-full font-mono uppercase tracking-wider px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="DE00 0000 0000 0000 0000 00" />
+              <!-- Account Holder (Defaults to Member Name automatically!) -->
+              <div class="bg-[#F7F4EC] border border-[#E6E1D5] rounded-xl p-3.5">
+                <label class="flex items-center justify-between gap-3 cursor-pointer select-none">
+                  <span class="flex items-center gap-2.5 text-xs font-semibold text-[#1F2937]">
+                    <input type="checkbox" id="sameAsMember" checked class="rounded border-[#D4CEBE] text-[#1B4D3E] focus:ring-[#1B4D3E] h-4 w-4" />
+                    <span>Kontoinhaber entspricht Mitglied</span>
+                  </span>
+                  <span id="accountHolderPreview" class="text-xs font-medium text-[#1B4D3E] truncate max-w-[180px]">Wird automatisch übernommen</span>
+                </label>
+
+                <div id="accountHolderWrapper" class="mt-3 pt-3 border-t border-[#E6E1D5] hidden">
+                  <label for="accountHolder" class="block text-xs font-semibold text-[#1F2937] uppercase tracking-wider mb-1.5">Abweichender Kontoinhaber *</label>
+                  <input type="text" id="accountHolder" name="accountHolder" required class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-[#D4CEBE] focus:border-[#1B4D3E] focus:ring-2 focus:ring-[#1B4D3E]/20 text-base sm:text-sm bg-white" placeholder="Vorname Nachname des Kontoinhabers" />
+                  <p id="accountHolderError" class="text-xs text-rose-600 mt-1 hidden">Bitte geben Sie den Namen des Kontoinhabers an.</p>
+                </div>
               </div>
 
-              <div>
-                <label for="bic" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">BIC (optional bei dt. Konten)</label>
-                <input type="text" id="bic" name="bic" maxlength="11" class="w-full font-mono uppercase px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="z. B. BREMDEMMXXX" />
-              </div>
-
-              <div>
-                <label for="bankName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kreditinstitut (optional)</label>
-                <input type="text" id="bankName" name="bankName" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-sm" placeholder="z. B. GLS Bank / Berliner Sparkasse" />
-              </div>
+              <!-- Optional Manual BIC & Bank Name Expander -->
+              <details id="manualBankDetails" class="group bg-slate-50/80 border border-slate-200/90 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer select-none text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors">
+                  <span>BIC & Kreditinstitut anzeigen / manuell anpassen (optional)</span>
+                  <svg class="w-4 h-4 text-slate-400 expander-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div class="p-4 pt-2 border-t border-slate-200/70 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white">
+                  <div class="min-w-0">
+                    <label for="bic" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">BIC (optional)</label>
+                    <input type="text" id="bic" name="bic" maxlength="11" class="w-full min-w-0 font-mono uppercase px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Wird automatisch erkannt" />
+                  </div>
+                  <div class="min-w-0">
+                    <label for="bankName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kreditinstitut (optional)</label>
+                    <input type="text" id="bankName" name="bankName" class="w-full min-w-0 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 text-base sm:text-sm" placeholder="Wird automatisch erkannt" />
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
 
           <!-- Section 5: Digitale Unterschrift -->
           <div>
-            <div class="flex items-center gap-2 pb-3 mb-4 border-b border-slate-200">
-              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs">5</span>
-              <h3 class="text-lg font-bold text-slate-900">Digitale Unterschrift</h3>
+            <div class="flex items-center gap-2 pb-3 mb-3 border-b border-[#E6E1D5]">
+              <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8F5E9] text-[#1B4D3E] font-bold text-xs shrink-0">5</span>
+              <h3 class="text-base sm:text-lg font-bold text-[#1B4D3E]">Digitale Unterschrift *</h3>
             </div>
-            <p class="text-xs text-slate-600 mb-3">
-              Bitte unterschreiben Sie mit der Maus oder dem Finger im nachfolgenden Feld.
+            <p class="text-xs text-[#57605b] mb-3">
+              Bitte unterschreiben Sie hier direkt mit dem Finger (am Smartphone) oder mit der Maus:
             </p>
 
-            <div class="signature-wrapper relative">
+            <div class="signature-wrapper relative border-2 border-dashed border-[#D4CEBE] rounded-xl">
               <canvas id="signatureCanvas" class="w-full h-44 sm:h-48 bg-white"></canvas>
               <div class="signature-baseline"></div>
             </div>
@@ -304,40 +402,43 @@
               <span id="signatureError" class="text-xs font-semibold text-rose-600 hidden">
                 ⚠️ Bitte zeichnen Sie Ihre Unterschrift in das Feld oben.
               </span>
-              <button type="button" id="clearSignatureBtn" class="ml-auto text-xs font-semibold text-slate-500 hover:text-slate-800 underline flex items-center gap-1 transition-colors">
+              <button type="button" id="clearSignatureBtn" class="ml-auto text-xs font-semibold text-[#57605b] hover:text-[#121c2a] underline flex items-center gap-1 py-1 px-2 rounded transition-colors">
                 ✕ Unterschrift löschen / neu zeichnen
               </button>
             </div>
           </div>
 
           <!-- Section 6: Rechtliches & Einwilligungen -->
-          <div class="space-y-4 pt-2">
-            <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="consentStatute" required class="mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500 h-4 w-4" />
-              <span class="text-xs text-slate-600 leading-normal">
+          <div class="space-y-3 pt-1">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-[#E6E1D5] bg-[#F7F4EC] hover:bg-[#EFF4FF] cursor-pointer transition-colors">
+              <input type="checkbox" id="consentStatute" required class="mt-0.5 rounded border-[#D4CEBE] text-[#1B4D3E] focus:ring-[#1B4D3E] h-4 w-4 shrink-0" />
+              <span class="text-xs text-[#404945] leading-relaxed">
                 Ich erkenne die <strong>Satzung</strong> sowie die Beitragsordnung des Fördervereins der Kita Weserwichtel e.V. an. Der Austritt ist jederzeit zum Ende eines Kalenderjahres mit einer Frist von einem Monat schriftlich oder per E-Mail möglich. *
               </span>
             </label>
 
-            <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="consentPrivacy" required class="mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500 h-4 w-4" />
-              <span class="text-xs text-slate-600 leading-normal">
-                Ich habe die <a href="datenschutz.html" target="_blank" class="text-brand-600 underline hover:text-brand-800">Datenschutzerklärung</a> zur Kenntnis genommen und willige in die Verarbeitung meiner Daten zum Zwecke der Vereinsverwaltung und des SEPA-Beitragseinzugs ein (Art. 6 Abs. 1 lit. b DSGVO). *
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-[#E6E1D5] bg-[#F7F4EC] hover:bg-[#EFF4FF] cursor-pointer transition-colors">
+              <input type="checkbox" id="consentPrivacy" required class="mt-0.5 rounded border-[#D4CEBE] text-[#1B4D3E] focus:ring-[#1B4D3E] h-4 w-4 shrink-0" />
+              <span class="text-xs text-[#404945] leading-relaxed">
+                Ich habe die <a href="datenschutz.html" target="_blank" class="text-[#1B4D3E] underline font-semibold hover:text-[#003629]">Datenschutzerklärung</a> zur Kenntnis genommen und willige in die Verarbeitung meiner Daten zum Zwecke der Vereinsverwaltung und des SEPA-Beitragseinzugs ein (Art. 6 Abs. 1 lit. b DSGVO). *
               </span>
             </label>
+            <p id="consentError" class="text-xs font-semibold text-rose-600 hidden">
+              ⚠️ Bitte bestätigen Sie beide rechtlichen Hinweise durch Anklicken der Kästchen.
+            </p>
           </div>
 
           <!-- Submit Action Button -->
-          <div class="pt-4 border-t border-slate-200">
-            <button type="submit" id="submitBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-8 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-bold text-sm sm:text-base shadow-lg shadow-brand-500/25 transition-all transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-center">
-              <svg id="submitSpinner" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <div class="pt-4 border-t border-[#E6E1D5]">
+            <button type="submit" id="submitBtn" class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] active:bg-[#002117] text-white font-bold text-base shadow-lg shadow-[#1B4D3E]/20 transition-all transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-center">
+              <svg id="submitSpinner" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden shrink-0" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
               </svg>
-              <span id="submitBtnText" class="text-center leading-snug">Mitgliedsantrag absenden & PDF herunterladen</span>
+              <span id="submitBtnText" class="text-center leading-snug">PDF-Antrag jetzt erstellen & absenden</span>
             </button>
-            <p class="text-[11px] text-slate-400 mt-2.5">
-              * Pflichtfelder. Nach dem Klick wird Ihr fertiges PDF-Dokument erstellt und Ihr E-Mail-Programm mit einer vorbereiteten Nachricht an den Förderverein (FoerdervereinKitaWeserwichtel@gmail.com) geöffnet.
+            <p class="text-[11px] text-[#707974] mt-2.5 text-center">
+              * Pflichtfelder. Ihr unterschriebenes PDF wird direkt in Ihrem Browser erstellt. Im nächsten Schritt können Sie es bequem speichern und per E-Mail senden.
             </p>
           </div>
 
@@ -347,74 +448,124 @@
     </div>
   </main>
 
-  <!-- Success & Instructions Modal -->
-  <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 text-center relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+  <!-- Calm, Step-by-Step Success & PDF Delivery Modal -->
+  <div id="successModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-7 shadow-2xl border border-[#E6E1D5] text-left relative animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] sm:max-h-[90vh] overflow-y-auto overscroll-contain">
       
+      <!-- Mobile Pull Indicator Bar -->
+      <div class="w-10 h-1 bg-[#D4CEBE] rounded-full mx-auto mb-3 sm:hidden"></div>
+
       <!-- Close Button -->
-      <button type="button" id="modalCloseBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-lg transition-colors" aria-label="Schließen">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button type="button" id="modalCloseBtn" class="absolute top-4 right-4 text-[#707974] hover:text-[#121c2a] p-1.5 rounded-lg transition-colors" aria-label="Schließen">
+        <svg class="w-5 h-5" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-inner">
-        ✓
-      </div>
-
-      <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Vielen herzlichen Dank!</h3>
-      <p class="text-sm text-slate-600 mt-2">
-        Ihr Mitgliedsantrag wurde erfolgreich erstellt und digital signiert.
-      </p>
-
-      <!-- Action Box -->
-      <div class="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 text-left space-y-3 text-xs">
-        <div class="flex items-start gap-2.5">
-          <span class="text-base">📄</span>
-          <div>
-            <p class="font-bold text-slate-800">1. PDF-Antrag heruntergeladen</p>
-            <p class="text-slate-500 font-mono text-[11px] mt-0.5" id="downloadedFileName">Mitgliedsantrag_Weserwichtel.pdf</p>
-          </div>
+      <div class="flex items-center gap-3 mb-3 pr-8">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-[#E8F5E9] text-[#1B4D3E] rounded-full flex items-center justify-center text-xl font-bold shrink-0">
+          ✓
         </div>
-        <div class="flex items-start gap-2.5">
-          <span class="text-base">✉️</span>
-          <div>
-            <p class="font-bold text-slate-800">2. E-Mail an den Vorstand</p>
-            <p class="text-slate-500 mt-0.5">
-              Ihr E-Mail-Programm wurde mit der Adresse <strong>FoerdervereinKitaWeserwichtel@gmail.com</strong> geöffnet. Bitte fügen Sie das heruntergeladene PDF als Anhang hinzu und versenden Sie die E-Mail.
-            </p>
-          </div>
+        <div>
+          <h3 class="text-base sm:text-xl font-bold text-[#121c2a] leading-tight">Fast geschafft! Ihr PDF ist fertig.</h3>
+          <p class="text-xs text-[#57605b] mt-0.5">Wählen Sie einfach Ihren bevorzugten Weg zum Versenden:</p>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="mt-6 flex flex-col sm:flex-row gap-3">
-        <button type="button" id="modalMailtoBtn" class="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs shadow-sm transition-colors">
-          E-Mail-Programm nochmals öffnen
+      <!-- Option A: Native Mobile Share Sheet (Primary on Smartphones) -->
+      <div id="nativeShareSection" class="mt-4 p-4 rounded-xl bg-[#E8F5E9] border-2 border-[#1B4D3E] hidden">
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span class="text-xs font-bold text-[#003629] uppercase tracking-wide">📲 Empfohlen fürs Smartphone</span>
+          <span class="text-[10px] font-semibold bg-[#1B4D3E] text-white px-2 py-0.5 rounded-full">Mit PDF-Anhang</span>
+        </div>
+        <p class="text-xs text-[#404945] leading-relaxed mb-3">
+          Tippen Sie unten auf den Button: Ihr Smartphone öffnet direkt das Teilen-Menü mit <strong>Mail / Gmail / WhatsApp</strong>. Das PDF ist dabei <strong>bereits fertig angehängt!</strong>
+        </p>
+        <button type="button" id="modalNativeShareBtn" class="w-full inline-flex justify-center items-center gap-2 py-3 px-4 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] active:bg-[#002117] text-white font-bold text-sm shadow-md transition-all">
+          <span>📤 PDF direkt teilen / per E-Mail senden</span>
         </button>
-        <button type="button" id="modalPdfBtn" class="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors">
-          PDF erneut herunterladen
-        </button>
+      </div>
+
+      <!-- Option B: Step-by-Step for PC / Laptop / Browser Download -->
+      <div class="mt-4 space-y-3 text-xs">
+        <div class="flex items-center gap-2 my-1">
+          <span id="manualStepsDividerLabel" class="text-[11px] font-bold text-[#707974] uppercase tracking-wider">Alternativ: Manuell per Download</span>
+          <div class="flex-grow h-px bg-[#E6E1D5]"></div>
+        </div>
+
+        <!-- Step 1: PDF Download on Click -->
+        <div class="p-4 rounded-xl bg-[#F7F4EC] border border-[#E6E1D5]">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0 pr-2">
+              <p class="font-bold text-[#1F2937]">Schritt 1: PDF auf Ihr Gerät herunterladen</p>
+              <p class="text-[#707974] font-mono text-[11px] mt-0.5 truncate" id="downloadedFileName">Mitgliedsantrag_Weserwichtel.pdf</p>
+            </div>
+            <span id="step1StatusBadge" class="text-[11px] font-semibold text-[#D97706] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full shrink-0">Bereit</span>
+          </div>
+          <p class="text-[11px] text-[#57605b] mt-2">
+            Klicken Sie hier, um das fertige PDF in Ihrem Download-Ordner zu speichern.
+          </p>
+          <button type="button" id="modalPdfBtn" class="mt-3 w-full inline-flex justify-center items-center gap-2 py-2.5 px-3 rounded-lg bg-[#1B4D3E] hover:bg-[#14382D] text-white font-bold text-xs shadow-sm transition-all">
+            <span>💾 Jetzt PDF-Datei herunterladen</span>
+          </button>
+        </div>
+
+        <!-- Step 2: Open Email & Attach PDF -->
+        <div class="p-4 rounded-xl bg-[#FEF3C7]/40 border border-[#FDE68A]">
+          <p class="font-bold text-[#121c2a]">Schritt 2: E-Mail öffnen & PDF anhängen</p>
+          <p class="text-[#404945] mt-1 leading-relaxed">
+            Fügen Sie die heruntergeladene PDF-Datei in Ihrem E-Mail-Programm über das <strong>Büroklammer-Symbol (📎)</strong> als Anhang hinzu.
+          </p>
+
+          <!-- Copyable Recipient Email Box -->
+          <div class="mt-2.5 flex items-center justify-between gap-2 bg-white border border-[#E6E1D5] rounded-lg px-3 py-2">
+            <span class="font-mono text-[11px] text-[#121c2a] break-all select-all" id="recipientEmailText" data-verein-email>foerdervereinweserwichtel@gmail.com</span>
+            <button type="button" id="copyEmailBtn" class="shrink-0 text-[11px] font-semibold text-[#1B4D3E] hover:text-[#003629] bg-[#E8F5E9] hover:bg-[#D1E7DD] px-2.5 py-1 rounded border border-[#C0C9C3] transition-colors">
+              📋 Kopieren
+            </button>
+          </div>
+
+          <!-- Quick One-Click Mail Provider Options -->
+          <div class="mt-3.5 pt-3 border-t border-[#E6E1D5]">
+            <p class="text-[11px] font-semibold text-[#1F2937] mb-2">E-Mail-Vorlage direkt öffnen:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button type="button" id="modalMailDefaultBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                <span>✉️</span>
+                <span>Mail-App</span>
+              </button>
+              <button type="button" id="modalMailGmailBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                <span class="text-rose-600 font-bold">M</span>
+                <span>Gmail</span>
+              </button>
+              <button type="button" id="modalMailProtonBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                <span class="text-purple-600 font-bold">P</span>
+                <span>Proton</span>
+              </button>
+              <button type="button" id="modalMailOutlookBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                <span class="text-sky-600 font-bold">O</span>
+                <span>Outlook</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-10 mt-auto w-full">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-500">
-      <div class="flex items-center gap-3">
-        <img src="assets/img/logo.svg" alt="Weserwichtel Logo" class="h-8 w-auto opacity-80" />
-        <div>
-          <p class="font-bold text-slate-800">Förderverein der Kita Weserwichtel e.V.</p>
-          <p>Amtsgericht Charlottenburg VR 42469 B • Berlin</p>
-        </div>
+  <footer class="bg-[#FFFFFF] border-t border-[#E6E1D5] py-10 mt-auto w-full">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-[#57605b]">
+      <div class="text-center sm:text-left">
+        <p class="font-bold text-[#1B4D3E]">Förderverein der Kita Weserwichtel e.V.</p>
+        <p>Amtsgericht Charlottenburg VR 42469 B • Weserstr. 106, 12059 Berlin</p>
       </div>
-      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-x-5 gap-y-2 text-center sm:text-right max-w-full">
-        <a href="index.html" class="hover:text-slate-900 transition-colors">Startseite</a>
-        <a href="impressum.html" class="hover:text-slate-900 transition-colors">Impressum</a>
-        <a href="datenschutz.html" class="hover:text-slate-900 transition-colors">Datenschutz</a>
-        <a href="mailto:FoerdervereinKitaWeserwichtel@gmail.com" class="hover:text-brand-600 transition-colors break-all">FoerdervereinKitaWeserwichtel@gmail.com</a>
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-x-5 gap-y-2 text-center sm:text-right max-w-full font-medium">
+        <a href="index.html" class="text-[#1B4D3E] font-bold hover:underline">Startseite</a>
+        <a href="impressum.html" class="hover:text-[#121c2a] transition-colors">Impressum</a>
+        <a href="datenschutz.html" class="hover:text-[#121c2a] transition-colors">Datenschutz</a>
+        <a href="mailto:foerdervereinweserwichtel@gmail.com" data-verein-email class="hover:text-[#1B4D3E] transition-colors break-all">foerdervereinweserwichtel@gmail.com</a>
       </div>
     </div>
   </footer>
