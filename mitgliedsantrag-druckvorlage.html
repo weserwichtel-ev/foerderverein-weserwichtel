@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mitgliedsantrag Druckvorlage – Förderverein der Kita Weserwichtel e.V.</title>
+  <link rel="icon" type="image/png" href="assets/img/icon-192.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="assets/js/pdf-generator.js"></script>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 12mm 14mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #0f172a;
+      background: #f1f5f9;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    /* Web Toolbar (Hidden when printing) */
+    .no-print {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      color: white;
+      padding: 10px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .no-print button, .no-print a {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-print {
+      background: #10b981;
+      color: white;
+    }
+    .btn-print:hover { background: #059669; }
+    .btn-pdf {
+      background: #3b82f6;
+      color: white;
+    }
+    .btn-pdf:hover { background: #2563eb; }
+    .btn-back {
+      background: #475569;
+      color: #f8fafc;
+    }
+    .btn-back:hover { background: #334155; }
+
+    /* A4 Paper Canvas Container */
+    .page-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      background: white;
+      padding: 14mm 15mm;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-sheet {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* Accent Bars */
+    .accent-bar {
+      display: flex;
+      height: 7px;
+      margin-bottom: 12px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .accent-burgundy { background: #451217; width: 68%; }
+    .accent-green { background: #169d20; width: 32%; }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .header-left h1 {
+      margin: 0;
+      font-size: 17px;
+      color: #451217;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .header-left h2 {
+      margin: 4px 0 0 0;
+      font-size: 13px;
+      color: #15803d;
+      font-weight: 700;
+    }
+    .header-left .meta {
+      font-size: 9.5px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+    .header-logo img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Online Notice Banner */
+    .tip-banner {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin-bottom: 12px;
+      font-size: 9.5px;
+      color: #166534;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tip-banner strong { font-weight: 700; }
+
+    /* Sections */
+    .section-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 11px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #451217;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 0 0 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+
+    /* Form Fields Grid */
+    .form-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+    .form-group {
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+      gap: 6px;
+    }
+    .form-label {
+      font-weight: 700;
+      font-size: 10px;
+      color: #1e293b;
+      white-space: nowrap;
+    }
+    .dot-line {
+      flex: 1;
+      border-bottom: 1.5px dotted #94a3b8;
+      height: 14px;
+      margin-bottom: 1px;
+    }
+    .small-hint {
+      font-size: 8px;
+      color: #94a3b8;
+      font-weight: normal;
+    }
+
+    /* Checkboxes */
+    .checkbox-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: 6px;
+    }
+    .checkbox-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: #1e293b;
+    }
+    .box-sq {
+      width: 13px;
+      height: 13px;
+      border: 1.5px solid #64748b;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 10px;
+      font-weight: bold;
+      color: #15803d;
+      line-height: 1;
+    }
+
+    /* SEPA Notice */
+    .sepa-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+    .legal-notice {
+      font-size: 8.5px;
+      color: #475569;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    /* 22-Digit IBAN Grid */
+    .iban-grid-container {
+      margin: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .iban-boxes {
+      display: inline-flex;
+      gap: 2.5px;
+    }
+    .iban-box {
+      width: 22px;
+      height: 26px;
+      border: 1.5px solid #64748b;
+      border-radius: 3px;
+      background: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .iban-space {
+      width: 6px;
+    }
+
+    /* Signature Area */
+    .sig-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 14px;
+      padding-top: 6px;
+    }
+    .sig-col-left {
+      width: 45%;
+    }
+    .sig-col-right {
+      width: 48%;
+      text-align: center;
+    }
+    .sig-line {
+      border-bottom: 1.5px solid #64748b;
+      margin-bottom: 4px;
+      height: 24px;
+    }
+    .sig-label {
+      font-size: 8.5px;
+      color: #64748b;
+    }
+
+    /* Footer Banner */
+    .footer-submission {
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 9px;
+      color: #334155;
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Web Toolbar (Hidden when printing) -->
+  <div class="no-print">
+    <div>
+      <span style="font-weight: 700; font-size: 13px;">Förderverein Kita Weserwichtel e.V.</span>
+      <span style="color: #94a3b8; font-size: 11px; margin-left: 8px;">Druckvorlage / Blanko-Antrag (DIN A4)</span>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn-print" onclick="window.print()">
+        <span>🖨️</span> Jetzt drucken (A4)
+      </button>
+      <button class="btn-pdf" onclick="PDFGenerator.generateBlankPrintablePDF({ autoDownload: true })">
+        <span>📥</span> Als PDF herunterladen
+      </button>
+      <a href="admin.html" class="btn-back">
+        <span>←</span> Zum Vorstands-Portal
+      </a>
+    </div>
+  </div>
+
+  <!-- A4 Printable Sheet -->
+  <div class="page-sheet">
+
+    <!-- Top Accent Bar -->
+    <div class="accent-bar">
+      <div class="accent-burgundy"></div>
+      <div class="accent-green"></div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header">
+      <div class="header-left">
+        <h1>Förderverein der Kita Weserwichtel e.V.</h1>
+        <h2>BEITRITTSERKLÄRUNG & SEPA-LASTSCHRIFTMANDAT</h2>
+        <div class="meta">
+          Weserstraße 106, 12059 Berlin • Gläubiger-ID: <strong>DE83ZZZ00002910027</strong> • Vereinsregister: AG Charlottenburg VR 42469 B
+        </div>
+      </div>
+      <div class="header-logo">
+        <img src="assets/img/icon-192.png" alt="Kita Weserwichtel Logo" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <!-- Tip Callout -->
+    <div class="tip-banner">
+      <span>💡</span>
+      <div>
+        <strong>Tipp für Eltern:</strong> Sie können diesen Antrag auch bequem und papierlos in 60 Sekunden am Smartphone online absenden unter: <strong>https://foerderverein-weserwichtel.de</strong>
+      </div>
+    </div>
+
+    <!-- 1. Persönliche Angaben -->
+    <div class="section-card">
+      <div class="section-title">1. Angaben zum Mitglied (Bitte in Druckbuchstaben ausfüllen)</div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1.4;">
+          <span class="form-label">Name, Vorname:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <span class="form-label">Geburtsdatum:</span>
+          <div class="dot-line"></div>
+          <span class="small-hint">(TT.MM.JJJJ)</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1.4;">
+          <span class="form-label">Straße & Hausnummer:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <span class="form-label">PLZ & Ort:</span>
+          <div class="dot-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1.4;">
+          <span class="form-label">E-Mail-Adresse:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <span class="form-label">Telefon / Mobil:</span>
+          <div class="dot-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1.2;">
+          <span class="form-label">Name des Kindes:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="form-group" style="flex: 1.2;">
+          <span class="form-label">Kita-Gruppe:</span>
+          <div class="checkbox-group">
+            <span class="checkbox-item"><span class="box-sq"></span> Zwerge</span>
+            <span class="checkbox-item"><span class="box-sq"></span> Wichtel</span>
+            <span class="checkbox-item"><span class="box-sq"></span> Riesen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-bottom: 2px;">
+        <div class="form-group">
+          <span class="form-label">Mitgliedsbeitrag:</span>
+          <div class="checkbox-group">
+            <span class="checkbox-item"><span class="box-sq">✓</span> <strong>Mindestbeitrag 24,00 € / Kalenderjahr</strong></span>
+            <span class="checkbox-item"><span class="box-sq"></span> Freiwillig höherer Förderbeitrag: <span style="display:inline-block; width:65px; border-bottom:1.5px dotted #94a3b8; height:12px; margin-left:4px;"></span> € / Jahr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SEPA-Lastschriftmandat -->
+    <div class="section-card">
+      <div class="section-title">2. SEPA-Basislastschriftmandat (Beitragseinzug)</div>
+
+      <div class="sepa-meta">
+        <div>Gläubiger-Identifikationsnummer: <strong>DE83ZZZ00002910027</strong></div>
+        <div>Mandatsreferenz: <span style="color:#64748b;">(wird vom Verein bei Aufnahme vergeben: WW-JJJJ-XXXX)</span></div>
+      </div>
+
+      <div class="legal-notice">
+        Ich ermächtige den Förderverein der Kita Weserwichtel e.V., Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die vom Förderverein der Kita Weserwichtel e.V. auf mein Konto gezogenen Lastschriften einzulösen.<br>
+        <em>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.</em>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1.3;">
+          <span class="form-label">Kontoinhaber:</span>
+          <div class="checkbox-item" style="margin-right: 6px;"><span class="box-sq"></span> Wie oben</div>
+          <span style="font-size: 9.5px; color:#475569;">oder abweichend:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <span class="form-label">Kreditinstitut (Bank):</span>
+          <div class="dot-line"></div>
+        </div>
+      </div>
+
+      <!-- 22-Digit IBAN Box Grid -->
+      <div style="margin: 6px 0;">
+        <div class="form-label" style="margin-bottom: 4px; color: #451217;">IBAN (Bitte jede Ziffer deutlich in ein Kästchen eintragen):</div>
+        <div class="iban-grid-container">
+          <div class="iban-boxes">
+            <!-- DE -->
+            <div class="iban-box" style="color: #64748b;">D</div>
+            <div class="iban-box" style="color: #64748b;">E</div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-space"></div>
+            <!-- Block 2 -->
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-space"></div>
+            <!-- Block 3 -->
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-space"></div>
+            <!-- Block 4 -->
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-space"></div>
+            <!-- Block 5 -->
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+            <div class="iban-space"></div>
+            <!-- Block 6 -->
+            <div class="iban-box"></div>
+            <div class="iban-box"></div>
+          </div>
+          <div style="display: flex; align-items: flex-end; gap: 4px; margin-left: auto;">
+            <span class="form-label">BIC:</span>
+            <div style="width: 120px; border-bottom: 1.5px dotted #94a3b8; height: 14px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Datenschutz & Unterschrift -->
+    <div class="section-card" style="margin-bottom: 6px;">
+      <div class="section-title">3. Einverständniserklärung, Datenschutz (DSGVO) & Unterschrift</div>
+      <div class="legal-notice">
+        Mit meiner Unterschrift erkenne ich die Satzung des Fördervereins der Kita Weserwichtel e.V. an und willige in die satzungsgemäße Erhebung und Verarbeitung meiner personenbezogenen Daten zum Zwecke der Mitgliederverwaltung und des Beitragseinzugs ein (DSGVO Art. 6 Abs. 1 lit. b). Der Austritt ist jederzeit zum Ende eines Kalenderjahres mit einer Frist von einem Monat schriftlich möglich.
+      </div>
+
+      <div class="sig-area">
+        <div class="sig-col-left">
+          <div style="display: flex; align-items: flex-end; gap: 6px;">
+            <span class="form-label">Ort, Datum:</span>
+            <div style="border-bottom: 1.5px dotted #94a3b8; flex: 1; height: 16px; margin-bottom: 1px;">
+              <span style="font-size: 10px; color: #475569;">Berlin, den</span>
+            </div>
+          </div>
+        </div>
+        <div class="sig-col-right">
+          <div class="sig-line"></div>
+          <div class="sig-label">Rechtsverbindliche Unterschrift (Mitglied / Kontoinhaber)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submission Footer Notice -->
+    <div class="footer-submission">
+      <strong>📬 Abgabe:</strong> Bitte ausgefüllt im <strong>Kita-Briefkasten einwerfen</strong>, den Erzieher*innen übergeben oder als Foto/Scan per E-Mail an <strong>info@foerderverein-weserwichtel.de</strong> senden.
+    </div>
+
+  </div>
+
+</body>
+</html>

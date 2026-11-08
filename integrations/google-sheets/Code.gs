@@ -75,6 +75,9 @@ function sendVereinEmail(options) {
     replyTo: options.replyTo || getActiveReplyToEmail()
   };
 
+  if (options.bcc) mailOptions.bcc = options.bcc;
+  if (options.cc) mailOptions.cc = options.cc;
+
   try {
     const aliases = GmailApp.getAliases();
     if (aliases && aliases.indexOf(VEREIN_GMAIL) !== -1) {
@@ -166,11 +169,15 @@ function doPost(e) {
         return handleUploadMemberPdf(data);
       case 'sendPreNotification':
         return handleSendPreNotification(data);
+      case 'sendCancellationNotification':
+        return handleSendCancellationNotification(data);
       case 'archiveSepaBatch':
         return handleArchiveSepaBatch(data);
       case 'updateMemberStatus':
       case 'updateOrCancelMember':
         return handleUpdateOrCancelMember(data);
+      case 'createPaperMember':
+        return handleCreatePaperMember(data);
       case 'healFolders':
         return handleHealFolders(data);
       case 'getSystemLogs':
@@ -503,7 +510,7 @@ function handleGetMembers() {
       iban: String(row[13] || '').trim(),
       bic: String(row[14] || 'GENODEF1SLR').trim(),
       bankName: String(row[15] || 'GLS Gemeinschaftsbank eG').trim(),
-      pdfStatus: matched ? 'PDF erhalten & geprüft' : (rawPdfCol || 'Wartet auf E-Mail'),
+      pdfStatus: matched ? 'Geprüft & Archiviert' : (rawPdfCol || 'Wartet auf E-Mail'),
       matchedPdfName: matched ? matched.name : null,
       matchedPdfUrl: matched ? matched.url : null,
       mandateRef: mandateRef,
@@ -579,7 +586,7 @@ function handleNewRegistration(data) {
       const decoded = Utilities.base64Decode(data.pdfBase64);
       const blob = Utilities.newBlob(decoded, 'application/pdf', lockedFileName);
       folders.antragsPdfs.createFile(blob);
-      pdfStatusText = 'PDF erhalten & geprüft';
+      pdfStatusText = 'Geprüft & Archiviert';
       savedPdfName = lockedFileName;
     } catch (pdfErr) {
       appendSystemLog('PDF_AUTOFILE_WARN', 'Konnte PDF bei Registrierung nicht direkt speichern: ' + pdfErr, lastName);
@@ -677,7 +684,7 @@ function handleScanInboxForPdfs() {
             const createdFile = folders.antragsPdfs.createFile(blob);
 
             existingFiles.push({ name: lockedName, url: createdFile.getUrl(), id: createdFile.getId() });
-            sheet.getRange(i + 2, 17).setValue('PDF erhalten & geprüft');
+            sheet.getRange(i + 2, 17).setValue('Geprüft & Archiviert');
             newlyMatched.push({ member: rFirstName + ' ' + rLastName, fileName: lockedName });
             break;
           }
@@ -720,7 +727,7 @@ function handleUploadMemberPdf(data) {
     const sheet = ensureMainSheetHeaders();
     const row = parseInt(data.rowNumber, 10);
     if (docType === 'Mitgliedsantrag') {
-      sheet.getRange(row, 17).setValue('PDF erhalten & geprüft');
+      sheet.getRange(row, 17).setValue('Geprüft & Archiviert');
     }
   }
 
@@ -898,16 +905,71 @@ function handleUpdateOrCancelMember(data) {
   }
 
   let cancellationFileUrl = '';
+  let cancellationEmailSent = false;
   if (data.isCancellation) {
     sheet.getRange(targetRow, 2).setValue('Gekündigt');
+    const folders = ensureVereinFolderStructure(new Date().getFullYear());
+    const lName = data.lastName || sheet.getRange(targetRow, 3).getValue() || 'Mitglied';
+    const fName = data.firstName || sheet.getRange(targetRow, 4).getValue() || '';
+
     if (data.cancellationPdfBase64) {
-      const folders = ensureVereinFolderStructure(new Date().getFullYear());
-      const lName = data.lastName || sheet.getRange(targetRow, 3).getValue();
-      const fName = data.firstName || sheet.getRange(targetRow, 4).getValue();
       const kFileName = buildLockedPdfFilename(dateIso, lName, fName, 'Kuendigung');
       const blob = Utilities.newBlob(Utilities.base64Decode(data.cancellationPdfBase64), 'application/pdf', kFileName);
       const kFile = folders.kuendigungen.createFile(blob);
       cancellationFileUrl = kFile.getUrl();
+    }
+
+    // Falls Kündigungs-E-Mail direkt mitgesendet werden soll
+    if (data.sendCancellationEmail) {
+      const targetEmail = String(data.email || sheet.getRange(targetRow, 5).getValue() || '').trim();
+      if (targetEmail.includes('@')) {
+        try {
+          const mandateRef = data.mandateRef || sheet.getRange(targetRow, 19).getValue() || 'Kuendigung';
+          const childName = data.childName || sheet.getRange(targetRow, 10).getValue() || '';
+          const childGroup = data.childGroup || sheet.getRange(targetRow, 11).getValue() || '';
+          const subject = data.cancellationSubject || 'Bestätigung über die Beendigung Ihrer Mitgliedschaft – Förderverein Kita Weserwichtel e.V.';
+          const body = data.cancellationBody || buildDefaultCancellationBody_(fName, lName, childName, childGroup, mandateRef, nowStr);
+          const replyToAddr = getActiveReplyToEmail(data.replyTo);
+
+          sendVereinEmail({
+            to: targetEmail,
+            subject: subject,
+            body: body,
+            replyTo: replyToAddr,
+            bcc: data.notifyBoard !== false ? VEREIN_GMAIL : undefined
+          });
+
+          // Text-Beleg im Drive-Ordner Kuendigungen_und_Aenderungen speichern
+          const safeLast = sanitizeFilePart(lName);
+          const safeFirst = sanitizeFilePart(fName);
+          const safeRef = sanitizeFilePart(mandateRef);
+          const proofFileName = `${dateIso}_${safeLast}_${safeFirst}_Kuendigungsbestaetigung_${safeRef}.txt`;
+          const dateGerman = Utilities.formatDate(new Date(), 'Europe/Berlin', 'dd.MM.yyyy HH:mm');
+          const proofContent =
+            `BELEG: GESENDETE KÜNDIGUNGSBESTÄTIGUNG / BEENDIGUNG DER MITGLIEDSCHAFT\n` +
+            `======================================================================\n` +
+            `Versanddatum:   ${dateGerman} Uhr\n` +
+            `Absender:       ${VEREIN_GMAIL} (Reply-To: ${replyToAddr})\n` +
+            `Empfänger:      ${targetEmail}\n` +
+            `BCC (Vorstand): ${data.notifyBoard !== false ? VEREIN_GMAIL : 'Kein BCC'}\n` +
+            `Betreff:        ${subject}\n` +
+            `Mandatsreferenz:${mandateRef}\n` +
+            `Status:         Gekündigt / SEPA-Mandat gesperrt\n` +
+            `======================================================================\n\n` +
+            body;
+
+          folders.kuendigungen.createFile(proofFileName, proofContent, MimeType.PLAIN_TEXT);
+          cancellationEmailSent = true;
+
+          const currentNotes = String(sheet.getRange(targetRow, 18).getValue() || '').trim();
+          const emailNote = `Kündigungsbestätigung gesendet am ${nowStr}`;
+          if (!currentNotes.includes(emailNote)) {
+            sheet.getRange(targetRow, 18).setValue(currentNotes ? `${currentNotes} · ${emailNote}` : emailNote);
+          }
+        } catch (mailErr) {
+          appendSystemLog('CANCELLATION_MAIL_WARN', 'Konnte Kündigungs-Mail nicht senden: ' + mailErr.toString(), targetEmail);
+        }
+      }
     }
   }
 
@@ -922,15 +984,235 @@ function handleUpdateOrCancelMember(data) {
   appendSystemLog(
     data.isCancellation ? 'MEMBER_CANCELLED' : 'MEMBER_UPDATED',
     'Mitglied aktualisiert (Zeile ' + targetRow + ')',
-    data.noteAddition || data.status || ''
+    (data.noteAddition || data.status || '') + (cancellationEmailSent ? ' [Bestätigung gemailt]' : '')
   );
+
+  let successMsg = data.isCancellation
+    ? 'Kündigung eingetragen, im Drive archiviert und SEPA-Mandat für künftige Einzüge gesperrt.'
+    : 'Mitgliedsdaten erfolgreich aktualisiert.';
+  if (cancellationEmailSent) {
+    successMsg += ' Offizielle Kündigungsbestätigung wurde per E-Mail versendet & als Beleg archiviert.';
+  }
 
   return jsonResponse({
     result: 'success',
     cancellationFileUrl: cancellationFileUrl,
-    message: data.isCancellation
-      ? 'Kündigung eingetragen, im Drive archiviert und SEPA-Mandat für künftige Einzüge gesperrt.'
-      : 'Mitgliedsdaten erfolgreich aktualisiert.'
+    cancellationEmailSent: cancellationEmailSent,
+    message: successMsg
+  });
+}
+
+/**
+ * Standard-Wortlaut für die rechtssichere Kündigungsbestätigung (Vereinsrecht & SEPA).
+ */
+function buildDefaultCancellationBody_(firstName, lastName, childName, childGroup, mandateRef, effectiveDateStr) {
+  const effDate = effectiveDateStr || Utilities.formatDate(new Date(), 'Europe/Berlin', 'dd.MM.yyyy');
+  const childInfo = childName ? `${childName}${childGroup ? ' (' + childGroup + ')' : ''}` : 'Ihres Kindes';
+
+  return `Liebe/r ${firstName} ${lastName},
+
+wir bestätigen hiermit den Eingang Ihrer Kündigung und die Beendigung Ihrer Mitgliedschaft im Förderverein der Kita Weserwichtel e.V. mit Wirkung zum ${effDate}.
+
+----------------------------------------------------------------------
+BESTÄTIGUNG DER BEENDIGUNG & SEPA-STATUS
+----------------------------------------------------------------------
+Mitglied:            ${firstName} ${lastName}
+Kind:                ${childInfo}
+Mandatsreferenz:     ${mandateRef || '–'}
+SEPA-Lastschrift:    DEAKTIVIERT / GESPERRT
+Status:              Mitgliedschaft beendet zum ${effDate}
+----------------------------------------------------------------------
+
+Es werden künftig keine weiteren Mitgliedsbeiträge von Ihrem angegebenen Bankkonto eingezogen. Ihr hinterlegtes SEPA-Lastschriftmandat wurde mit sofortiger Wirkung im Verwaltungssystem deaktiviert und für künftige Lastschriftläufe gesperrt.
+
+Hinweis gem. DSGVO & Steuerrecht: Gemäß den gesetzlichen Aufbewahrungsfristen (§ 147 Abgabenordnung) bleiben steuer- und buchungsrelevante Belege vergangener Beitragsjahre für 10 Jahre im Vereinsarchiv aufbewahrt und werden im Anschluss datenschutzkonform vernichtet.
+
+Wir danken Ihnen und Ihrer Familie von ganzem Herzen für Ihre wertvolle Unterstützung während Ihrer Zeit in der Kita Weserwichtel. Durch Ihren Beitrag konnten wir viele schöne Aktionen, Ausflüge und Spielgeräte für die Kinder verwirklichen!
+
+Für die Zukunft wünschen wir Ihnen und Ihrem Kind alles Gute und einen erfolgreichen weiteren Lebensweg.
+
+Herzliche Grüße
+Der Vorstand & Schatzmeister
+Förderverein der Kita Weserwichtel e.V.
+Weserstraße 106, 12059 Berlin
+Amtsgericht Charlottenburg · VR 42469 B`;
+}
+
+/**
+ * ==============================================================================
+ * EIGENSTÄNDIGE AKTION: KÜNDIGUNGSBESTÄTIGUNG VERSENDEN & BELEG ARCHIVIEREN
+ * (z. B. wenn Kündigung bereits eingetragen war oder nachträglich bestätigt wird)
+ * ==============================================================================
+ */
+function handleSendCancellationNotification(data) {
+  const sheet = ensureMainSheetHeaders();
+  const targetRow = findMemberRow(sheet, data.rowNumber, data.email);
+  if (targetRow < 2) {
+    throw new Error('Mitgliedszeile konnte in der Tabelle nicht gefunden werden.');
+  }
+
+  const targetEmail = String(data.email || sheet.getRange(targetRow, 5).getValue() || '').trim();
+  if (!targetEmail || !targetEmail.includes('@')) {
+    throw new Error('Keine gültige E-Mail-Adresse für dieses Mitglied hinterlegt.');
+  }
+
+  const now = new Date();
+  const dateIso = Utilities.formatDate(now, 'Europe/Berlin', 'yyyy-MM-dd');
+  const nowStr = Utilities.formatDate(now, 'Europe/Berlin', 'dd.MM.yyyy');
+  const dateGerman = Utilities.formatDate(now, 'Europe/Berlin', 'dd.MM.yyyy HH:mm');
+  const folders = ensureVereinFolderStructure(now.getFullYear());
+
+  const lName = data.lastName || sheet.getRange(targetRow, 3).getValue() || 'Mitglied';
+  const fName = data.firstName || sheet.getRange(targetRow, 4).getValue() || '';
+  const childName = data.childName || sheet.getRange(targetRow, 10).getValue() || '';
+  const childGroup = data.childGroup || sheet.getRange(targetRow, 11).getValue() || '';
+  const mandateRef = data.mandateRef || sheet.getRange(targetRow, 19).getValue() || 'Kuendigung';
+
+  const subject = data.subject || 'Bestätigung über die Beendigung Ihrer Mitgliedschaft – Förderverein Kita Weserwichtel e.V.';
+  const body = data.body || buildDefaultCancellationBody_(fName, lName, childName, childGroup, mandateRef, nowStr);
+  const replyToAddr = getActiveReplyToEmail(data.replyTo);
+
+  // 1. E-Mail über das offizielle Vereinskonto versenden
+  sendVereinEmail({
+    to: targetEmail,
+    subject: subject,
+    body: body,
+    replyTo: replyToAddr,
+    bcc: data.notifyBoard !== false ? VEREIN_GMAIL : undefined
+  });
+
+  // 2. Belegkopie in 02_MITGLIEDERVERWALTUNG/Kuendigungen_und_Aenderungen speichern
+  const safeLast = sanitizeFilePart(lName);
+  const safeFirst = sanitizeFilePart(fName);
+  const safeRef = sanitizeFilePart(mandateRef);
+  const proofFileName = `${dateIso}_${safeLast}_${safeFirst}_Kuendigungsbestaetigung_${safeRef}.txt`;
+
+  const proofContent =
+    `BELEG: GESENDETE KÜNDIGUNGSBESTÄTIGUNG / BEENDIGUNG DER MITGLIEDSCHAFT\n` +
+    `======================================================================\n` +
+    `Versanddatum:   ${dateGerman} Uhr\n` +
+    `Absender:       ${VEREIN_GMAIL} (Reply-To: ${replyToAddr})\n` +
+    `Empfänger:      ${targetEmail}\n` +
+    `BCC (Vorstand): ${data.notifyBoard !== false ? VEREIN_GMAIL : 'Kein BCC'}\n` +
+    `Betreff:        ${subject}\n` +
+    `Mandatsreferenz:${mandateRef}\n` +
+    `Status:         Gekündigt / SEPA-Mandat gesperrt\n` +
+    `======================================================================\n\n` +
+    body;
+
+  const proofFile = folders.kuendigungen.createFile(proofFileName, proofContent, MimeType.PLAIN_TEXT);
+
+  // 3. Status im Sheet auf "Gekündigt" setzen und Notiz vermerken
+  sheet.getRange(targetRow, 2).setValue('Gekündigt');
+  const currentNotes = String(sheet.getRange(targetRow, 18).getValue() || '').trim();
+  const emailNote = `Kündigungsbestätigung gesendet am ${nowStr}`;
+  if (!currentNotes.includes(emailNote)) {
+    sheet.getRange(targetRow, 18).setValue(currentNotes ? `${currentNotes} · ${emailNote}` : emailNote);
+  }
+
+  appendSystemLog('CANCELLATION_NOTICE_SENT', 'Kündigungsbestätigung gesendet an ' + targetEmail, proofFileName);
+
+  return jsonResponse({
+    result: 'success',
+    proofFileName: proofFileName,
+    proofUrl: proofFile.getUrl(),
+    sentDate: nowStr,
+    message: 'Kündigungsbestätigung erfolgreich an ' + targetEmail + ' versendet und Beleg im Drive archiviert.'
+  });
+}
+
+/**
+ * Erfasst einen alten oder neuen handschriftlichen Papierantrag aus dem Vorstand-Portal
+ * und legt den Scan / das Foto automatisch im Google Drive ab.
+ */
+function handleCreatePaperMember(data) {
+  const sheet = ensureMainSheetHeaders();
+  const now = new Date();
+
+  // Eintrittsdatum: historisches Datum oder heute
+  let entryDate = now;
+  if (data.entryDate) {
+    const parsed = new Date(data.entryDate);
+    if (!isNaN(parsed.getTime())) entryDate = parsed;
+  }
+  const timestampStr = Utilities.formatDate(entryDate, 'Europe/Berlin', 'dd.MM.yyyy HH:mm:ss');
+  const dateIso = Utilities.formatDate(entryDate, 'Europe/Berlin', 'yyyy-MM-dd');
+  const yearStr = entryDate.getFullYear() || now.getFullYear();
+
+  const firstName = String(data.firstName || '').trim();
+  const lastName = String(data.lastName || '').trim();
+  if (!lastName || !firstName) {
+    throw new Error('Vorname und Nachname sind Pflichtfelder.');
+  }
+
+  const addressStr = (String(data.street || '') + ' ' + String(data.houseNumber || '')).trim();
+  const cityStr = (String(data.zip || '') + ' ' + String(data.city || '')).trim();
+  const fee = data.contributionAmount ? parseFloat(data.contributionAmount).toFixed(2) : (data.fee ? parseFloat(data.fee).toFixed(2) : '24.00');
+  const mandateRef = String(data.mandateRef || ('WW-' + yearStr + '-' + Math.floor(1000 + Math.random() * 9000))).trim();
+
+  let pdfStatusText = 'Wartet auf Scan';
+  let savedFileName = '';
+
+  // Scan-Datei / Foto / PDF im fest verdrahteten Drive-Ordner speichern
+  if (data.fileBase64 && String(data.fileBase64).length > 50) {
+    try {
+      const folders = ensureVereinFolderStructure(yearStr);
+      const mimeType = String(data.mimeType || 'application/pdf').toLowerCase();
+      let ext = '.pdf';
+      if (mimeType.includes('png')) ext = '.png';
+      else if (mimeType.includes('jpeg') || mimeType.includes('jpg')) ext = '.jpg';
+
+      const lockedFileName = buildLockedPdfFilename(dateIso, lastName, firstName, 'Mitgliedsantrag').replace(/\.pdf$/i, ext);
+      const decoded = Utilities.base64Decode(data.fileBase64);
+      const blob = Utilities.newBlob(decoded, mimeType, lockedFileName);
+      folders.antragsPdfs.createFile(blob);
+      pdfStatusText = 'Geprüft & Archiviert';
+      savedFileName = lockedFileName;
+    } catch (e) {
+      appendSystemLog('PAPER_FILE_WARN', 'Konnte Scan-Datei nicht im Drive speichern: ' + e.toString(), lastName);
+    }
+  }
+
+  const isOld = Boolean(data.isOldMember);
+  const status = data.status || (isOld ? 'Aktiv' : 'Neu eingegangen');
+  const collectedYears = Array.isArray(data.collectedYears)
+    ? data.collectedYears.join(', ')
+    : String(data.collectedYears || '').trim();
+  const defaultNote = isOld ? 'Papierantrag aus Altbestand erfasst' : 'Handschriftlicher Papierantrag erfasst';
+  const notes = data.notes ? String(data.notes).trim() : defaultNote;
+
+  const newRow = [
+    timestampStr,                                         // A: Eingangsdatum
+    status,                                               // B: Status
+    lastName,                                             // C: Nachname
+    firstName,                                            // D: Vorname
+    String(data.email || '').trim(),                      // E: E-Mail
+    String(data.phone || '').trim(),                      // F: Telefon
+    addressStr,                                           // G: Straße & Hausnr.
+    cityStr,                                              // H: PLZ & Ort
+    String(data.birthDate || '').trim(),                  // I: Geburtsdatum
+    String(data.childName || '').trim(),                  // J: Name des Kindes
+    String(data.childGroup || '').trim(),                 // K: Kita-Gruppe
+    fee,                                                  // L: Jahresbeitrag (€)
+    String(data.accountHolder || (firstName + ' ' + lastName)).trim(), // M: Kontoinhaber
+    String(data.iban || '').trim(),                       // N: IBAN
+    String(data.bic || '').trim(),                        // O: BIC
+    String(data.bankName || '').trim(),                   // P: Kreditinstitut
+    pdfStatusText,                                        // Q: PDF-Status
+    savedFileName ? (notes + ' (Archiv: ' + savedFileName + ')') : notes, // R: Notizen
+    mandateRef,                                           // S: Mandatsreferenz
+    collectedYears                                        // T: Eingezogene Beitragsjahre
+  ];
+
+  sheet.appendRow(newRow);
+  appendSystemLog('PAPER_MEMBER_CREATED', 'Papierantrag erfasst: ' + firstName + ' ' + lastName + ' (' + mandateRef + ')', savedFileName || 'Ohne Anhang');
+
+  return jsonResponse({
+    result: 'success',
+    row: sheet.getLastRow(),
+    mandateRef: mandateRef,
+    fileName: savedFileName,
+    message: 'Papierantrag erfolgreich im Google Drive archiviert und in Mitgliederliste eingetragen.'
   });
 }
 
@@ -1117,7 +1399,13 @@ function formatSheetProfessional() {
   sheet.getRange('B2:B').setDataValidation(statusRule);
 
   const pdfRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Wartet auf E-Mail', 'PDF erhalten & geprüft'], true)
+    .requireValueInList([
+      'Wartet auf E-Mail',
+      'Eingegangen',
+      'Geprüft & Archiviert',
+      'Nicht erforderlich',
+      'Fehlerhaft / Unvollständig'
+    ], true)
     .setAllowInvalid(true)
     .build();
   sheet.getRange('Q2:Q').setDataValidation(pdfRule);

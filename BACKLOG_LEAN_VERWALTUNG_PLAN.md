@@ -60,3 +60,9 @@
 ### Epic 5: Geführter Dialog für Kündigungen (Einschulung), Bankwechsel & Fernwartung
 - [x] **Task 5.1:** „Mitglied bearbeiten / Kündigung“-Modal inkl. automatischer Ablage des Kündigungs-PDFs in `Kuendigungen_und_Aenderungen/` und sofortiger SEPA-Sperre.
 - [x] **Task 5.2:** Remote-Diagnose (`System_Log`) für Gaston zur 100% kontaktlosen Fernwartung.
+- [x] **Task 5.3:** Rechtssichere & geführte Kündigungsbestätigung per E-Mail („✉️ Bestätigung jetzt senden“) inkl. automatischer Drive-Beleg-Archivierung in `Kuendigungen_und_Aenderungen/`, BCC an Vereins-Postfach (`foerdervereinweserwichtel@gmail.com`) und Behebung der Dropdown-Listenvalidierung in Spalte Q (`Geprüft & Archiviert`).
+
+### Epic 6: Handschriftliche Papieranträge, Druckvorlage & Sicherer Drive-Scanner
+- [x] **Task 6.1:** Offizielle DIN-A4 Druckvorlage für handschriftliche Mitgliedsanträge (`PDFGenerator.generateBlankPrintablePDF` & [`mitgliedsantrag-druckvorlage.html`](file:///Volumes/Macbook%20Pro_Work/01_PROJECTS/WESERWICHTEL%20e.V/foerderverein-weserwichtel/mitgliedsantrag-druckvorlage.html)) mit 22-Kästchen IBAN-Gitter, Kita-Gruppen-Auswahl, SEPA-Mandat, DSGVO-Einwilligung und Online-Direktlink. Direkt druckbar aus `admin.html` per 1-Klick („🖨️ Vorlage drucken“).
+- [x] **Task 6.2:** Manuelle Papierantrag-Erfassung & Beleg-Archivierung (`#paperScanModal` in `admin.html` & `admin.js`) mit PDF/Scan/Foto-Upload, Live-Beleg-Vorschau (Drehen & Zoomen), händischer Dateneingabe und strikter ISO 7064 MOD-97 IBAN-Prüfsummen-Validierung (vollständig ohne fehleranfälliges OCR).
+- [x] **Task 6.3:** 100% automatische Google Drive Archivierung alter & neuer Papieranträge (`createPaperMember` in `Code.gs`) in `02_MITGLIEDERVERWALTUNG/Eingegangene_Mitgliedsantraege_PDFs/` als `JJJJ-MM-TT_Nachname_Vorname_Mitgliedsantrag.pdf` + Doppel-Einzugs-Schutz für historische Jahre (`paidYears`).

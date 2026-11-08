@@ -84,7 +84,7 @@
       iban: "DE06 1007 0024 0555 4443 32",
       bic: "DEUTDEDBBER",
       bankName: "Deutsche Bank",
-      pdfStatus: "PDF erhalten & geprüft",
+      pdfStatus: "Geprüft & Archiviert",
       matchedPdfName: "2026-11-04_Weber_Michael_Mitgliedsantrag.pdf",
       matchedPdfUrl: "#pdf-preview",
       mandateRef: "WW-2026-1002",
@@ -110,7 +110,7 @@
       iban: "DE17 1005 0000 0123 4567 89",
       bic: "BELADEB1BRL",
       bankName: "Berliner Sparkasse",
-      pdfStatus: "PDF erhalten & geprüft",
+      pdfStatus: "Geprüft & Archiviert",
       matchedPdfName: "2026-10-28_Schmidt_Alexander_Mitgliedsantrag.pdf",
       matchedPdfUrl: "#pdf-preview",
       mandateRef: "WW-2026-1003",
@@ -136,7 +136,7 @@
       iban: "DE29 1001 0010 0987 6543 21",
       bic: "PBNKDEFF",
       bankName: "Postbank",
-      pdfStatus: "PDF erhalten & geprüft",
+      pdfStatus: "Geprüft & Archiviert",
       matchedPdfName: "2026-10-15_Yilmaz_Fatma_Mitgliedsantrag.pdf",
       matchedPdfUrl: "#pdf-preview",
       mandateRef: "WW-2026-1004",
@@ -219,6 +219,18 @@
     copyEmailTextBtn: document.getElementById('copyEmailTextBtn'),
     sendViaVereinAccountBtn: document.getElementById('sendViaVereinAccountBtn'),
 
+    // Cancellation Email Modal
+    cancellationEmailModal: document.getElementById('cancellationEmailModal'),
+    closeCancellationEmailModalBtn: document.getElementById('closeCancellationEmailModalBtn'),
+    cancelEmailModalRecipient: document.getElementById('cancelEmailModalRecipient'),
+    cancelEmailModalReplyTo: document.getElementById('cancelEmailModalReplyTo'),
+    cancelEmailModalSubject: document.getElementById('cancelEmailModalSubject'),
+    cancelEmailModalBody: document.getElementById('cancelEmailModalBody'),
+    cancelEmailNotifyBoardCheck: document.getElementById('cancelEmailNotifyBoardCheck'),
+    openCancelMailAppBtn: document.getElementById('openCancelMailAppBtn'),
+    copyCancelEmailTextBtn: document.getElementById('copyCancelEmailTextBtn'),
+    sendCancelViaVereinAccountBtn: document.getElementById('sendCancelViaVereinAccountBtn'),
+
     // SEPA Modal
     openSepaModalBtn: document.getElementById('openSepaModalBtn'),
     sepaModal: document.getElementById('sepaModal'),
@@ -250,6 +262,10 @@
     editNotes: document.getElementById('editNotes'),
     editCancelCheck: document.getElementById('editCancelCheck'),
     editCancellationPdfInput: document.getElementById('editCancellationPdfInput'),
+    manageCancelEmailPrompt: document.getElementById('manageCancelEmailPrompt'),
+    manageSendCancelEmailCheck: document.getElementById('manageSendCancelEmailCheck'),
+    previewCancelEmailFromManageBtn: document.getElementById('previewCancelEmailFromManageBtn'),
+    manageCancelAlreadySentNotice: document.getElementById('manageCancelAlreadySentNotice'),
 
     // Folders & Maintainer Modal
     foldersModal: document.getElementById('foldersModal'),
@@ -273,11 +289,56 @@
     dismissInstallModalBtn: document.getElementById('dismissInstallModalBtn'),
     triggerNativeInstallBtn: document.getElementById('triggerNativeInstallBtn'),
 
+    // Druckvorlage & Papierantrag-Scanner
+    printBlankFormBtn: document.getElementById('printBlankFormBtn'),
+    openPaperScanModalBtn: document.getElementById('openPaperScanModalBtn'),
+    quickAddPaperMemberBtn: document.getElementById('quickAddPaperMemberBtn'),
+    paperScanModal: document.getElementById('paperScanModal'),
+    closePaperScanModalBtn: document.getElementById('closePaperScanModalBtn'),
+    cancelPaperScanBtn: document.getElementById('cancelPaperScanBtn'),
+    paperScanForm: document.getElementById('paperScanForm'),
+    paperFileInput: document.getElementById('paperFileInput'),
+    triggerPaperFileBtn: document.getElementById('triggerPaperFileBtn'),
+    paperDropzone: document.getElementById('paperDropzone'),
+    paperUploadPrompt: document.getElementById('paperUploadPrompt'),
+    paperFileLoadedContainer: document.getElementById('paperFileLoadedContainer'),
+    paperFileNameLabel: document.getElementById('paperFileNameLabel'),
+    paperFileSizeLabel: document.getElementById('paperFileSizeLabel'),
+    removePaperFileBtn: document.getElementById('removePaperFileBtn'),
+    paperPreviewArea: document.getElementById('paperPreviewArea'),
+    paperZoomHint: document.getElementById('paperZoomHint'),
+    rotatePaperLeftBtn: document.getElementById('rotatePaperLeftBtn'),
+    rotatePaperRightBtn: document.getElementById('rotatePaperRightBtn'),
+    paperTypeNew: document.getElementById('paperTypeNew'),
+    paperTypeOld: document.getElementById('paperTypeOld'),
+    labelPaperTypeNew: document.getElementById('labelPaperTypeNew'),
+    labelPaperTypeOld: document.getElementById('labelPaperTypeOld'),
+    paperFirstName: document.getElementById('paperFirstName'),
+    paperLastName: document.getElementById('paperLastName'),
+    paperEmail: document.getElementById('paperEmail'),
+    paperPhone: document.getElementById('paperPhone'),
+    paperAddress: document.getElementById('paperAddress'),
+    paperCity: document.getElementById('paperCity'),
+    paperChildName: document.getElementById('paperChildName'),
+    paperChildGroup: document.getElementById('paperChildGroup'),
+    paperAccountHolder: document.getElementById('paperAccountHolder'),
+    paperFee: document.getElementById('paperFee'),
+    paperIban: document.getElementById('paperIban'),
+    paperIbanFeedback: document.getElementById('paperIbanFeedback'),
+    paperBankName: document.getElementById('paperBankName'),
+    paperBic: document.getElementById('paperBic'),
+    paperEntryDate: document.getElementById('paperEntryDate'),
+    paperPaidYears: document.getElementById('paperPaidYears'),
+    paperNotes: document.getElementById('paperNotes'),
+    savePaperMemberBtn: document.getElementById('savePaperMemberBtn'),
+
     // Toast
     toastNotification: document.getElementById('toastNotification'),
     toastMessage: document.getElementById('toastMessage'),
     toastIcon: document.getElementById('toastIcon')
   };
+
+  state.paperFile = null;
 
   let deferredPrompt = null;
 
@@ -552,7 +613,22 @@
    * Step 1 Helper: Check if Member has Signed PDF on File
    */
   function memberHasPdf(member) {
-    return Boolean(member.matchedPdfName || member.pdfStatus === 'PDF erhalten & geprüft');
+    const s = String(member.pdfStatus || '').toLowerCase();
+    return Boolean(
+      member.matchedPdfName ||
+      s.includes('geprüft') ||
+      s.includes('archiviert') ||
+      s.includes('erhalten') ||
+      s === 'eingegangen'
+    );
+  }
+
+  /**
+   * Helper: Check if Member has been sent a Cancellation Confirmation
+   */
+  function memberHasCancellationNotice(member) {
+    const notes = String(member.notes || '');
+    return notes.includes('Kündigungsbestätigung') || notes.includes('Bestätigung gemailt');
   }
 
   /**
@@ -716,7 +792,34 @@
       // --- SCHRITT 2 HTML: Aufnahme & SEPA-Vorab-Mail (Guardrail: Erst wenn Schritt 1 🟢!) ---
       let step2Html = '';
       if (isCancelled) {
-        step2Html = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-200 text-slate-700">🚪 Mitgliedschaft beendet</span>`;
+        const hasNotice = memberHasCancellationNotice(member);
+        if (hasNotice) {
+          step2Html = `
+            <div class="space-y-1">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700">
+                🚪 Beendet & bestätigt
+              </span>
+              <div>
+                <button type="button" class="open-cancellation-email-btn text-[10px] text-slate-500 hover:text-rose-700 underline" data-id="${member.id}">
+                  Kündigungsbeleg / E-Mail ansehen
+                </button>
+              </div>
+            </div>
+          `;
+        } else {
+          step2Html = `
+            <div class="space-y-1">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-900">
+                🚪 Gekündigt / SEPA gesperrt
+              </span>
+              <div>
+                <button type="button" class="open-cancellation-email-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-[10px] font-bold shadow-2xs transition-colors" data-id="${member.id}">
+                  <span>✉️ Bestätigung jetzt senden</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
       } else if (!hasPdf) {
         step2Html = `
           <div class="text-[11px] text-slate-400 flex items-center gap-1" title="Sicherheitssperre: Bitte ordnen Sie zuerst in Schritt 1 das unterschriebene SEPA-Mandats-PDF zu.">
@@ -857,6 +960,14 @@
       });
     });
 
+    // Step 2 (Cancelled): Open Cancellation Email Modal
+    el.membersTableBody.querySelectorAll('.open-cancellation-email-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        openCancellationEmailModal(id);
+      });
+    });
+
     // Manage / Cancel Member Modal
     el.membersTableBody.querySelectorAll('.manage-member-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -894,7 +1005,7 @@
         member.matchedPdfUrl = '#demo-pdf';
       }
 
-      member.pdfStatus = 'PDF erhalten & geprüft';
+      member.pdfStatus = 'Geprüft & Archiviert';
       saveDemoState();
       renderAll();
       showToast(`Schritt 1 erledigt: "${member.matchedPdfName}" im Drive abgelegt!`, 'success');
@@ -912,7 +1023,7 @@
       if (missing) {
         missing.matchedPdfName = `2026-11-05_${missing.lastName}_${missing.firstName}_Mitgliedsantrag.pdf`;
         missing.matchedPdfUrl = '#demo-pdf';
-        missing.pdfStatus = 'PDF erhalten & geprüft';
+        missing.pdfStatus = 'Geprüft & Archiviert';
         saveDemoState();
         renderAll();
         showToast(`[Demo] 1 Antrags-PDF im Postfach gefunden und automatisch für ${missing.firstName} ${missing.lastName} im Drive abgelegt!`, 'success');
@@ -1041,6 +1152,126 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     } finally {
       el.sendViaVereinAccountBtn.disabled = false;
       el.sendViaVereinAccountBtn.innerHTML = origHtml;
+    }
+  }
+
+  /**
+   * Cancellation Email Preview & Central Verein Dispatch
+   */
+  function buildCancellationEmailText(member) {
+    const todayStr = new Date().toLocaleDateString('de-DE');
+    const childInfo = member.childName ? `${member.childName}${member.childGroup ? ' (' + member.childGroup + ')' : ''}` : 'Ihres Kindes';
+    const mandateRef = member.mandateRef || member.id;
+
+    const subject = `Bestätigung über die Beendigung Ihrer Mitgliedschaft – Förderverein Kita Weserwichtel e.V. (${mandateRef})`;
+    const body = `Liebe/r ${member.firstName} ${member.lastName},
+
+wir bestätigen hiermit den Eingang Ihrer Kündigung und die Beendigung Ihrer Mitgliedschaft im Förderverein der Kita Weserwichtel e.V. mit Wirkung zum ${todayStr}.
+
+----------------------------------------------------------------------
+BESTÄTIGUNG DER BEENDIGUNG & SEPA-STATUS
+----------------------------------------------------------------------
+Mitglied:            ${member.firstName} ${member.lastName}
+Kind:                ${childInfo}
+Mandatsreferenz:     ${mandateRef}
+SEPA-Lastschrift:    DEAKTIVIERT / GESPERRT
+Status:              Mitgliedschaft beendet zum ${todayStr}
+----------------------------------------------------------------------
+
+Es werden künftig keine weiteren Mitgliedsbeiträge von Ihrem angegebenen Bankkonto eingezogen. Ihr hinterlegtes SEPA-Lastschriftmandat wurde mit sofortiger Wirkung im Verwaltungssystem deaktiviert und für künftige Lastschriftläufe gesperrt.
+
+Hinweis gem. DSGVO & Steuerrecht: Gemäß den gesetzlichen Aufbewahrungsfristen (§ 147 Abgabenordnung) bleiben steuer- und buchungsrelevante Belege vergangener Beitragsjahre für 10 Jahre im Vereinsarchiv aufbewahrt und werden im Anschluss datenschutzkonform vernichtet.
+
+Wir danken Ihnen und Ihrer Familie von ganzem Herzen für Ihre wertvolle Unterstützung während Ihrer Zeit in der Kita Weserwichtel. Durch Ihren Beitrag konnten wir viele schöne Aktionen, Ausflüge und Spielgeräte für die Kinder verwirklichen!
+
+Für die Zukunft wünschen wir Ihnen und Ihrem Kind alles Gute und einen erfolgreichen weiteren Lebensweg.
+
+Herzliche Grüße
+Der Vorstand & Schatzmeister
+Förderverein der Kita Weserwichtel e.V.
+Weserstraße 106, 12059 Berlin
+Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
+
+    return { subject, body };
+  }
+
+  function openCancellationEmailModal(memberId) {
+    const member = state.members.find(m => m.id === memberId);
+    if (!member) return;
+
+    state.selectedMemberForCancellationEmail = member;
+    const { subject, body } = buildCancellationEmailText(member);
+
+    if (el.cancelEmailModalRecipient) el.cancelEmailModalRecipient.value = member.email || '';
+    if (el.cancelEmailModalReplyTo) el.cancelEmailModalReplyTo.value = getActiveContactEmail();
+    if (el.cancelEmailModalSubject) el.cancelEmailModalSubject.value = subject;
+    if (el.cancelEmailModalBody) el.cancelEmailModalBody.value = body;
+    if (el.cancelEmailNotifyBoardCheck) el.cancelEmailNotifyBoardCheck.checked = true;
+
+    if (el.cancellationEmailModal) el.cancellationEmailModal.classList.remove('hidden');
+  }
+
+  function closeCancellationEmailModal() {
+    if (el.cancellationEmailModal) el.cancellationEmailModal.classList.add('hidden');
+    state.selectedMemberForCancellationEmail = null;
+  }
+
+  async function handleSendCancellationViaVereinAccount() {
+    const member = state.selectedMemberForCancellationEmail;
+    if (!member) return;
+
+    const to = el.cancelEmailModalRecipient ? el.cancelEmailModalRecipient.value.trim() : '';
+    if (!to || !to.includes('@')) {
+      alert('Für dieses Mitglied ist keine gültige E-Mail-Adresse hinterlegt.');
+      return;
+    }
+
+    const subject = el.cancelEmailModalSubject ? el.cancelEmailModalSubject.value : '';
+    const body = el.cancelEmailModalBody ? el.cancelEmailModalBody.value : '';
+    const replyTo = getActiveContactEmail();
+    const notifyBoard = Boolean(el.cancelEmailNotifyBoardCheck && el.cancelEmailNotifyBoardCheck.checked);
+
+    if (el.sendCancelViaVereinAccountBtn) {
+      el.sendCancelViaVereinAccountBtn.disabled = true;
+      el.sendCancelViaVereinAccountBtn.innerHTML = '<span>⏳ Sende Kündigungsbestätigung & archiviere Beleg...</span>';
+    }
+
+    try {
+      const todayStr = new Date().toLocaleDateString('de-DE');
+      if (!state.isDemoMode) {
+        await callBackendApi({
+          action: 'sendCancellationNotification',
+          rowNumber: member.rowNumber,
+          email: to,
+          replyTo: replyTo,
+          firstName: member.firstName,
+          lastName: member.lastName,
+          childName: member.childName,
+          childGroup: member.childGroup,
+          mandateRef: member.mandateRef || member.id,
+          subject: subject,
+          body: body,
+          notifyBoard: notifyBoard
+        });
+      }
+
+      member.status = 'Gekündigt';
+      const noteEntry = `Kündigungsbestätigung gesendet am ${todayStr}`;
+      if (!String(member.notes || '').includes(noteEntry)) {
+        member.notes = member.notes ? `${member.notes} · ${noteEntry}` : noteEntry;
+      }
+
+      saveDemoState();
+      renderAll();
+      closeCancellationEmailModal();
+      showToast(`Kündigungsbestätigung an ${to} versendet und Beleg im Google Drive archiviert!`, 'success');
+    } catch (err) {
+      alert('Fehler beim E-Mail-Versand: ' + err.message);
+    } finally {
+      if (el.sendCancelViaVereinAccountBtn) {
+        el.sendCancelViaVereinAccountBtn.disabled = false;
+        el.sendCancelViaVereinAccountBtn.innerHTML = '<span>✉️ Kündigungsbestätigung senden & Beleg archivieren</span>';
+      }
     }
   }
 
@@ -1328,8 +1559,24 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     el.editEmail.value = member.email || '';
     el.editIban.value = member.iban || '';
     el.editNotes.value = member.notes || '';
-    el.editCancelCheck.checked = (member.status === 'Gekündigt');
+    const isCancelled = (member.status === 'Gekündigt');
+    el.editCancelCheck.checked = isCancelled;
     if (el.editCancellationPdfInput) el.editCancellationPdfInput.value = '';
+
+    if (el.manageCancelEmailPrompt) {
+      if (isCancelled) {
+        el.manageCancelEmailPrompt.classList.remove('hidden');
+        const hasNotice = memberHasCancellationNotice(member);
+        if (el.manageSendCancelEmailCheck) el.manageSendCancelEmailCheck.checked = !hasNotice;
+        if (el.manageCancelAlreadySentNotice) {
+          el.manageCancelAlreadySentNotice.classList.toggle('hidden', !hasNotice);
+        }
+      } else {
+        el.manageCancelEmailPrompt.classList.add('hidden');
+        if (el.manageSendCancelEmailCheck) el.manageSendCancelEmailCheck.checked = true;
+        if (el.manageCancelAlreadySentNotice) el.manageCancelAlreadySentNotice.classList.add('hidden');
+      }
+    }
 
     el.manageMemberModal.classList.remove('hidden');
   }
@@ -1356,6 +1603,10 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       cancelPdfBase64 = await fileToBase64(el.editCancellationPdfInput.files[0]);
     }
 
+    const sendCancelEmail = isCancelling && Boolean(el.manageSendCancelEmailCheck && el.manageSendCancelEmailCheck.checked);
+    const { subject: cancelSubject, body: cancelBody } = buildCancellationEmailText(member);
+    const todayStr = new Date().toLocaleDateString('de-DE');
+
     try {
       if (!state.isDemoMode) {
         await callBackendApi({
@@ -1371,7 +1622,11 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           notes: el.editNotes.value.trim(),
           isCancellation: isCancelling,
           cancellationPdfBase64: cancelPdfBase64,
-          noteAddition: isCancelling ? 'Gekündigt / SEPA gesperrt' : ''
+          noteAddition: isCancelling ? 'Gekündigt / SEPA gesperrt' : '',
+          sendCancellationEmail: sendCancelEmail,
+          cancellationSubject: cancelSubject,
+          cancellationBody: cancelBody,
+          mandateRef: member.mandateRef || member.id
         });
       }
 
@@ -1385,12 +1640,20 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       member.notes = el.editNotes.value.trim();
       if (isCancelling) {
         member.status = 'Gekündigt';
+        if (sendCancelEmail) {
+          const cancelNote = `Kündigungsbestätigung gesendet am ${todayStr}`;
+          if (!String(member.notes || '').includes(cancelNote)) {
+            member.notes = member.notes ? `${member.notes} · ${cancelNote}` : cancelNote;
+          }
+        }
       }
 
       saveDemoState();
       renderAll();
       closeManageMemberModal();
-      showToast(isCancelling ? 'Kündigung gespeichert & SEPA-Mandat gesperrt.' : 'Mitgliedsdaten aktualisiert.', 'success');
+      let toastMsg = isCancelling ? 'Kündigung gespeichert & SEPA-Mandat gesperrt.' : 'Mitgliedsdaten aktualisiert.';
+      if (sendCancelEmail) toastMsg += ' Kündigungsbestätigung versendet & im Drive archiviert.';
+      showToast(toastMsg, 'success');
     } catch (err) {
       alert('Fehler beim Speichern: ' + err.message);
     }
@@ -1501,6 +1764,400 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
   }
 
   /**
+   * ==============================================================================
+   * DRUCKVORLAGE & PAPIERANTRAG-SCANNER (ALTBESTAND & NEUE HANDSCHRIFTLICHE FORMULARE)
+   * ==============================================================================
+   */
+
+  function handlePrintBlankForm() {
+    if (window.PDFGenerator && typeof window.PDFGenerator.generateBlankPrintablePDF === 'function') {
+      window.PDFGenerator.generateBlankPrintablePDF({ autoOpen: true });
+    } else {
+      window.open('mitgliedsantrag-druckvorlage.html', '_blank');
+    }
+  }
+
+  function openPaperScanModal() {
+    state.paperFile = null;
+    if (el.paperScanForm) el.paperScanForm.reset();
+    if (el.paperFileInput) el.paperFileInput.value = '';
+
+    // Default values
+    if (el.paperTypeNew) el.paperTypeNew.checked = true;
+    updatePaperTypeUI();
+
+    const todayIso = new Date().toISOString().split('T')[0];
+    if (el.paperEntryDate) el.paperEntryDate.value = todayIso;
+    if (el.paperFee) el.paperFee.value = '24';
+    if (el.paperCity) el.paperCity.value = '12059 Berlin';
+    if (el.paperIbanFeedback) {
+      el.paperIbanFeedback.textContent = 'Prüfsumme wird berechnet...';
+      el.paperIbanFeedback.className = 'text-[10px] font-bold text-slate-400';
+    }
+
+    resetPaperFile();
+    if (el.paperScanModal) el.paperScanModal.classList.remove('hidden');
+  }
+
+  function closePaperScanModal() {
+    if (el.paperScanModal) el.paperScanModal.classList.add('hidden');
+    state.paperFile = null;
+  }
+
+  function updatePaperTypeUI() {
+    const isOld = el.paperTypeOld && el.paperTypeOld.checked;
+    if (isOld) {
+      if (el.labelPaperTypeOld) {
+        el.labelPaperTypeOld.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors bg-white border-purple-300 text-purple-900 shadow-2xs';
+      }
+      if (el.labelPaperTypeNew) {
+        el.labelPaperTypeNew.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors bg-white/70 border-slate-300 text-slate-700';
+      }
+      if (el.paperPaidYears && !el.paperPaidYears.value) {
+        el.paperPaidYears.value = '2024, 2025';
+      }
+      if (el.paperNotes && !el.paperNotes.value) {
+        el.paperNotes.value = 'Altes Bestandsmitglied aus Papierordner';
+      }
+    } else {
+      if (el.labelPaperTypeNew) {
+        el.labelPaperTypeNew.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors bg-white border-purple-300 text-purple-900 shadow-2xs';
+      }
+      if (el.labelPaperTypeOld) {
+        el.labelPaperTypeOld.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors bg-white/70 border-slate-300 text-slate-700';
+      }
+      if (el.paperPaidYears && el.paperPaidYears.value === '2024, 2025') {
+        el.paperPaidYears.value = '';
+      }
+      if (el.paperNotes && el.paperNotes.value.includes('Altes Bestandsmitglied')) {
+        el.paperNotes.value = '';
+      }
+    }
+  }
+
+  function resetPaperFile() {
+    state.paperFile = null;
+    state.paperRotation = 0;
+    state.paperOriginalBase64 = null;
+    if (el.paperFileInput) el.paperFileInput.value = '';
+    if (el.paperUploadPrompt) el.paperUploadPrompt.classList.remove('hidden');
+    if (el.paperFileLoadedContainer) el.paperFileLoadedContainer.classList.add('hidden');
+    if (el.paperPreviewArea) {
+      el.paperPreviewArea.innerHTML = '<span class="text-slate-400">Kein Beleg ausgewählt</span>';
+    }
+    if (el.paperZoomHint) el.paperZoomHint.textContent = 'Vorschau';
+  }
+
+  function isHeicFile(file) {
+    if (!file) return false;
+    const name = (file.name || '').toLowerCase();
+    const type = (file.type || '').toLowerCase();
+    return name.endsWith('.heic') || name.endsWith('.heif') || type.includes('heic') || type.includes('heif');
+  }
+
+  function rotateImageCanvas(dataUrl, rotationDegrees = 0) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const isRotated90 = (rotationDegrees === 90 || rotationDegrees === 270);
+        const canvas = document.createElement('canvas');
+        canvas.width = isRotated90 ? img.height : img.width;
+        canvas.height = isRotated90 ? img.width : img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((rotationDegrees * Math.PI) / 180);
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        resolve(canvas.toDataURL('image/jpeg', 0.9));
+      };
+      img.onerror = reject;
+      img.src = dataUrl;
+    });
+  }
+
+  async function rotatePaperPreview(deltaDegrees) {
+    if (!state.paperFile || !state.paperOriginalBase64) return;
+    state.paperRotation = (state.paperRotation + deltaDegrees + 360) % 360;
+
+    const dataUrl = `data:${state.paperFile.mimeType};base64,${state.paperOriginalBase64}`;
+    try {
+      const rotatedDataUrl = await rotateImageCanvas(dataUrl, state.paperRotation);
+      state.paperFile.base64 = rotatedDataUrl.split(',')[1];
+
+      if (el.paperPreviewArea) {
+        el.paperPreviewArea.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = rotatedDataUrl;
+        img.className = 'max-w-full max-h-[380px] object-contain rounded shadow-2xs cursor-zoom-in';
+        img.title = 'Klicken zum Vergrößern';
+        img.addEventListener('click', () => {
+          const w = window.open('');
+          if (w) w.document.write(`<img src="${rotatedDataUrl}" style="max-width:100%;height:auto;">`);
+        });
+        el.paperPreviewArea.appendChild(img);
+        if (el.paperZoomHint) el.paperZoomHint.textContent = `Drehung: ${state.paperRotation}°`;
+      }
+      showToast(`Beleg gedreht (${state.paperRotation}°).`, 'info');
+    } catch (err) {
+      console.error('[Admin] Rotation error:', err);
+    }
+  }
+
+  async function ensureHeic2Any() {
+    if (typeof window.heic2any === 'function') return true;
+    return new Promise(resolve => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+      s.onload = () => resolve(typeof window.heic2any === 'function');
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+  }
+
+  async function handlePaperFileSelected(file) {
+    if (!file) return;
+
+    state.paperRotation = 0;
+    if (el.paperUploadPrompt) el.paperUploadPrompt.classList.add('hidden');
+    if (el.paperFileLoadedContainer) el.paperFileLoadedContainer.classList.remove('hidden');
+
+    const isHeic = isHeicFile(file);
+    let heicConverted = false;
+
+    // Handle Apple HEIC photos (iPhone/iPad camera default)
+    if (isHeic) {
+      if (el.paperFileNameLabel) el.paperFileNameLabel.textContent = file.name;
+      if (el.paperFileSizeLabel) el.paperFileSizeLabel.textContent = '⏳ Konvertiere Apple HEIC in JPEG...';
+      if (el.paperPreviewArea) {
+        el.paperPreviewArea.innerHTML = `
+          <div class="p-6 text-center space-y-2">
+            <div class="text-2xl animate-spin">⚙️</div>
+            <div class="text-xs font-bold text-purple-900">Apple iPhone-Foto erkannt (.HEIC)</div>
+            <p class="text-[11px] text-slate-500">Wird für Webbrowser automatisch in Standard-JPEG umgewandelt...</p>
+          </div>
+        `;
+      }
+
+      await ensureHeic2Any();
+
+      if (typeof window.heic2any === 'function') {
+        try {
+          const converted = await window.heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 0.88
+          });
+          const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
+          const newName = file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg');
+          file = new File([jpegBlob], newName, { type: 'image/jpeg' });
+          heicConverted = true;
+        } catch (heicErr) {
+          console.error('[Admin] HEIC conversion error:', heicErr);
+        }
+      }
+    }
+
+    try {
+      const base64 = await fileToBase64(file);
+      const mime = file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+
+      state.paperOriginalBase64 = base64;
+      state.paperFile = {
+        file: file,
+        base64: base64,
+        mimeType: mime,
+        name: file.name
+      };
+
+      if (el.paperFileNameLabel) el.paperFileNameLabel.textContent = file.name;
+      const sizeKb = Math.round(file.size / 1024);
+      if (el.paperFileSizeLabel) el.paperFileSizeLabel.textContent = `${sizeKb} KB · Bereit zur Archivierung`;
+
+      // Render Preview
+      if (el.paperPreviewArea) {
+        el.paperPreviewArea.innerHTML = '';
+        if (isHeic && !heicConverted) {
+          el.paperPreviewArea.innerHTML = `
+            <div class="p-4 text-center space-y-2 text-amber-900 bg-amber-50 rounded-lg border border-amber-200">
+              <div class="text-2xl">📸</div>
+              <div class="text-xs font-bold">Apple HEIC-Beleg geladen (${sizeKb} KB)</div>
+              <p class="text-[11px] text-slate-600">Google Chrome kann Apple iPhone .HEIC Fotos nicht nativ im Browser anzeigen. Die Original-Datei wird jedoch <strong>vollständig und sicher im Google Drive archiviert</strong>!</p>
+              <p class="text-[10px] text-slate-500">Tipp: Bitte die Antragsdaten rechts prüfen oder das Foto am iPhone kurz als JPG teilen.</p>
+            </div>
+          `;
+          if (el.paperZoomHint) el.paperZoomHint.textContent = 'HEIC Beleg';
+        } else if (mime.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = `data:${mime};base64,${base64}`;
+          img.className = 'max-w-full max-h-[380px] object-contain rounded shadow-2xs cursor-zoom-in';
+          img.title = 'Klicken zum Vergrößern';
+          img.addEventListener('click', () => {
+            const w = window.open('');
+            if (w) w.document.write(`<img src="${img.src}" style="max-width:100%;height:auto;">`);
+          });
+          el.paperPreviewArea.appendChild(img);
+          if (el.paperZoomHint) el.paperZoomHint.textContent = '🔍 Klickbar zum Zoomen (Drehen mit ↻)';
+        } else if (mime === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+          const embed = document.createElement('iframe');
+          embed.src = `data:application/pdf;base64,${base64}#toolbar=0`;
+          embed.className = 'w-full h-[380px] rounded border border-slate-200';
+          el.paperPreviewArea.appendChild(embed);
+          if (el.paperZoomHint) el.paperZoomHint.textContent = 'PDF Dokument';
+        } else {
+          el.paperPreviewArea.innerHTML = `<div class="p-4 text-center text-slate-500">📄 ${escapeHtml(file.name)} (${sizeKb} KB)</div>`;
+        }
+      }
+
+      showToast(isHeic && !heicConverted ? 'Belegdatei geladen.' : 'Beleg geladen. Falls er seitlich liegt, mit ↻ aufrecht drehen!', 'info');
+    } catch (err) {
+      alert('Fehler beim Laden der Belegdatei: ' + err.message);
+    }
+  }
+
+  function handlePaperIbanInput() {
+    if (!el.paperIban || !el.paperIbanFeedback) return;
+    const raw = el.paperIban.value;
+    const clean = cleanIban(raw);
+
+    if (!clean) {
+      el.paperIbanFeedback.textContent = 'Bitte IBAN eingeben (DE + 20 Ziffern)';
+      el.paperIbanFeedback.className = 'text-[10px] font-bold text-slate-400';
+      if (el.savePaperMemberBtn) el.savePaperMemberBtn.disabled = false;
+      return;
+    }
+
+    if (isValidIbanChecksum(clean)) {
+      let bankName = '';
+      if (clean.includes('83065408')) bankName = 'GLS Gemeinschaftsbank';
+      else if (clean.includes('10050000')) bankName = 'Berliner Sparkasse';
+      else if (clean.includes('10070024')) bankName = 'Deutsche Bank';
+      else if (clean.includes('12030000')) bankName = 'DKB';
+
+      el.paperIbanFeedback.textContent = `✓ Gültig (MOD-97 OK)${bankName ? ' • ' + bankName : ''}`;
+      el.paperIbanFeedback.className = 'text-[10px] font-bold text-emerald-700';
+      if (bankName && el.paperBankName && !el.paperBankName.value) {
+        el.paperBankName.value = bankName;
+      }
+      if (el.savePaperMemberBtn) el.savePaperMemberBtn.disabled = false;
+    } else {
+      el.paperIbanFeedback.textContent = '⚠️ Ungültige IBAN-Prüfsumme (Tipp- oder Lesefehler)';
+      el.paperIbanFeedback.className = 'text-[10px] font-bold text-amber-700 animate-pulse';
+    }
+  }
+
+  async function handleSavePaperScan(e) {
+    e.preventDefault();
+
+    const firstName = el.paperFirstName.value.trim();
+    const lastName = el.paperLastName.value.trim();
+    if (!firstName || !lastName) {
+      alert('Bitte Vor- und Nachname angeben.');
+      return;
+    }
+
+    const iban = cleanIban(el.paperIban.value);
+    if (!iban) {
+      alert('Bitte eine IBAN angeben.');
+      return;
+    }
+
+    if (!isValidIbanChecksum(iban)) {
+      if (!confirm('⚠️ Die IBAN hat eine ungültige Prüfsumme nach ISO 7064 MOD-97. Wollen Sie trotzdem fortfahren? (Bei der GLS Bank kann dies zu Lastschrift-Rückweisungen führen).')) {
+        return;
+      }
+    }
+
+    const isOld = el.paperTypeOld && el.paperTypeOld.checked;
+    const entryDate = el.paperEntryDate.value || new Date().toISOString().split('T')[0];
+    const feeVal = parseFloat(el.paperFee.value || 24).toFixed(2);
+    const paidYearsVal = el.paperPaidYears ? el.paperPaidYears.value.trim() : '';
+
+    const origBtnHtml = el.savePaperMemberBtn.innerHTML;
+    el.savePaperMemberBtn.disabled = true;
+    el.savePaperMemberBtn.innerHTML = '<span>⏳ Speichere & lege im Drive ab...</span>';
+
+    try {
+      let createdMandateRef = '';
+      let savedFileName = '';
+
+      if (!state.isDemoMode) {
+        const payload = {
+          action: 'createPaperMember',
+          firstName: firstName,
+          lastName: lastName,
+          email: el.paperEmail.value.trim(),
+          phone: el.paperPhone.value.trim(),
+          street: el.paperAddress.value.trim(),
+          zip: (el.paperCity.value.match(/\b\d{5}\b/) || ['12059'])[0],
+          city: el.paperCity.value.trim(),
+          childName: el.paperChildName.value.trim(),
+          childGroup: el.paperChildGroup.value,
+          fee: feeVal,
+          accountHolder: el.paperAccountHolder.value.trim() || `${firstName} ${lastName}`,
+          iban: iban,
+          bic: el.paperBic.value.trim(),
+          bankName: el.paperBankName.value.trim(),
+          isOldMember: isOld,
+          status: isOld ? 'Aktiv' : 'Neu eingegangen',
+          entryDate: entryDate,
+          collectedYears: paidYearsVal,
+          notes: el.paperNotes.value.trim(),
+          fileBase64: state.paperFile ? state.paperFile.base64 : '',
+          mimeType: state.paperFile ? state.paperFile.mimeType : 'application/pdf'
+        };
+
+        const res = await callBackendApi(payload);
+        createdMandateRef = res.mandateRef || '';
+        savedFileName = res.fileName || '';
+        await fetchMembers();
+      } else {
+        // Demo Mode Fallback
+        const year = entryDate.slice(0, 4) || CURRENT_YEAR;
+        createdMandateRef = `WW-${year}-${Math.floor(1000 + Math.random() * 9000)}`;
+        savedFileName = `${entryDate}_${lastName}_${firstName}_Mitgliedsantrag.pdf`;
+
+        const newDemoMember = {
+          id: createdMandateRef,
+          rowNumber: state.members.length + 2,
+          entryDate: entryDate,
+          status: isOld ? 'Aktiv' : 'Neu eingegangen',
+          lastName: lastName,
+          firstName: firstName,
+          email: el.paperEmail.value.trim(),
+          phone: el.paperPhone.value.trim(),
+          address: el.paperAddress.value.trim(),
+          city: el.paperCity.value.trim(),
+          birthDate: '–',
+          childName: el.paperChildName.value.trim(),
+          childGroup: el.paperChildGroup.value || 'Wichtelgruppe',
+          fee: feeVal,
+          accountHolder: el.paperAccountHolder.value.trim() || `${firstName} ${lastName}`,
+          iban: iban,
+          bic: el.paperBic.value.trim(),
+          bankName: el.paperBankName.value.trim() || 'GLS Gemeinschaftsbank eG',
+          pdfStatus: state.paperFile ? 'Geprüft & Archiviert' : 'Wartet auf Scan',
+          matchedPdfName: state.paperFile ? savedFileName : null,
+          matchedPdfUrl: state.paperFile ? '#pdf-preview' : null,
+          mandateRef: createdMandateRef,
+          paidYears: paidYearsVal ? paidYearsVal.split(',').map(s => s.trim()) : (isOld ? ['2024', '2025'] : []),
+          notes: el.paperNotes.value.trim() || (isOld ? 'Papierantrag aus Altbestand erfasst' : 'Handschriftlicher Antrag erfasst')
+        };
+
+        state.members.unshift(newDemoMember);
+        saveDemoState();
+        renderAll();
+      }
+
+      closePaperScanModal();
+      showToast(`Papierantrag erfolgreich erfasst! Mandat: ${createdMandateRef}${savedFileName ? ' · PDF im Drive archiviert' : ''}`, 'success');
+    } catch (err) {
+      alert('Fehler beim Speichern des Papierantrags: ' + err.message);
+    } finally {
+      el.savePaperMemberBtn.disabled = false;
+      el.savePaperMemberBtn.innerHTML = origBtnHtml;
+    }
+  }
+
+  /**
    * Setup DOM Event Listeners
    */
   function setupEventListeners() {
@@ -1510,6 +2167,53 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     if (el.logoutBtn) el.logoutBtn.addEventListener('click', () => handleLogout());
     if (el.refreshDataBtn) el.refreshDataBtn.addEventListener('click', fetchMembers);
     if (el.scanInboxBtn) el.scanInboxBtn.addEventListener('click', handleScanInbox);
+
+    // Druckvorlage & Papierantrag-Scanner Buttons
+    if (el.printBlankFormBtn) el.printBlankFormBtn.addEventListener('click', handlePrintBlankForm);
+    if (el.openPaperScanModalBtn) el.openPaperScanModalBtn.addEventListener('click', openPaperScanModal);
+    if (el.quickAddPaperMemberBtn) el.quickAddPaperMemberBtn.addEventListener('click', openPaperScanModal);
+    if (el.closePaperScanModalBtn) el.closePaperScanModalBtn.addEventListener('click', closePaperScanModal);
+    if (el.cancelPaperScanBtn) el.cancelPaperScanBtn.addEventListener('click', closePaperScanModal);
+
+    if (el.triggerPaperFileBtn) el.triggerPaperFileBtn.addEventListener('click', () => el.paperFileInput?.click());
+    if (el.removePaperFileBtn) el.removePaperFileBtn.addEventListener('click', resetPaperFile);
+    if (el.rotatePaperLeftBtn) el.rotatePaperLeftBtn.addEventListener('click', () => rotatePaperPreview(-90));
+    if (el.rotatePaperRightBtn) el.rotatePaperRightBtn.addEventListener('click', () => rotatePaperPreview(90));
+    if (el.paperIban) el.paperIban.addEventListener('input', handlePaperIbanInput);
+    if (el.paperTypeNew) el.paperTypeNew.addEventListener('change', updatePaperTypeUI);
+    if (el.paperTypeOld) el.paperTypeOld.addEventListener('change', updatePaperTypeUI);
+    if (el.paperScanForm) el.paperScanForm.addEventListener('submit', handleSavePaperScan);
+
+    if (el.paperFileInput) {
+      el.paperFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handlePaperFileSelected(e.target.files[0]);
+        }
+      });
+    }
+
+    // Drag-and-Drop for Paper Dropzone
+    if (el.paperDropzone) {
+      ['dragenter', 'dragover'].forEach(name => {
+        el.paperDropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          el.paperDropzone.classList.add('border-purple-600', 'bg-purple-50/50');
+        });
+      });
+      ['dragleave', 'drop'].forEach(name => {
+        el.paperDropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          el.paperDropzone.classList.remove('border-purple-600', 'bg-purple-50/50');
+        });
+      });
+      el.paperDropzone.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handlePaperFileSelected(e.dataTransfer.files[0]);
+        }
+      });
+    }
 
     if (el.hiddenPdfFileInput) {
       el.hiddenPdfFileInput.addEventListener('change', (e) => {
@@ -1557,6 +2261,26 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       });
     }
 
+    // Cancellation Email Modal
+    if (el.closeCancellationEmailModalBtn) el.closeCancellationEmailModalBtn.addEventListener('click', closeCancellationEmailModal);
+    if (el.sendCancelViaVereinAccountBtn) el.sendCancelViaVereinAccountBtn.addEventListener('click', handleSendCancellationViaVereinAccount);
+    if (el.openCancelMailAppBtn) {
+      el.openCancelMailAppBtn.addEventListener('click', () => {
+        const to = el.cancelEmailModalRecipient ? el.cancelEmailModalRecipient.value : '';
+        const subject = el.cancelEmailModalSubject ? el.cancelEmailModalSubject.value : '';
+        const body = el.cancelEmailModalBody ? el.cancelEmailModalBody.value : '';
+        window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      });
+    }
+    if (el.copyCancelEmailTextBtn) {
+      el.copyCancelEmailTextBtn.addEventListener('click', () => {
+        if (el.cancelEmailModalBody) {
+          navigator.clipboard.writeText(el.cancelEmailModalBody.value);
+          showToast('Kündigungstext kopiert!', 'success');
+        }
+      });
+    }
+
     // SEPA Modal
     if (el.openSepaModalBtn) el.openSepaModalBtn.addEventListener('click', openSepaModal);
     if (el.closeSepaModalBtn) el.closeSepaModalBtn.addEventListener('click', closeSepaModal);
@@ -1589,6 +2313,22 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     if (el.closeManageMemberModalBtn) el.closeManageMemberModalBtn.addEventListener('click', closeManageMemberModal);
     if (el.cancelManageMemberBtn) el.cancelManageMemberBtn.addEventListener('click', closeManageMemberModal);
     if (el.manageMemberForm) el.manageMemberForm.addEventListener('submit', handleSaveManageMember);
+    if (el.editCancelCheck) {
+      el.editCancelCheck.addEventListener('change', () => {
+        if (el.manageCancelEmailPrompt) {
+          el.manageCancelEmailPrompt.classList.toggle('hidden', !el.editCancelCheck.checked);
+        }
+      });
+    }
+    if (el.previewCancelEmailFromManageBtn) {
+      el.previewCancelEmailFromManageBtn.addEventListener('click', () => {
+        if (state.selectedMemberForManage) {
+          const m = state.selectedMemberForManage;
+          closeManageMemberModal();
+          openCancellationEmailModal(m.id);
+        }
+      });
+    }
 
     // Folders & Maintainer Modal
     if (el.openFoldersModalBtn) el.openFoldersModalBtn.addEventListener('click', () => el.foldersModal.classList.remove('hidden'));
