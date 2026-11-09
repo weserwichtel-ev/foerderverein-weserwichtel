@@ -9,7 +9,7 @@
  * - Idiotensichere 3-Schritt-Leitplanken:
  *   [1. PDF im Drive] ➔ [2. Vorab-Mail über Vereinskonto] ➔ [3. SEPA-Einzug]
  * - Doppel-Einzugs-Schutz pro Beitragsjahr (2026, 2027, ...).
- * - Duales SEPA-XML (pain.008.001.02): Lokaler Download für GLS Bank +
+ * - Duales SEPA-XML (pain.008.001.08): Lokaler Download für Deutsche Skatbank +
  *   automatische Archivierung im Google Drive inkl. CSV-Einzugsliste.
  * - Zero-Touch Fernwartung: Automatischer Versions-Check (version.json) &
  *   Remote-Fehlerprotokollierung in das Tabellenblatt 'System_Log'.
@@ -21,7 +21,7 @@
   const config = window.APP_CONFIG || {
     ASSOCIATION_NAME: "Förderverein der Kita Weserwichtel e.V.",
     CREDITOR_ID: "DE83ZZZ00002910027",
-    BANK_NAME: "GLS Gemeinschaftsbank eG",
+    BANK_NAME: "Deutsche Skatbank (VR-Bank Altenburger Land eG)",
     BANK_IBAN: "DE67 8306 5408 0007 0069 93",
     BANK_BIC: "GENODEF1SLR",
     REGISTER_COURT: "Amtsgericht Charlottenburg (Berlin)",
@@ -57,7 +57,7 @@
       accountHolder: "Erika Musterfrau",
       iban: "DE67 8306 5408 0007 0069 93",
       bic: "GENODEF1SLR",
-      bankName: "GLS Gemeinschaftsbank eG",
+      bankName: "Deutsche Skatbank (VR-Bank Altenburger Land eG)",
       pdfStatus: "Wartet auf E-Mail",
       matchedPdfName: null,
       matchedPdfUrl: null,
@@ -1276,7 +1276,7 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
   }
 
   /**
-   * Step 3 Execution: GLS Bank SEPA XML (pain.008.001.02) + Dual Drive Archive + Double-Debit Protection
+   * Step 3 Execution: Deutsche Skatbank SEPA XML (pain.008.001.08) + Dual Drive Archive + Double-Debit Protection
    */
   function openSepaModal() {
     if (el.sepaCollectionYear) {
@@ -1388,13 +1388,13 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     const messageId = `WW-${yearStr}-${Date.now()}`;
     const pmtInfId = `PMT-${messageId}`;
 
-    // 1. Build ISO 20022 pain.008.001.02 XML
+    // 1. Build ISO 20022 pain.008.001.08 XML (Deutsche Kreditwirtschaft / Atruvia / Skatbank Standard)
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CstmrDrctDbtInitn>
     <GrpHdr>
       <MsgId>${escapeXml(messageId)}</MsgId>
-      <CreDtTm>${nowIso}</CreDtTm>
+      <CreDtTm>${nowIso}Z</CreDtTm>
       <NbOfTxs>${selectedMembers.length}</NbOfTxs>
       <CtrlSum>${totalAmount}</CtrlSum>
       <InitgPty>
@@ -1404,6 +1404,7 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     <PmtInf>
       <PmtInfId>${escapeXml(pmtInfId)}</PmtInfId>
       <PmtMtd>DD</PmtMtd>
+      <BtchBookg>true</BtchBookg>
       <NbOfTxs>${selectedMembers.length}</NbOfTxs>
       <CtrlSum>${totalAmount}</CtrlSum>
       <PmtTpInf>
@@ -1426,9 +1427,10 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       </CdtrAcct>
       <CdtrAgt>
         <FinInstnId>
-          <BIC>${cleanBic(config.BANK_BIC)}</BIC>
+          <BICFI>${cleanBic(config.BANK_BIC)}</BICFI>
         </FinInstnId>
       </CdtrAgt>
+      <ChrgBr>SLEV</ChrgBr>
       <CdtrSchmeId>
         <Id>
           <PrvtId>
@@ -1452,6 +1454,10 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       const signatureDate = /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : executionDate;
       const endToEndId = `WW-${yearStr}-${idx + 1}`;
       const remInfo = `Jahresbeitrag ${yearStr} Foerderverein Kita Weserwichtel e.V.`;
+      const memberBic = cleanBic(m.bic || '');
+      const dbtrAgtFinInstnXml = memberBic.length >= 8
+        ? `<BICFI>${escapeXml(memberBic)}</BICFI>`
+        : `<Othr>\n              <Id>NOTPROVIDED</Id>\n            </Othr>`;
 
       xml += `
       <DrctDbtTxInf>
@@ -1463,11 +1469,12 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           <MndtRltdInf>
             <MndtId>${escapeXml(mndtId)}</MndtId>
             <DtOfSgntr>${signatureDate}</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
           </MndtRltdInf>
         </DrctDbtTx>
         <DbtrAgt>
           <FinInstnId>
-            <BIC>${cleanBic(m.bic || 'GENODEF1SLR')}</BIC>
+            ${dbtrAgtFinInstnXml}
           </FinInstnId>
         </DbtrAgt>
         <Dbtr>
@@ -1483,7 +1490,7 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
         </RmtInf>
       </DrctDbtTxInf>`;
 
-      csvLines.push(`${mndtId};${m.lastName};${m.firstName};${m.childName || ''};${cleanIban(m.iban)};${cleanBic(m.bic)};${amount};${yearStr};${executionDate}`);
+      csvLines.push(`${mndtId};${m.lastName};${m.firstName};${m.childName || ''};${cleanIban(m.iban)};${memberBic};${amount};${yearStr};${executionDate}`);
     });
 
     xml += `
@@ -1491,9 +1498,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
   </CstmrDrctDbtInitn>
 </Document>`;
 
-    // 2. Download XML locally for immediate upload into GLS Online-Banking
+    // 2. Download XML locally for immediate upload into Skatbank Online-Banking
     const sumClean = totalAmount.replace('.', '_');
-    const fileName = `${executionDate}_SEPA_Lastschrift_GLS_${selectedMembers.length}Mitglieder_${sumClean}EUR.xml`;
+    const fileName = `${executionDate}_SEPA_Lastschrift_Skatbank_${selectedMembers.length}Mitglieder_${sumClean}EUR.xml`;
     const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -2027,7 +2034,8 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
 
     if (isValidIbanChecksum(clean)) {
       let bankName = '';
-      if (clean.includes('83065408')) bankName = 'GLS Gemeinschaftsbank';
+      if (clean.includes('83065408')) bankName = 'Deutsche Skatbank';
+      else if (clean.includes('43060967')) bankName = 'GLS Gemeinschaftsbank';
       else if (clean.includes('10050000')) bankName = 'Berliner Sparkasse';
       else if (clean.includes('10070024')) bankName = 'Deutsche Bank';
       else if (clean.includes('12030000')) bankName = 'DKB';
@@ -2061,7 +2069,7 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     }
 
     if (!isValidIbanChecksum(iban)) {
-      if (!confirm('⚠️ Die IBAN hat eine ungültige Prüfsumme nach ISO 7064 MOD-97. Wollen Sie trotzdem fortfahren? (Bei der GLS Bank kann dies zu Lastschrift-Rückweisungen führen).')) {
+      if (!confirm('⚠️ Die IBAN hat eine ungültige Prüfsumme nach ISO 7064 MOD-97. Wollen Sie trotzdem fortfahren? (Bei der Deutschen Skatbank kann dies zu Lastschrift-Rückweisungen führen).')) {
         return;
       }
     }
@@ -2133,7 +2141,7 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           accountHolder: el.paperAccountHolder.value.trim() || `${firstName} ${lastName}`,
           iban: iban,
           bic: el.paperBic.value.trim(),
-          bankName: el.paperBankName.value.trim() || 'GLS Gemeinschaftsbank eG',
+          bankName: el.paperBankName.value.trim() || 'Deutsche Skatbank (VR-Bank Altenburger Land eG)',
           pdfStatus: state.paperFile ? 'Geprüft & Archiviert' : 'Wartet auf Scan',
           matchedPdfName: state.paperFile ? savedFileName : null,
           matchedPdfUrl: state.paperFile ? '#pdf-preview' : null,

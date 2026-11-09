@@ -39,8 +39,8 @@ const APP_CONFIG = {
   // Official Creditor Identifier for SEPA Direct Debit Mandates
   CREDITOR_ID: "DE83ZZZ00002910027",
 
-  // Official Association Bank Details (GLS Bank)
-  BANK_NAME: "GLS Gemeinschaftsbank eG",
+  // Official Association Bank Details (Deutsche Skatbank / VR-Bank Altenburger Land eG)
+  BANK_NAME: "Deutsche Skatbank (VR-Bank Altenburger Land eG)",
   BANK_IBAN: "DE67 8306 5408 0007 0069 93",
   BANK_BIC: "GENODEF1SLR",
 

@@ -16,7 +16,7 @@
     '12030000': { name: 'Deutsche Kreditbank (DKB)', bic: 'BYLADEM1001' },
     '50010517': { name: 'ING', bic: 'INGDDEFFXXX' },
     '10011001': { name: 'N26 Bank', bic: 'NTSBDEB1XXX' },
-    '83065408': { name: 'GLS Gemeinschaftsbank eG', bic: 'GENODEF1SLR' },
+    '83065408': { name: 'Deutsche Skatbank (VR-Bank Altenburger Land eG)', bic: 'GENODEF1SLR' },
     '43060967': { name: 'GLS Gemeinschaftsbank eG', bic: 'GENODEM1GLS' },
     '10040000': { name: 'Commerzbank', bic: 'COBADEFFXXX' },
     '10080000': { name: 'Commerzbank', bic: 'DRESDEFF100' },

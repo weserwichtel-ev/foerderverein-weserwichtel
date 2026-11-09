@@ -19,7 +19,7 @@
 3. **Passwort-Selbsthilfe per 6-stelligem E-Mail-PIN:**
    - Falls Thomas sein Vorstands-Passwort vergisst, klickt er im Login-Screen einfach auf **„📧 6-stelligen Einmal-PIN an Vereins-E-Mail senden“**. Er holt sich den Code selbst aus dem Vereins-Gmail und meldet sich an – ohne dich anrufen zu müssen.
 4. **Automatische IBAN-Prüfsummen-Kontrolle (ISO 13616 MOD-97):**
-   - Vor jedem SEPA-XML-Lauf und bei jeder Kontodaten-Änderung prüft `admin.js` mathematisch die IBAN-Prüfsumme (MOD-97). Tippfehler werden sofort erkannt, bevor die GLS Bank eine Datei ablehnt.
+   - Vor jedem SEPA-XML-Lauf und bei jeder Kontodaten-Änderung prüft `admin.js` mathematisch die IBAN-Prüfsumme (MOD-97). Tippfehler werden sofort erkannt, bevor die Deutsche Skatbank eine Datei ablehnt.
 5. **Remote-Diagnose & Fehler-Telemetrie (`System_Log`):**
    - Sollte auf Thomas' Computer jemals ein Fehler auftreten, sendet sein Browser die Fehlermeldung automatisch an `Code.gs` in das Tabellenblatt `System_Log`.
    - Du kannst von deinem eigenen Laptop aus in `admin.html` unten auf **„🔧 Fernwartung & System-Log (Gaston)“** klicken, das Log einsehen und den Fix per `git push` ausrollen.
@@ -33,7 +33,7 @@
 | **Unterschriebener Antrag (PDF)** | `02_MITGLIEDERVERWALTUNG/Eingegangene_Mitgliedsantraege_PDFs/` | `JJJJ-MM-TT_Nachname_Vorname_Mitgliedsantrag.pdf` |
 | **SEPA-Vorabinformation (Beleg)** | `02_MITGLIEDERVERWALTUNG/Gesendete_SEPA_Vorabinformationen/` | `JJJJ-MM-TT_Nachname_Vorname_PreNotification_WW-JJJJ-XXXX.txt` |
 | **Kündigung / Änderung** | `02_MITGLIEDERVERWALTUNG/Kuendigungen_und_Aenderungen/` | `JJJJ-MM-TT_Nachname_Vorname_Kuendigung.pdf` |
-| **GLS SEPA-XML Sammellastschrift** | `03_FINANZEN_&_BUCHHALTUNG/<JJJJ>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/` | `JJJJ-MM-TT_SEPA_Lastschrift_GLS_<Anzahl>Mitglieder_<Summe>EUR.xml` |
+| **Skatbank SEPA-XML Sammellastschrift** | `03_FINANZEN_&_BUCHHALTUNG/<JJJJ>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/` | `JJJJ-MM-TT_SEPA_Lastschrift_Skatbank_<Anzahl>Mitglieder_<Summe>EUR.xml` |
 | **SEPA-Einzugs-Protokoll (CSV)** | `03_FINANZEN_&_BUCHHALTUNG/<JJJJ>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/` | `JJJJ-MM-TT_Einzugsliste_<Anzahl>Mitglieder_<Summe>EUR.csv` |
 
 ---
@@ -53,9 +53,9 @@
 - [x] **Task 3.1:** Visuelle 3-Schritt-Leitplanke (`1. PDF im Drive` ➔ `2. Vorab-Mail` ➔ `3. SEPA-Einzug`) in `admin.html` & `admin.js`.
 - [x] **Task 3.2:** Kontrollierter Versand über das offizielle Vereinskonto (`Reply-To: info@foerderverein-weserwichtel.de`) + automatische Beleg-Archivierung in `Gesendete_SEPA_Vorabinformationen/`.
 
-### Epic 4: Doppel-Einzugs-Schutz & Duales SEPA-XML Archiv (`pain.008.001.02`)
+### Epic 4: Doppel-Einzugs-Schutz & Duales SEPA-XML Archiv (`pain.008.001.08`)
 - [x] **Task 4.1:** Spalte `Eingezogene Beitragsjahre` + automatische Abwahl bereits eingezogener Mitglieder im SEPA-Modal + MOD-97 IBAN-Prüfsummen-Kontrolle.
-- [x] **Task 4.2:** Gleichzeitiger lokaler XML-Download für GLS Online-Banking + automatische Google-Drive-Archivierung (XML + CSV-Einzugsliste) in `03_FINANZEN_&_BUCHHALTUNG/<Jahr>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/`.
+- [x] **Task 4.2:** Gleichzeitiger lokaler XML-Download für Deutsche Skatbank Online-Banking + automatische Google-Drive-Archivierung (XML + CSV-Einzugsliste) in `03_FINANZEN_&_BUCHHALTUNG/<Jahr>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/`.
 
 ### Epic 5: Geführter Dialog für Kündigungen (Einschulung), Bankwechsel & Fernwartung
 - [x] **Task 5.1:** „Mitglied bearbeiten / Kündigung“-Modal inkl. automatischer Ablage des Kündigungs-PDFs in `Kuendigungen_und_Aenderungen/` und sofortiger SEPA-Sperre.

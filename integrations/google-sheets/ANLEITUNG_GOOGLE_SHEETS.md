@@ -16,7 +16,7 @@ Dieses Handbuch beschreibt die Einrichtung und Fernwartung des gesamten Systems,
    - Jede Zeile führt ihn durch **3 gesicherte Schritte**:
      * **Schritt 1 (Antrags-PDF im Drive):** Automatisch `🟢`, sobald der Antrag über die Website kam (oder 1-Klick Postfach-Scan / Drag-and-Drop für Papieranträge).
      * **Schritt 2 (Aufnahme & SEPA-Vorab-Mail):** Erst klickbar, wenn Schritt 1 `🟢` ist. Versendet die rechtliche SEPA-Pre-Notification über das offizielle Vereinskonto und legt automatisch einen Beleg in `Gesendete_SEPA_Vorabinformationen/` ab.
-     * **Schritt 3 (GLS Bank SEPA-XML):** Erstellt die `pain.008.001.02` XML-Datei für das gewählte Beitragsjahr (z. B. `2026`), schützt automatisch vor Doppel-Einzügen, lädt die XML-Datei für den GLS-Upload herunter **und** archiviert XML + CSV-Einzugsliste automatisch in `03_FINANZEN_&_BUCHHALTUNG/<Jahr>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/`.
+     * **Schritt 3 (Skatbank SEPA-XML):** Erstellt die `pain.008.001.08` XML-Datei für das gewählte Beitragsjahr (z. B. `2026`), schützt automatisch vor Doppel-Einzügen, lädt die XML-Datei für den Skatbank-Upload herunter **und** archiviert XML + CSV-Einzugsliste automatisch in `03_FINANZEN_&_BUCHHALTUNG/<Jahr>/02_Einnahmen_und_Spenden/SEPA_Lastschriften/`.
 3. **Automatische Fern-Updates bei jedem `git push`:**
    - Bei jedem `git push` auf `main` aktualisiert GitHub Actions automatisch die `version.json` mit dem neuesten Commit-Hash.
    - Sobald Thomas das Portal öffnet, erkennt sein Browser die neue Version, leert alte Caches automatisch und lädt deinen neuesten Code.

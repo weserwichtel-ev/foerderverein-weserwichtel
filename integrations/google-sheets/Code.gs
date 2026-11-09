@@ -508,8 +508,8 @@ function handleGetMembers() {
       fee: row[11] ? parseFloat(row[11]).toFixed(2) : '24.00',
       accountHolder: String(row[12] || (firstName + ' ' + lastName)).trim(),
       iban: String(row[13] || '').trim(),
-      bic: String(row[14] || 'GENODEF1SLR').trim(),
-      bankName: String(row[15] || 'GLS Gemeinschaftsbank eG').trim(),
+      bic: String(row[14] || '').trim(),
+      bankName: String(row[15] || '').trim(),
       pdfStatus: matched ? 'Geprüft & Archiviert' : (rawPdfCol || 'Wartet auf E-Mail'),
       matchedPdfName: matched ? matched.name : null,
       matchedPdfUrl: matched ? matched.url : null,
@@ -827,7 +827,7 @@ function handleArchiveSepaBatch(data) {
 
   const count = parseInt(data.memberCount || 0, 10);
   const sumStr = String(data.totalSum || '0.00').replace('.', '_');
-  const xmlFileName = `${dateIso}_SEPA_Lastschrift_GLS_${count}Mitglieder_${sumStr}EUR.xml`;
+  const xmlFileName = `${dateIso}_SEPA_Lastschrift_Skatbank_${count}Mitglieder_${sumStr}EUR.xml`;
   const csvFileName = `${dateIso}_Einzugsliste_${count}Mitglieder_${sumStr}EUR.csv`;
 
   let xmlUrl = '';

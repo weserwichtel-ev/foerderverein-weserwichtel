@@ -194,7 +194,7 @@
         <span class="text-emerald-500">➔</span>
         <span class="inline-flex items-center gap-1"><strong class="text-white">2.</strong> ✉️ Vorab-Mail (Pre-Notification) senden</span>
         <span class="text-emerald-500">➔</span>
-        <span class="inline-flex items-center gap-1"><strong class="text-white">3.</strong> 🏦 SEPA-XML für GLS Bank erstellen</span>
+        <span class="inline-flex items-center gap-1"><strong class="text-white">3.</strong> 🏦 SEPA-XML für Skatbank erstellen</span>
       </div>
       <span class="text-[11px] text-emerald-300">Alle Dateien werden automatisch richtig benannt & im Google Drive abgelegt.</span>
     </div>
@@ -253,7 +253,7 @@
     <!-- Main Table Card -->
     <div class="bg-white rounded-2xl border border-[#E6E1D5] shadow-xs overflow-hidden">
 
-      <!-- Toolbar: Search, Task Filters, and Big GLS SEPA XML Button -->
+      <!-- Toolbar: Search, Task Filters, and Big Skatbank SEPA XML Button -->
       <div class="p-4 sm:p-5 border-b border-[#E6E1D5] bg-slate-50/60 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
           <div class="relative flex-1 max-w-sm">
@@ -287,7 +287,7 @@
         <div class="flex items-center gap-2 shrink-0">
           <button id="openSepaModalBtn" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#003629] text-white text-xs font-bold shadow-sm transition-colors">
             <span>🏦</span>
-            <span>3. SEPA-Lastschrift (XML) für GLS Bank erstellen</span>
+            <span>3. SEPA-Lastschrift (XML) für Skatbank erstellen</span>
           </button>
         </div>
       </div>
@@ -464,14 +464,14 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 2: SCHRITT 3 – SEPA-SAMMELLASTSCHRIFT (GLS BANK + DRIVE ARCHIV)     -->
+  <!-- MODAL 2: SCHRITT 3 – SEPA-SAMMELLASTSCHRIFT (SKATBANK + DRIVE ARCHIV)     -->
   <!-- ========================================================================= -->
   <div id="sepaModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full border border-slate-200 shadow-2xl overflow-hidden">
       <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
         <div>
-          <h3 class="text-sm font-bold text-slate-900">🏦 Schritt 3: SEPA-Sammellastschrift (pain.008) für GLS Bank</h3>
-          <p class="text-xs text-slate-500">Automatischer Doppel-Einzugs-Schutz & automatische Archivierung im Google Drive</p>
+          <h3 class="text-sm font-bold text-slate-900">🏦 Schritt 3: SEPA-Sammellastschrift (pain.008.001.08) für Deutsche Skatbank</h3>
+          <p class="text-xs text-slate-500">Direkt-Upload im Skatbank / VR-Online-Banking (Atruvia) · Automatischer Doppel-Einzugs-Schutz & Drive-Archiv</p>
         </div>
         <button id="closeSepaModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">✕</button>
       </div>
@@ -479,7 +479,7 @@
       <div class="px-6 py-3 bg-amber-50 border-b border-amber-100 text-xs text-amber-950 flex items-start gap-2.5">
         <span class="font-bold">🛡️</span>
         <div>
-          <strong>Doppel-Einzugs-Schutz aktiv:</strong> Mitglieder, deren Beitrag für das gewählte Beitragsjahr bereits eingezogen wurde (oder bei denen PDF / Vorab-Mail noch fehlen), sind automatisch abgewählt. So können Sie jederzeit unterjährig neue Mitglieder nachziehen, ohne bestehende Mitglieder doppelt zu belasten!
+          <strong>Doppel-Einzugs-Schutz & Skatbank XML-Upload:</strong> Mitglieder, deren Beitrag für das gewählte Beitragsjahr bereits eingezogen wurde (oder bei denen PDF / Vorab-Mail noch fehlen), sind automatisch abgewählt. Die erzeugte <code>pain.008.001.08</code> XML-Datei kann im Skatbank Online-Banking direkt unter <em>Zahlungsverkehr / Aufträge ➔ Dateiverarbeitung / XML-Upload ➔ SEPA-Datei hochladen</em> eingereicht und per TAN freigegeben werden.
         </div>
       </div>
 
@@ -494,7 +494,7 @@
             </select>
           </div>
           <div>
-            <label for="sepaExecutionDate" class="text-slate-500 block font-semibold">Fälligkeitstag (GLS):</label>
+            <label for="sepaExecutionDate" class="text-slate-500 block font-semibold">Fälligkeitstag (Skatbank):</label>
             <input type="date" id="sepaExecutionDate" class="mt-1 w-full px-2 py-1 text-xs border border-slate-300 rounded-lg font-semibold bg-white" />
           </div>
           <div>
@@ -683,7 +683,7 @@
           </a>
           <a id="linkFolderSepaArchiv" href="#" target="_blank" rel="noopener" class="p-3 rounded-xl border border-slate-200 hover:border-[#1B4D3E] hover:bg-emerald-50/40 flex items-center justify-between transition-colors sm:col-span-2">
             <div>
-              <div class="font-bold text-slate-900">🏦 Archivierte GLS SEPA-Lastschriften (pain.008 XML & Einzugslisten)</div>
+              <div class="font-bold text-slate-900">🏦 Archivierte Skatbank SEPA-Lastschriften (pain.008 XML & Einzugslisten)</div>
               <div class="text-[11px] text-slate-500">03_FINANZEN_&_BUCHHALTUNG/&lt;Jahr&gt;/02_Einnahmen_und_Spenden/SEPA_Lastschriften/</div>
             </div>
             <span class="text-[#1B4D3E] font-bold">Öffnen ↗</span>
