@@ -581,12 +581,16 @@
     const birthDate = birthDateInput?.value.trim() || '';
     const street = streetInput?.value.trim() || '';
     const houseNumber = houseNumberInput?.value.trim() || '';
+    const addressExtra = document.getElementById('addressExtra')?.value.trim() || '';
     const zip = zipInput?.value.trim() || '';
     const city = cityInput?.value.trim() || '';
     const email = emailInput?.value.trim() || '';
     const phone = phoneInput?.value.trim() || '';
     const childName = document.getElementById('childName')?.value.trim() || '';
     const childGroup = document.getElementById('childGroup')?.value.trim() || '';
+    const volunteerActions = Boolean(document.getElementById('optVolunteerActions')?.checked);
+    const newsletter = Boolean(document.getElementById('optNewsletter')?.checked);
+    const emailNotifications = Boolean(document.getElementById('optEmailComms')?.checked);
 
     // Contribution amount
     const checkedRadio = document.querySelector('input[name="feePreset"]:checked');
@@ -669,12 +673,16 @@
       birthDate,
       street,
       houseNumber,
+      addressExtra,
       zip,
       city,
       email,
       phone,
       childName,
       childGroup,
+      volunteerActions,
+      newsletter,
+      emailNotifications,
       contributionAmount: numericFee,
       accountHolder,
       iban,
@@ -725,11 +733,12 @@
         `Liebes Team des Fördervereins der Kita Weserwichtel e.V.,\n\n` +
         `hiermit übersende ich meinen ausgefüllten und digital unterschriebenen Antrag auf Mitgliedschaft im Anhang.\n\n` +
         `Name: ${firstName} ${lastName}\n` +
-        `Anschrift: ${street} ${houseNumber}, ${zip} ${city}\n` +
+        `Anschrift: ${street} ${houseNumber}${addressExtra ? ' (' + addressExtra + ')' : ''}, ${zip} ${city}\n` +
         `E-Mail: ${email}\n` +
         `Telefon: ${phone || '–'}\n` +
         `Mandatsreferenz: ${generatedMandateRef}\n` +
-        `Jahresbeitrag: ${numericFee.toFixed(2)} €\n\n` +
+        `Jahresbeitrag: ${numericFee.toFixed(2)} €\n` +
+        `Aktionen-Mithilfe: ${volunteerActions ? 'Ja' : 'Nein'} | Mailverteiler: ${newsletter ? 'Ja' : 'Nein'} | E-Mail-Mitteilungen: ${emailNotifications ? 'Ja' : 'Nein'}\n\n` +
         `Viele Grüße\n` +
         `${firstName} ${lastName}`;
 
@@ -767,12 +776,16 @@
       birthDate: data.birthDate || '',
       street: data.street || '',
       houseNumber: data.houseNumber || '',
+      addressExtra: data.addressExtra || '',
       zip: data.zip || '',
       city: data.city || '',
       email: data.email || '',
       phone: data.phone || '',
       childName: data.childName || '',
       childGroup: data.childGroup || '',
+      volunteerActions: Boolean(data.volunteerActions),
+      newsletter: Boolean(data.newsletter),
+      emailNotifications: Boolean(data.emailNotifications),
       contributionAmount: data.contributionAmount || 24,
       accountHolder: data.accountHolder || '',
       iban: data.iban || '',

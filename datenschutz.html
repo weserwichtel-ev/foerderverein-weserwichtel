@@ -114,39 +114,72 @@
             Wenn Sie das Antragsformular auf unserer Website ausfüllen, werden folgende Daten verarbeitet:
           </p>
           <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-600">
-            <li><strong>Mitgliederdaten:</strong> Vorname, Nachname, Geburtsdatum (optional), Anschrift (Straße, Hausnummer, PLZ, Ort), E-Mail-Adresse, Telefonnummer (optional)</li>
+            <li><strong>Mitgliederdaten:</strong> Vorname, Nachname, Geburtsdatum (optional), Anschrift (Straße, Hausnummer, ggf. Adresszusatz, PLZ, Ort), E-Mail-Adresse, Telefonnummer (optional)</li>
             <li><strong>Kita-Bezug:</strong> Name des Kindes, Kita-Gruppe (freiwillige Angabe zur vereinfachten Zuordnung)</li>
             <li><strong>Beitragsdaten:</strong> Gewählter jährlicher Mitgliedsbeitrag</li>
             <li><strong>Zahlungsdaten (SEPA-Mandat):</strong> Kontoinhaber, IBAN, ggf. BIC und Kreditinstitut</li>
             <li><strong>Digitale Signatur:</strong> Im Canvas-Feld gezeichnete Unterschrift zur rechtswirksamen Bestätigung des Antrags und des SEPA-Lastschriftmandats</li>
+            <li><strong>Freiwillige Kommunikations- &amp; Mitmach-Angaben:</strong> Optionale Einwilligungen zur Beteiligung an Vereinsaktionen, zur Aufnahme in den Mailverteiler (Newsletter) sowie zum Erhalt schriftlicher Vereinsmitteilungen per E-Mail</li>
           </ul>
 
           <div class="mt-4 p-4 rounded-xl bg-sky-50 border border-sky-150 text-xs text-slate-700 space-y-2">
-            <p class="font-bold text-brand-800">Wichtiger Hinweis zur clientseitigen PDF-Generierung & Datensparsamkeit:</p>
+            <p class="font-bold text-brand-800">Wichtiger Hinweis zur clientseitigen PDF-Generierung &amp; Datensparsamkeit:</p>
             <p>
-              Die Erstellung Ihres unterschriebenen Antragsdokuments erfolgt <strong>vollständig lokal (client-seitig) in Ihrem Webbrowser</strong> mittels JavaScript. Ihre digitale Unterschrift wird <strong>zu keinem Zeitpunkt in einer externen Cloud-Datenbank gespeichert</strong> (Grundsatz der Datensparsamkeit gemäß Art. 5 Abs. 1 lit. c DSGVO). Das fertige PDF verbleibt auf Ihrem Gerät und wird von Ihnen eigenhändig per E-Mail an den Vorstand (<span class="font-mono text-brand-700" data-verein-email>foerdervereinweserwichtel@gmail.com</span>) übermittelt.
+              Die Erstellung Ihres unterschriebenen Antragsdokuments erfolgt <strong>vollständig lokal (client-seitig) in Ihrem Webbrowser</strong> mittels JavaScript. Es wird kein externer Signatur-Dienstleister eingebunden. Das erzeugte PDF verbleibt auf Ihrem Gerät und wird zusätzlich von Ihnen per E-Mail an den Vorstand (<span class="font-mono text-brand-700" data-verein-email>foerdervereinweserwichtel@gmail.com</span>) übermittelt.
             </p>
             <p>
-              Zur automatisierten Verwaltung des Mitgliederverzeichnisses und der sicheren Archivierung im Vereins-Tresor werden die im Formular eingegebenen Antragsdaten (sowie optional das generierte Antrags-PDF) verschlüsselt an das geschützte Google-Drive-/Google-Sheets-System des Vereins übertragen.
+              Zur automatisierten Verwaltung des Mitgliederverzeichnisses und zur rechtssicheren Belegablage im Vereins-Tresor werden die Antragsdaten (sowie das erzeugte Antrags-PDF) verschlüsselt über HTTPS an das geschützte Google-Sheets-/Google-Drive-System des Fördervereins übertragen.
             </p>
           </div>
 
           <p class="mt-3">
-            <strong>Rechtsgrundlage:</strong> Die Verarbeitung der Antragsdaten erfolgt gemäß Art. 6 Abs. 1 lit. b DSGVO zur Durchführung vorvertraglicher Maßnahmen und zur Begründung bzw. Abwicklung des Mitgliedschaftsverhältnisses sowie des satzungsgemäßen Beitragseinzugs.
+            <strong>Rechtsgrundlage:</strong> Die Verarbeitung der Pflichtangaben des Antrags erfolgt gemäß Art. 6 Abs. 1 lit. b DSGVO zur Begründung, Durchführung und Abwicklung des Mitgliedschaftsverhältnisses sowie des satzungsgemäßen Beitragseinzugs.
           </p>
         </section>
 
-        <!-- 5. Speicherdauer -->
+        <!-- 5. Freiwillige Einwilligungen: Mailverteiler, Aktionen & E-Mail-Mitteilungen -->
         <section>
-          <h2 class="text-lg font-bold text-slate-900 mb-3">5. Speicherdauer</h2>
+          <h2 class="text-lg font-bold text-slate-900 mb-3">5. Mailverteiler (Newsletter), Aktions-Mithilfe &amp; E-Mail-Mitteilungen</h2>
+          <p>
+            Im Mitgliedsantrag können Sie freiwillig ankreuzen, ob Sie
+          </p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-600">
+            <li>sich an Aktionen und Festen des Fördervereins beteiligen möchten,</li>
+            <li>in den Mailverteiler (Newsletter) des Fördervereins aufgenommen werden möchten, und/oder</li>
+            <li>schriftliche Mitteilungen und Einladungen (z. B. zur Mitgliederversammlung) per E-Mail erhalten möchten.</li>
+          </ul>
+          <p class="mt-3">
+            <strong>Freiwilligkeit &amp; Rechtsgrundlage:</strong> Diese Angaben sind vollständig freiwillig und für die Mitgliedschaft nicht erforderlich (Art. 7 Abs. 4 DSGVO). Die Verarbeitung erfolgt ausschließlich auf Grundlage Ihrer ausdrücklichen Einwilligung gemäß <strong>Art. 6 Abs. 1 lit. a DSGVO</strong>. Sie können jede dieser Einwilligungen jederzeit formlos per E-Mail an <a href="mailto:foerdervereinweserwichtel@gmail.com" data-verein-email class="text-brand-600 underline">foerdervereinweserwichtel@gmail.com</a> mit Wirkung für die Zukunft widerrufen, ohne dass die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung berührt wird.
+          </p>
+        </section>
+
+        <!-- 6. Eingesetzte Dienste & Datenübermittlung in Drittländer -->
+        <section>
+          <h2 class="text-lg font-bold text-slate-900 mb-3">6. Eingesetzte technische Dienste &amp; Drittlandtransfer</h2>
+          <ul class="list-disc pl-5 space-y-2 text-slate-600">
+            <li>
+              <strong>Google Workspace / Google Drive, Sheets &amp; Gmail (Google Ireland Limited / Google LLC, USA):</strong> Für die Vereinskommunikation, die verschlüsselte Speicherung der Mitgliederliste sowie die Archivierung der Mitgliedsanträge und SEPA-Belege nutzt der Verein Dienste von Google. Soweit Daten in die USA übermittelt werden, stützt sich dies auf das EU-US Data Privacy Framework (Angemessenheitsbeschluss der EU-Kommission) bzw. Standardvertragsklauseln gemäß Art. 46 DSGVO.
+            </li>
+            <li>
+              <strong>Automatische IBAN-/Bankprüfung (OpenIBAN):</strong> Beim Ausfüllen des Online-Formulars kann Ihre eingegebene IBAN zur automatischen Erkennung von Bankname und BIC an den Dienst <em>openiban.com</em> übermittelt werden (Art. 6 Abs. 1 lit. f DSGVO – berechtigtes Interesse an der Vermeidung von Tippfehlern bei SEPA-Mandaten). Es werden hierbei keine Namen oder weiteren Personendaten übertragen.
+            </li>
+            <li>
+              <strong>GitHub Pages (GitHub Inc., USA):</strong> Bereitstellung der statischen Website (siehe Abschnitt 2; zertifiziert nach dem EU-US Data Privacy Framework).
+            </li>
+          </ul>
+        </section>
+
+        <!-- 7. Speicherdauer -->
+        <section>
+          <h2 class="text-lg font-bold text-slate-900 mb-3">7. Speicherdauer</h2>
           <p>
             Ihre personenbezogenen Daten werden für die Dauer der Mitgliedschaft im Förderverein gespeichert. Nach Beendigung der Mitgliedschaft werden die Daten gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten (z. B. steuerrechtliche Buchungs- und Belegaufbewahrungsfristen nach § 147 Abgabenordnung von bis zu 10 Jahren für Zahlungsvorgänge) einer Löschung entgegenstehen.
           </p>
         </section>
 
-        <!-- 6. Ihre Rechte als betroffene Person -->
+        <!-- 8. Ihre Rechte als betroffene Person -->
         <section>
-          <h2 class="text-lg font-bold text-slate-900 mb-3">6. Ihre Betroffenenrechte</h2>
+          <h2 class="text-lg font-bold text-slate-900 mb-3">8. Ihre Betroffenenrechte</h2>
           <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf:</p>
           <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-600">
             <li><strong>Auskunft</strong> über Ihre bei uns gespeicherten personenbezogenen Daten (Art. 15 DSGVO)</li>
@@ -161,9 +194,9 @@
           </p>
         </section>
 
-        <!-- 7. Beschwerderecht -->
+        <!-- 9. Beschwerderecht -->
         <section class="pt-4 border-t border-slate-200">
-          <h2 class="text-lg font-bold text-slate-900 mb-2">7. Beschwerderecht bei der zuständigen Aufsichtsbehörde</h2>
+          <h2 class="text-lg font-bold text-slate-900 mb-2">9. Beschwerderecht bei der zuständigen Aufsichtsbehörde</h2>
           <p class="text-xs text-slate-600">
             Im Falle von datenschutzrechtlichen Verstößen steht Ihnen ein Beschwerderecht bei einer zuständigen Aufsichtsbehörde zu (Art. 77 DSGVO). Die für das Land Berlin zuständige Aufsichtsbehörde ist:<br />
             <strong>Berliner Beauftragte für Datenschutz und Informationsfreiheit</strong><br />

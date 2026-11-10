@@ -572,10 +572,16 @@ function handleNewRegistration(data) {
 
   const firstName = String(data.firstName || '').trim();
   const lastName = String(data.lastName || '').trim();
-  const addressStr = (String(data.street || '') + ' ' + String(data.houseNumber || '')).trim();
+  const addressExtra = String(data.addressExtra || '').trim();
+  const addressStr = ((String(data.street || '') + ' ' + String(data.houseNumber || '')).trim() + (addressExtra ? ' (' + addressExtra + ')' : '')).trim();
   const cityStr = (String(data.zip || '') + ' ' + String(data.city || '')).trim();
   const fee = data.contributionAmount ? parseFloat(data.contributionAmount).toFixed(2) : '24.00';
   const mandateRef = String(data.mandateRef || ('WW-' + now.getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000))).trim();
+
+  const optFlags = [];
+  if (data.volunteerActions) optFlags.push('Aktionen: Ja');
+  if (data.newsletter) optFlags.push('Mailverteiler: Ja');
+  if (data.emailNotifications) optFlags.push('E-Mail-Mitteilungen: Ja');
 
   let pdfStatusText = 'Wartet auf E-Mail';
   let savedPdfName = '';
@@ -613,7 +619,7 @@ function handleNewRegistration(data) {
     String(data.bic || '').trim(),                        // O: BIC
     String(data.bankName || '').trim(),                   // P: Kreditinstitut
     pdfStatusText,                                        // Q: PDF-Status
-    savedPdfName ? ('Auto-Archiv: ' + savedPdfName) : '', // R: Notizen
+    [savedPdfName ? ('Auto-Archiv: ' + savedPdfName) : '', optFlags.join(' | ')].filter(Boolean).join(' · '), // R: Notizen
     mandateRef,                                           // S: Mandatsreferenz
     ''                                                    // T: Eingezogene Beitragsjahre
   ];
