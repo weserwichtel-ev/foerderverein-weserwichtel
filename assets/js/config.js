@@ -20,7 +20,7 @@ const _isCustomDomainHost =
   window.location.hostname.toLowerCase().includes("foerderverein-weserwichtel.de");
 
 // >>> SCHALTER SOBALD DIE DOMAIN GEKAUFT IST: Auf `true` setzen <<<
-const CUSTOM_DOMAIN_ACTIVE = false || _isCustomDomainHost;
+const CUSTOM_DOMAIN_ACTIVE = true || _isCustomDomainHost;
 
 const VEREIN_GMAIL_ADDRESS = "foerdervereinweserwichtel@gmail.com";
 const CUSTOM_DOMAIN_EMAIL_ADDRESS = "info@foerderverein-weserwichtel.de";
