@@ -12,6 +12,7 @@
 const CACHE_NAME = 'ww-admin-v2.0.0';
 const ASSETS_TO_CACHE = [
   './admin.html',
+  './admin-anleitung.html',
   './admin.webmanifest',
   './version.json',
   './assets/js/config.js',

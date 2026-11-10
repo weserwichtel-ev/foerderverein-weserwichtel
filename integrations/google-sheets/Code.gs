@@ -161,6 +161,8 @@ function doPost(e) {
     }
 
     switch (action) {
+      case 'verifySession':
+        return jsonResponse({ result: 'success', valid: true });
       case 'getMembers':
         return handleGetMembers();
       case 'scanInboxForPdfs':

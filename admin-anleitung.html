@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="de" class="bg-[#FDFBF7]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Anleitung für den Vorstand · Förderverein der Kita Weserwichtel e.V.</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/wichtel-icon.svg" />
+  <link rel="manifest" href="admin.webmanifest" />
+  <meta name="theme-color" content="#1B4D3E" />
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png" />
+
+  <!-- ========================================================================= -->
+  <!-- ZUGANGSSPERRE: Diese Seite ist nur für angemeldete Vorstandsmitglieder.    -->
+  <!-- Ohne gültige Portal-Sitzung wird sofort zur Anmeldung weitergeleitet.      -->
+  <!-- (Die Sitzung wird unten zusätzlich beim Google-Server überprüft.)          -->
+  <!-- ========================================================================= -->
+  <style id="authGuardStyle">html { visibility: hidden; }</style>
+  <script>
+    (function () {
+      var token = '';
+      var isDemo = false;
+      try {
+        token = localStorage.getItem('ww_admin_session_token') || '';
+        isDemo = sessionStorage.getItem('ww_admin_demo_active') === 'true';
+      } catch (e) {}
+      if (!token && !isDemo) {
+        window.location.replace('admin.html?next=anleitung');
+        return;
+      }
+      var guard = document.getElementById('authGuardStyle');
+      if (guard) guard.parentNode.removeChild(guard);
+    })();
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+    /* Nachgebaute Portal-Elemente ("So sieht der Knopf im Portal aus") */
+    .replica { display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; vertical-align: middle; pointer-events: none; user-select: none; }
+    .step-list { counter-reset: guide-step; }
+    .step-list > li { counter-increment: guide-step; position: relative; padding-left: 3rem; }
+    .step-list > li::before {
+      content: counter(guide-step);
+      position: absolute; left: 0; top: 0;
+      width: 2rem; height: 2rem; border-radius: 9999px;
+      background: #1B4D3E; color: #fff; font-weight: 800; font-size: .95rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .toc-link.is-active { background: #ECFDF5; color: #1B4D3E; font-weight: 700; border-left-color: #1B4D3E; }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .faq-chevron { transform: rotate(90deg); }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; }
+      section { break-inside: avoid-page; }
+      details { display: block; }
+      details > *:not(summary) { display: block !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-800 bg-[#FDFBF7] antialiased text-[16px] leading-relaxed">
+
+  <!-- ========================================================================= -->
+  <!-- KOPFZEILE                                                                  -->
+  <!-- ========================================================================= -->
+  <header class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E6E1D5] shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <img src="assets/img/icon-192.png" alt="Logo" class="w-9 h-9 rounded-xl border border-[#1B4D3E]/20 shrink-0" />
+        <div>
+          <div class="text-base sm:text-lg font-bold text-slate-900 leading-tight">📖 Anleitung für den Vorstand</div>
+          <div class="text-xs text-slate-500">Förderverein der Kita Weserwichtel e.V. · nur für angemeldete Vorstandsmitglieder</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" id="printGuideBtn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-sm font-semibold transition-colors">
+          🖨️ Anleitung drucken
+        </button>
+        <a href="admin.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#1B4D3E] hover:bg-[#003629] text-white text-sm font-bold shadow-sm transition-colors">
+          ← Zurück zum Portal
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:grid lg:grid-cols-[230px_1fr] lg:gap-10">
+
+    <!-- ======================================================================= -->
+    <!-- INHALTSVERZEICHNIS                                                       -->
+    <!-- ======================================================================= -->
+    <nav aria-label="Inhaltsverzeichnis" class="no-print">
+      <!-- Mobil: aufklappbar -->
+      <details class="lg:hidden mb-6 bg-white rounded-xl border border-[#E6E1D5] p-4">
+        <summary class="font-bold text-slate-900 flex items-center justify-between">📑 Inhaltsverzeichnis <span class="faq-chevron transition-transform">›</span></summary>
+        <ol class="mt-3 space-y-1 text-sm" data-toc-mobile></ol>
+      </details>
+      <!-- Desktop: feste Seitenleiste -->
+      <div class="hidden lg:block sticky top-24">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-3">Inhalt</div>
+        <ol class="space-y-0.5 text-sm" data-toc-desktop></ol>
+      </div>
+    </nav>
+
+    <main class="space-y-12 min-w-0">
+
+      <!-- ===================================================================== -->
+      <!-- 0. WILLKOMMEN                                                          -->
+      <!-- ===================================================================== -->
+      <section id="willkommen" data-toc="👋 Willkommen" class="rounded-2xl bg-[#1B4D3E] text-white p-6 sm:p-8 shadow-lg">
+        <p class="text-emerald-200 text-sm font-semibold uppercase tracking-wider">Herzlich willkommen im Vorstand!</p>
+        <h1 class="mt-2 text-2xl sm:text-3xl font-extrabold leading-tight">Alles, was Sie wissen müssen – ganz ohne Technik-Kenntnisse.</h1>
+        <p class="mt-4 text-emerald-50 text-base sm:text-lg max-w-3xl">
+          Diese Anleitung erklärt Ihnen Schritt für Schritt, wie das <strong>Vorstands-Portal</strong> funktioniert und was Sie tun müssen.
+          Sie brauchen <strong>nichts</strong> über Computer, Programmierung oder die Website zu wissen. Lesen Sie einfach der Reihe nach –
+          oder springen Sie über das Inhaltsverzeichnis direkt zu Ihrer Frage.
+        </p>
+        <div class="mt-6 grid sm:grid-cols-3 gap-3 text-sm">
+          <div class="rounded-xl bg-white/10 border border-white/15 p-4">
+            <div class="text-2xl">🛟</div>
+            <div class="mt-1 font-bold">Keine Angst vor Fehlern</div>
+            <div class="text-emerald-100">Das Portal lässt Sie nur das tun, was gerade dran ist. Typische Fehler (z.&nbsp;B. doppelt abbuchen) werden automatisch verhindert.</div>
+          </div>
+          <div class="rounded-xl bg-white/10 border border-white/15 p-4">
+            <div class="text-2xl">🗂️</div>
+            <div class="mt-1 font-bold">Alles wird automatisch abgelegt</div>
+            <div class="text-emerald-100">Dateien werden automatisch richtig benannt und sicher gespeichert. Sie müssen nichts sortieren.</div>
+          </div>
+          <div class="rounded-xl bg-white/10 border border-white/15 p-4">
+            <div class="text-2xl">⏱️</div>
+            <div class="mt-1 font-bold">Wenig Aufwand</div>
+            <div class="text-emerald-100">Pro neuem Mitglied ca. 2 Minuten. Der Beitragseinzug passiert nur einmal im Jahr.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 1. DAS WICHTIGSTE IN KÜRZE                                             -->
+      <!-- ===================================================================== -->
+      <section id="kurz" data-toc="⚡ Das Wichtigste in Kürze" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">⚡ Das Wichtigste in 1 Minute</h2>
+          <p class="mt-2 text-slate-600">Wenn Sie nur einen Abschnitt lesen, dann diesen.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] p-5 sm:p-6 space-y-4">
+          <p><strong>Wozu gibt es das?</strong> Eltern können auf unserer Website online Mitglied im Förderverein werden. Das Vorstands-Portal ist <em>Ihr</em> Arbeitsplatz: Hier sehen Sie alle Mitglieder, nehmen neue Mitglieder auf und ziehen einmal im Jahr die Mitgliedsbeiträge ein.</p>
+          <p><strong>Ihre Arbeit besteht aus genau 3 Schritten – immer in dieser Reihenfolge:</strong></p>
+
+          <div class="grid md:grid-cols-3 gap-3">
+            <a href="#schritt1" class="block rounded-xl border-2 border-emerald-200 bg-emerald-50/60 p-4 hover:border-[#1B4D3E] transition-colors">
+              <div class="text-3xl">📄</div>
+              <div class="mt-1 text-xs font-bold uppercase tracking-wider text-emerald-800">Schritt 1 · pro Mitglied</div>
+              <div class="font-bold text-slate-900">Unterschriebenen Antrag ablegen</div>
+              <div class="text-sm text-slate-600 mt-1">Passiert meistens <strong>von selbst</strong>. Nur wenn etwas fehlt, helfen Sie mit einem Klick nach.</div>
+            </a>
+            <a href="#schritt2" class="block rounded-xl border-2 border-emerald-200 bg-emerald-50/60 p-4 hover:border-[#1B4D3E] transition-colors">
+              <div class="text-3xl">✉️</div>
+              <div class="mt-1 text-xs font-bold uppercase tracking-wider text-emerald-800">Schritt 2 · pro Mitglied</div>
+              <div class="font-bold text-slate-900">Willkommens-Mail senden</div>
+              <div class="text-sm text-slate-600 mt-1">Ein Klick – das neue Mitglied bekommt seine Bestätigung und ist ab dann <strong>aktiv</strong>.</div>
+            </a>
+            <a href="#schritt3" class="block rounded-xl border-2 border-sky-200 bg-sky-50/60 p-4 hover:border-sky-700 transition-colors">
+              <div class="text-3xl">🏦</div>
+              <div class="mt-1 text-xs font-bold uppercase tracking-wider text-sky-800">Schritt 3 · einmal im Jahr</div>
+              <div class="font-bold text-slate-900">Beiträge einziehen</div>
+              <div class="text-sm text-slate-600 mt-1">Das Portal erstellt eine Datei für die Bank. Diese laden Sie im Online-Banking hoch – fertig.</div>
+            </a>
+          </div>
+
+          <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-950">
+            <strong>💡 Die goldene Regel:</strong> Achten Sie im Portal auf den <strong>grünen, pulsierenden Knopf</strong>. Er zeigt Ihnen immer, was als Nächstes zu tun ist.
+            Alles, was noch nicht dran ist, ist mit einem Schloss 🔒 gesperrt.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 2. WIE KOMMT EIN NEUES MITGLIED ZU UNS?                                -->
+      <!-- ===================================================================== -->
+      <section id="ablauf" data-toc="🧒 Wie ein Mitglied zu uns kommt" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🧒 Wie ein neues Mitglied zu uns kommt</h2>
+          <p class="mt-2 text-slate-600">So sieht der Weg vom ersten Klick der Eltern bis zum Beitragseinzug aus. Die grün markierten Stellen sind Ihre Aufgaben.</p>
+        </div>
+
+        <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <li class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold text-slate-400">Eltern</div>
+            <div class="font-bold text-slate-900">1. Formular auf der Website ausfüllen</div>
+            <div class="text-sm text-slate-600 mt-1">Die Eltern geben Name, Kind, Beitrag und Bankverbindung ein und unterschreiben mit dem Finger oder der Maus.</div>
+          </li>
+          <li class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold text-slate-400">Automatisch</div>
+            <div class="font-bold text-slate-900">2. Antrag erscheint im Portal</div>
+            <div class="text-sm text-slate-600 mt-1">Das neue Mitglied steht sofort in Ihrer Liste – mit dem Hinweis „🔔 Neuer Antrag“. Der unterschriebene Antrag (PDF) wird meist gleich mit abgelegt.</div>
+          </li>
+          <li class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold text-slate-400">Eltern</div>
+            <div class="font-bold text-slate-900">3. Eltern schicken uns den Antrag per E-Mail</div>
+            <div class="text-sm text-slate-600 mt-1">Zur Sicherheit senden die Eltern den Antrag zusätzlich an die Vereins-E-Mail-Adresse.</div>
+          </li>
+          <li class="bg-emerald-50 rounded-xl border-2 border-emerald-300 p-4">
+            <div class="text-xs font-bold text-emerald-700">Sie · Schritt 1</div>
+            <div class="font-bold text-slate-900">4. Prüfen, ob der Antrag abgelegt ist</div>
+            <div class="text-sm text-slate-600 mt-1">Ist der Punkt grün 🟢, ist alles erledigt. Ist er rot 🔴, helfen Sie mit einem Klick nach.</div>
+          </li>
+          <li class="bg-emerald-50 rounded-xl border-2 border-emerald-300 p-4">
+            <div class="text-xs font-bold text-emerald-700">Sie · Schritt 2</div>
+            <div class="font-bold text-slate-900">5. Willkommens-Mail senden</div>
+            <div class="text-sm text-slate-600 mt-1">Ein Klick – das Mitglied ist aufgenommen und weiß, wann der Beitrag abgebucht wird.</div>
+          </li>
+          <li class="bg-sky-50 rounded-xl border-2 border-sky-300 p-4">
+            <div class="text-xs font-bold text-sky-700">Sie · Schritt 3 (Anfang März)</div>
+            <div class="font-bold text-slate-900">6. Beiträge einziehen</div>
+            <div class="text-sm text-slate-600 mt-1">Einmal im Jahr für alle aktiven Mitglieder gemeinsam – Abbuchung jeweils zum 15. März.</div>
+          </li>
+        </ol>
+
+        <p class="text-sm text-slate-600">
+          <strong>Manche Eltern füllen lieber einen Papierantrag aus.</strong> Auch das ist kein Problem – wie Sie diese erfassen, steht unter
+          <a href="#aufgaben-papier" class="text-[#1B4D3E] font-semibold underline">„Papierantrag erfassen“</a>.
+        </p>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 3. ANMELDEN                                                            -->
+      <!-- ===================================================================== -->
+      <section id="anmelden" data-toc="🔓 Anmelden & Abmelden" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🔓 Anmelden &amp; Abmelden</h2>
+          <p class="mt-2 text-slate-600">Sie haben es schon geschafft, sonst könnten Sie diese Seite nicht sehen. 🎉 Hier trotzdem alles zum Nachlesen – z.&nbsp;B. für ein neues Gerät.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] p-5 sm:p-6 space-y-5">
+          <ol class="step-list space-y-5">
+            <li>
+              <div class="font-bold text-slate-900">Portal öffnen</div>
+              <div class="text-slate-600">Öffnen Sie im Internet-Browser (z.&nbsp;B. Safari oder Chrome) die Adresse
+                <code class="px-1.5 py-0.5 rounded bg-slate-100 text-sm">foerderverein-weserwichtel.de/admin.html</code>
+                – oder tippen Sie auf das Portal-Symbol, falls Sie es als App installiert haben (siehe unten).</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Passwort eingeben</div>
+              <div class="text-slate-600">Geben Sie das Vorstands-Passwort ein und klicken Sie auf
+                <span class="replica px-3 py-1 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold">🔓 Sicher anmelden &amp; Mitgliederdaten laden</span>.
+                Das Passwort bekommen Sie von einem anderen Vorstandsmitglied oder von Gaston.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Passwort vergessen? Kein Problem!</div>
+              <div class="text-slate-600">Klicken Sie auf
+                <span class="replica px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200">📧 6-stelligen Einmal-PIN an Vereins-E-Mail senden</span>.
+                Im Postfach des Vereins (<span data-verein-email>foerdervereinweserwichtel@gmail.com</span>) kommt kurz darauf eine E-Mail mit einer 6-stelligen Zahl an.
+                Tippen Sie diese Zahl statt des Passworts in dasselbe Feld ein. Die Zahl ist <strong>15 Minuten</strong> gültig.</div>
+            </li>
+          </ol>
+
+          <div class="grid sm:grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-950">
+              <strong>✅ Sie bleiben angemeldet:</strong> Auf Ihrem Gerät bleiben Sie bis zu 30 Tage angemeldet. Danach fragt das Portal einfach wieder nach dem Passwort.
+            </div>
+            <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-rose-950">
+              <strong>⚠️ 5× falsch = 30 Minuten Pause:</strong> Nach 5 falschen Versuchen wird der Zugang zum Schutz für 30 Minuten gesperrt. Warten Sie einfach ab – oder nutzen Sie den E-Mail-PIN.
+            </div>
+          </div>
+
+          <div class="border-t border-slate-100 pt-4 space-y-3">
+            <div>
+              <div class="font-bold text-slate-900">🔒 Abmelden</div>
+              <p class="text-slate-600">Ganz rechts oben im Portal ist ein kleines Schloss <span class="replica px-1.5 py-0.5 rounded bg-slate-100 text-xs">🔒</span>. Ein Klick darauf meldet Sie ab.
+                <strong>Bitte immer abmelden, wenn Sie einen fremden oder gemeinsam genutzten Computer verwenden.</strong> An Ihrem eigenen Gerät ist das nicht nötig.</p>
+            </div>
+            <div>
+              <div class="font-bold text-slate-900">📲 Tipp: Portal als App auf den Startbildschirm legen</div>
+              <p class="text-slate-600">Klicken Sie im Portal auf <span class="replica px-2.5 py-1 rounded-lg bg-emerald-50 text-[#1B4D3E] border border-emerald-200 text-xs font-bold">📲 Als App installieren</span>.
+                Dann haben Sie ein eigenes Symbol wie bei jeder anderen App und müssen sich die Adresse nicht merken. Die App aktualisiert sich automatisch.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 4. DIE PORTAL-STARTSEITE                                               -->
+      <!-- ===================================================================== -->
+      <section id="ueberblick" data-toc="🧭 Was ist wo im Portal?" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🧭 Was ist wo im Portal?</h2>
+          <p class="mt-2 text-slate-600">Ein kleiner Rundgang über die Startseite – von oben nach unten.</p>
+        </div>
+
+        <!-- A: Knöpfe oben -->
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <div class="px-5 py-3 bg-slate-50 border-b border-[#E6E1D5] font-bold text-slate-900">A · Die Knöpfe ganz oben</div>
+          <dl class="divide-y divide-slate-100">
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 text-xs font-bold">🖨️ Vorlage drucken</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Öffnet einen leeren Mitgliedsantrag zum Ausdrucken – z.&nbsp;B. für Elternabende oder das Sommerfest.</dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-purple-50 text-purple-900 border border-purple-300 text-xs font-bold">📷 Papierantrag erfassen</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Für ausgefüllte Papieranträge: Foto machen, Daten abtippen, speichern. <a href="#aufgaben-papier" class="text-[#1B4D3E] font-semibold underline">Anleitung</a></dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 text-xs font-bold">📥 E-Mail-Postfach nach PDFs scannen</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Sucht im Vereins-Postfach nach Anträgen, die Eltern per E-Mail geschickt haben, und ordnet sie automatisch dem richtigen Mitglied zu. <a href="#schritt1" class="text-[#1B4D3E] font-semibold underline">Mehr bei Schritt 1</a></dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">📁 Google Drive Ordner</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Direkte Links zu den Ordnern, in denen alle Anträge, E-Mails und Bank-Dateien gespeichert sind. Zum <strong>Anschauen</strong> – Sie müssen dort nichts tun.</dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-2.5 py-1.5 rounded-lg bg-emerald-50 text-[#1B4D3E] border border-emerald-200 text-xs font-bold">📲 Als App installieren</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Legt das Portal als eigenes Symbol auf Ihren Computer oder Ihr Handy.</dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold">↻ Aktualisieren</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Lädt die Liste neu. Nützlich, wenn Sie auf einen neuen Antrag warten oder ein anderes Vorstandsmitglied gerade etwas geändert hat.</dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-3 py-1.5 rounded-lg bg-white text-[#1B4D3E] border border-emerald-300 text-xs font-bold">📖 Anleitung</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Öffnet diese Anleitung.</dd>
+            </div>
+            <div class="p-4 sm:flex sm:items-start sm:gap-4">
+              <dt class="sm:w-72 shrink-0"><span class="replica px-2 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-xs">🔒</span></dt>
+              <dd class="mt-2 sm:mt-0 text-slate-600">Abmelden.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- B: Zahlen-Kacheln -->
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <div class="px-5 py-3 bg-slate-50 border-b border-[#E6E1D5] font-bold text-slate-900">B · Die vier Zahlen-Kacheln</div>
+          <div class="p-4 grid sm:grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl border border-slate-200 p-3"><strong>Aktive Mitglieder</strong> – so viele Mitglieder sind vollständig aufgenommen.</div>
+            <div class="rounded-xl border border-slate-200 p-3"><strong>Jahresbeitragssumme</strong> – so viel Geld kommt pro Jahr durch Beiträge zusammen.</div>
+            <div class="rounded-xl border border-amber-300 bg-amber-50/50 p-3"><strong>Offene Aufgaben</strong> – so viele neue Anträge warten auf Sie. <em>Ist die Zahl größer als 0, gibt es etwas zu tun.</em></div>
+            <div class="rounded-xl border border-slate-200 p-3"><strong>Einzugsbereit</strong> – bei so vielen Mitgliedern wurde der Beitrag für dieses Jahr noch nicht abgebucht.</div>
+          </div>
+        </div>
+
+        <!-- C: Suche & Filter -->
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <div class="px-5 py-3 bg-slate-50 border-b border-[#E6E1D5] font-bold text-slate-900">C · Suchen &amp; Filtern</div>
+          <div class="p-4 space-y-3 text-slate-600">
+            <p><strong>Suchfeld:</strong> Tippen Sie einfach einen Namen ein (Elternteil oder Kind) oder die Kita-Gruppe. Die Liste zeigt sofort nur passende Einträge.</p>
+            <p><strong>Filter-Knöpfe:</strong>
+              <span class="replica px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold">Alle</span>
+              <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">🔔 Neue Anträge</span>
+              <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">✅ Aktiv</span>
+              <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">🚪 Gekündigt</span>
+            </p>
+            <p class="text-sm rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-emerald-950">💡 <strong>Tipp:</strong> Klicken Sie auf <strong>„🔔 Neue Anträge“</strong>. Dann sehen Sie nur die Mitglieder, bei denen Sie noch etwas tun müssen.</p>
+          </div>
+        </div>
+
+        <!-- D: Die Tabelle -->
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <div class="px-5 py-3 bg-slate-50 border-b border-[#E6E1D5] font-bold text-slate-900">D · Die Mitgliederliste – eine Zeile pro Mitglied</div>
+          <div class="p-4 text-slate-600 space-y-3">
+            <p>Jede Zeile ist ein Mitglied. Von links nach rechts sehen Sie:</p>
+            <ol class="list-decimal pl-6 space-y-1.5">
+              <li><strong>Mitglied &amp; Kind</strong> – Name, Kind, Kita-Gruppe und E-Mail.</li>
+              <li><strong>Beitrag &amp; Bank</strong> – Jahresbeitrag und Bankverbindung. Die Kontonummer ist zum Schutz teilweise versteckt; mit dem Auge <span class="replica text-xs">👁️</span> können Sie sie kurz anzeigen.</li>
+              <li><strong>Schritt 1</strong>, <strong>Schritt 2</strong>, <strong>Schritt 3</strong> – hier sehen Sie auf einen Blick, was erledigt ist und was noch fehlt (siehe Ampel unten).</li>
+              <li><strong>Verwalten</strong> – der Knopf <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">✏️ Bearbeiten / Kündigung</span> zum Ändern von Daten oder Eintragen einer Kündigung.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 5. DIE AMPEL                                                           -->
+      <!-- ===================================================================== -->
+      <section id="ampel" data-toc="🚦 Was bedeuten die Farben?" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🚦 Was bedeuten die Farben und Symbole?</h2>
+          <p class="mt-2 text-slate-600">Das Portal funktioniert wie eine Ampel. Sie müssen nur auf Rot und den pulsierenden grünen Knopf achten.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="py-3 px-4">So sieht es aus</th>
+                <th class="py-3 px-4">Das bedeutet es</th>
+                <th class="py-3 px-4">Muss ich etwas tun?</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 align-top">
+              <tr>
+                <td class="py-3 px-4"><span class="replica px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900">🟢 1. PDF im Drive</span></td>
+                <td class="py-3 px-4 text-slate-600">Grün = erledigt.</td>
+                <td class="py-3 px-4 font-semibold text-emerald-700">Nein ✓</td>
+              </tr>
+              <tr class="bg-rose-50/40">
+                <td class="py-3 px-4"><span class="replica px-2 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-900 border border-dashed border-amber-400">🔴 1. Unterschriebenes PDF fehlt</span></td>
+                <td class="py-3 px-4 text-slate-600">Rot = hier fehlt etwas.</td>
+                <td class="py-3 px-4 font-semibold text-rose-700">Ja → <a href="#schritt1" class="underline">Schritt 1</a></td>
+              </tr>
+              <tr class="bg-emerald-50/40">
+                <td class="py-3 px-4"><span class="replica px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-[11px] font-bold animate-pulse">✉️ 2. Vorab-Mail prüfen &amp; senden</span></td>
+                <td class="py-3 px-4 text-slate-600">Pulsierender grüner Knopf = <strong>das ist Ihr nächster Schritt</strong>.</td>
+                <td class="py-3 px-4 font-semibold text-rose-700">Ja → <a href="#schritt2" class="underline">Schritt 2</a></td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica text-[12px] text-slate-400">🔒 Wartet auf Schritt 1 (PDF)</span></td>
+                <td class="py-3 px-4 text-slate-600">Schloss = noch gesperrt, weil ein Schritt davor fehlt.</td>
+                <td class="py-3 px-4 text-slate-600">Erst den Schritt davor erledigen.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900">🟢 2. Aktiv &amp; Vorab-Mail gesendet</span></td>
+                <td class="py-3 px-4 text-slate-600">Mitglied ist vollständig aufgenommen.</td>
+                <td class="py-3 px-4 font-semibold text-emerald-700">Nein ✓</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-100 text-sky-900">⏳ Bereit für Einzug</span></td>
+                <td class="py-3 px-4 text-slate-600">Beitrag für dieses Jahr wurde noch nicht abgebucht.</td>
+                <td class="py-3 px-4 text-slate-600">Erst beim jährlichen Einzug (<a href="#schritt3" class="underline">Schritt 3</a>).</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900">✅ eingezogen</span></td>
+                <td class="py-3 px-4 text-slate-600">Beitrag für dieses Jahr ist abgebucht. Eine doppelte Abbuchung ist automatisch ausgeschlossen.</td>
+                <td class="py-3 px-4 font-semibold text-emerald-700">Nein ✓</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 text-slate-700">🚪 Beendet &amp; bestätigt</span></td>
+                <td class="py-3 px-4 text-slate-600">Mitglied hat gekündigt (Zeile ist grau). Es wird nichts mehr abgebucht.</td>
+                <td class="py-3 px-4 font-semibold text-emerald-700">Nein ✓</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><span class="replica font-mono text-[12px] text-red-600 font-bold">DE12 •••• 3456</span></td>
+                <td class="py-3 px-4 text-slate-600">Rote Kontonummer = sie enthält vermutlich einen Tippfehler.</td>
+                <td class="py-3 px-4 font-semibold text-rose-700">Ja → <a href="#aufgaben-aendern" class="underline">Kontonummer korrigieren</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 6. SCHRITT 1                                                           -->
+      <!-- ===================================================================== -->
+      <section id="schritt1" data-toc="📄 Schritt 1: Antrag ablegen" class="space-y-5">
+        <div>
+          <p class="text-sm font-bold text-emerald-700 uppercase tracking-wider">Schritt 1 von 3 · bei jedem neuen Mitglied</p>
+          <h2 class="text-2xl font-extrabold text-slate-900">📄 Den unterschriebenen Antrag ablegen</h2>
+          <p class="mt-2 text-slate-600"><strong>Warum?</strong> Wir dürfen nur Geld abbuchen, wenn wir den unterschriebenen Antrag aufbewahren. Das Portal legt ihn sicher für Sie ab.</p>
+        </div>
+
+        <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-950">
+          <strong>😊 Gute Nachricht:</strong> Bei Online-Anträgen passiert das meistens <strong>automatisch</strong>. Steht in der Spalte „Schritt 1“ schon
+          <span class="replica px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900">🟢 1. PDF im Drive</span>, können Sie direkt mit <a href="#schritt2" class="underline font-semibold">Schritt 2</a> weitermachen.
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] p-5 sm:p-6 space-y-4">
+          <p class="font-bold text-slate-900">Wenn dort stattdessen <span class="replica px-2 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-900 border border-dashed border-amber-400">🔴 1. Unterschriebenes PDF fehlt</span> steht:</p>
+          <ol class="step-list space-y-5">
+            <li>
+              <div class="font-bold text-slate-900">Zuerst das Postfach durchsuchen lassen</div>
+              <div class="text-slate-600">Klicken Sie oben auf <span class="replica px-3 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 text-xs font-bold">📥 E-Mail-Postfach nach PDFs scannen</span>.
+                Das Portal schaut im Vereins-Postfach nach, ob die Eltern den Antrag per E-Mail geschickt haben, und legt ihn automatisch ab. Das dauert ein paar Sekunden.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Ist der Punkt jetzt grün? Dann fertig!</div>
+              <div class="text-slate-600">Unten rechts erscheint eine kurze Meldung, wie viele Anträge gefunden wurden.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Immer noch rot? Dann von Hand hinzufügen</div>
+              <div class="text-slate-600">
+                Suchen Sie die E-Mail der Eltern im Vereins-Postfach und speichern Sie den angehängten Antrag (PDF-Datei) auf Ihrem Computer.
+                Klicken Sie dann in der Zeile des Mitglieds auf
+                <span class="replica px-2.5 py-1 rounded-lg bg-white text-amber-950 border border-amber-300 text-[11px] font-bold">📄 PDF auswählen / hierher ziehen</span>
+                und wählen Sie die Datei aus. (Am Computer können Sie die Datei auch einfach mit der Maus auf das Feld ziehen.)
+              </div>
+            </li>
+          </ol>
+          <div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-sm text-slate-600">
+            <strong>Die Eltern haben gar nichts geschickt?</strong> Schreiben Sie ihnen eine kurze, freundliche E-Mail und bitten Sie darum, den Antrag als Anhang an
+            <span data-verein-email>foerdervereinweserwichtel@gmail.com</span> zu senden. Danach wiederholen Sie die Schritte oben.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 7. SCHRITT 2                                                           -->
+      <!-- ===================================================================== -->
+      <section id="schritt2" data-toc="✉️ Schritt 2: Willkommens-Mail" class="space-y-5">
+        <div>
+          <p class="text-sm font-bold text-emerald-700 uppercase tracking-wider">Schritt 2 von 3 · bei jedem neuen Mitglied</p>
+          <h2 class="text-2xl font-extrabold text-slate-900">✉️ Willkommens-Mail senden &amp; Mitglied aufnehmen</h2>
+          <p class="mt-2 text-slate-600"><strong>Warum?</strong> Bevor wir zum ersten Mal Geld abbuchen, müssen wir dem Mitglied vorher Bescheid geben, wann und wie viel abgebucht wird (das nennt man „Vorab-Information“). Diese E-Mail erledigt das – und heißt das neue Mitglied gleich herzlich willkommen.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] p-5 sm:p-6 space-y-4">
+          <ol class="step-list space-y-5">
+            <li>
+              <div class="font-bold text-slate-900">Auf den pulsierenden Knopf klicken</div>
+              <div class="text-slate-600">In der Zeile des neuen Mitglieds: <span class="replica px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-[11px] font-bold animate-pulse">✉️ 2. Vorab-Mail prüfen &amp; senden</span></div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Die E-Mail kurz durchlesen</div>
+              <div class="text-slate-600">Es öffnet sich ein Fenster mit einer fertig geschriebenen E-Mail. Name, Betrag und alle Bankangaben sind schon eingetragen.
+                <strong>Sie müssen nichts ändern.</strong> Wenn Sie möchten, können Sie den Text aber noch persönlicher gestalten.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Absenden</div>
+              <div class="text-slate-600">Klicken Sie unten rechts auf <span class="replica px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-[11px] font-bold">✉️ Jetzt über Vereinskonto senden &amp; Mitglied aktivieren</span>.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Fertig! 🎉</div>
+              <div class="text-slate-600">In der Zeile steht jetzt <span class="replica px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900">🟢 2. Aktiv &amp; Vorab-Mail gesendet</span>.
+                Die E-Mail wurde vom Vereins-Konto verschickt und eine Kopie automatisch abgelegt.</div>
+            </li>
+          </ol>
+          <div class="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-950">
+            <strong>Bitte nur den großen grünen Knopf benutzen.</strong> Die kleinen grauen Knöpfe („Nur in lokalem Mail-Programm öffnen“ und „📋 Kopieren“) sind nur für Ausnahmefälle gedacht. Damit wird das Mitglied <em>nicht</em> automatisch aktiviert und es wird kein Beleg abgelegt.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 8. SCHRITT 3                                                           -->
+      <!-- ===================================================================== -->
+      <section id="schritt3" data-toc="🏦 Schritt 3: Beiträge einziehen" class="space-y-5">
+        <div>
+          <p class="text-sm font-bold text-sky-700 uppercase tracking-wider">Schritt 3 von 3 · einmal im Jahr (Anfang März)</p>
+          <h2 class="text-2xl font-extrabold text-slate-900">🏦 Die Jahresbeiträge einziehen</h2>
+          <p class="mt-2 text-slate-600"><strong>Worum geht es?</strong> Einmal im Jahr buchen wir die Beiträge aller aktiven Mitglieder auf einmal von deren Konten ab.
+            Das Portal erstellt dafür eine Datei, die die Bank versteht. Diese Datei laden Sie im Online-Banking der Skatbank hoch. Das ist schon alles.</p>
+        </div>
+
+        <div class="rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-950">
+          <strong>📅 Wann?</strong> In der Willkommens-Mail steht: <em>„Jährlich zum 15. März“</em>. Erledigen Sie diesen Schritt also am besten <strong>Anfang März</strong>.
+          Neue Mitglieder, die später im Jahr dazukommen, können Sie bei Bedarf mit einem zweiten, kleinen Einzug nachholen – das Portal wählt dann automatisch nur die aus, die noch nicht bezahlt haben.
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] p-5 sm:p-6 space-y-5">
+          <h3 class="text-lg font-bold text-slate-900">Teil A · Die Bank-Datei im Portal erstellen</h3>
+          <ol class="step-list space-y-5">
+            <li>
+              <div class="font-bold text-slate-900">Den großen grünen Knopf über der Liste klicken</div>
+              <div class="text-slate-600"><span class="replica px-4 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold">🏦 3. SEPA-Lastschrift (XML) für Skatbank erstellen</span></div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Jahr und Datum prüfen</div>
+              <div class="text-slate-600">
+                <strong>Beitragsjahr:</strong> das aktuelle Jahr auswählen.<br />
+                <strong>Fälligkeitstag:</strong> der Tag, an dem das Geld abgebucht werden soll – also der <strong>15. März</strong>.
+                (Wenn der 15. März schon sehr nah ist oder auf ein Wochenende fällt, wählen Sie den nächsten Werktag, der mindestens ein paar Tage in der Zukunft liegt.)
+              </div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Die Liste der Mitglieder anschauen</div>
+              <div class="text-slate-600">Das Portal hat <strong>automatisch alle richtigen Mitglieder angehakt</strong>. Wer schon bezahlt hat, wer noch nicht vollständig aufgenommen ist oder eine fehlerhafte Kontonummer hat, ist automatisch ausgegraut.
+                Oben sehen Sie, wie viele Mitglieder es sind und welche Summe abgebucht wird. <strong>Normalerweise müssen Sie hier nichts ändern.</strong></div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Häkchen „Im Google Drive archivieren …“ angehakt lassen</div>
+              <div class="text-slate-600">Dadurch merkt sich das Portal, wer schon bezahlt hat – so kann niemand versehentlich doppelt belastet werden.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Datei herunterladen</div>
+              <div class="text-slate-600">Klicken Sie auf <span class="replica px-4 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold">📥 pain.008 XML herunterladen &amp; im Drive archivieren</span>.
+                Die Datei landet in Ihrem <strong>Downloads</strong>-Ordner. Ihr Name beginnt mit dem Datum und enthält das Wort „SEPA_Lastschrift_Skatbank“ – z.&nbsp;B.
+                <code class="px-1.5 py-0.5 rounded bg-slate-100 text-xs break-all">2027-03-15_SEPA_Lastschrift_Skatbank_40Mitglieder_960_00EUR.xml</code>.
+                <em>Sie müssen diese Datei nicht öffnen</em> – sie ist nur für die Bank bestimmt.</div>
+            </li>
+          </ol>
+
+          <h3 class="text-lg font-bold text-slate-900 pt-4 border-t border-slate-100">Teil B · Die Datei bei der Bank hochladen</h3>
+          <ol class="step-list space-y-5">
+            <li>
+              <div class="font-bold text-slate-900">Im Online-Banking der Deutschen Skatbank anmelden</div>
+              <div class="text-slate-600">Wie gewohnt mit den Zugangsdaten des Vereinskontos.</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Den Datei-Upload öffnen</div>
+              <div class="text-slate-600">Im Menü: <strong>Zahlungsverkehr / Aufträge → Dateiverarbeitung (XML-Upload) → SEPA-Datei hochladen</strong>.
+                (Die Bezeichnungen können sich bei der Bank leicht ändern – gesucht ist alles mit „Datei“, „Upload“ oder „Sammler“.)</div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Die Datei aus dem Downloads-Ordner auswählen</div>
+              <div class="text-slate-600">Die Bank zeigt Ihnen danach die Anzahl der Lastschriften und die Gesamtsumme an. <strong>Vergleichen Sie diese mit den Zahlen aus dem Portal.</strong></div>
+            </li>
+            <li>
+              <div class="font-bold text-slate-900">Mit TAN freigeben</div>
+              <div class="text-slate-600">Bestätigen Sie den Auftrag wie jede Überweisung mit Ihrer TAN (z.&nbsp;B. per App). <strong>Fertig!</strong> 🎉 Die Bank bucht die Beiträge am Fälligkeitstag ab.</div>
+            </li>
+          </ol>
+
+          <div class="rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-950">
+            <strong>⚠️ Wichtig:</strong> Erstellen Sie die Datei nur, wenn Sie sie auch gleich bei der Bank hochladen. Sobald die Datei erstellt ist, gelten die Mitglieder im Portal als „bezahlt“.
+            Klappt der Upload bei der Bank nicht, erstellen Sie die Datei <strong>nicht neu</strong> – nehmen Sie einfach <strong>dieselbe Datei</strong> noch einmal (sie liegt im Downloads-Ordner und zusätzlich im Google-Drive-Archiv). Im Zweifel: Gaston fragen.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 9. HÄUFIGE AUFGABEN                                                    -->
+      <!-- ===================================================================== -->
+      <section id="aufgaben" data-toc="🧰 Weitere Aufgaben" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🧰 Weitere Aufgaben, die ab und zu vorkommen</h2>
+          <p class="mt-2 text-slate-600">Klicken Sie auf eine Aufgabe, um die Anleitung aufzuklappen.</p>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Papierantrag -->
+          <details id="aufgaben-papier" class="group bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 hover:bg-slate-50">
+              <span class="font-bold text-slate-900">📷 Jemand hat einen Papierantrag abgegeben</span>
+              <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span>
+            </summary>
+            <div class="px-5 pb-5 pt-1 space-y-4 text-slate-600">
+              <ol class="step-list space-y-4">
+                <li><div class="font-bold text-slate-900">Oben auf <span class="replica px-3 py-1 rounded-lg bg-purple-50 text-purple-900 border border-purple-300 text-xs font-bold">📷 Papierantrag erfassen</span> klicken.</div></li>
+                <li><div class="font-bold text-slate-900">Foto vom Antrag machen</div>Links auf „📁 Datei auswählen / Foto aufnehmen“ tippen. Am Handy können Sie direkt fotografieren, am Computer eine eingescannte Datei auswählen. Steht das Foto auf dem Kopf, drehen Sie es mit ↺ / ↻.</li>
+                <li><div class="font-bold text-slate-900">Art auswählen</div><strong>🟢 Neuer Antrag</strong> – für ganz neue Mitglieder.<br /><strong>🟣 Altbestand</strong> – für Mitglieder, die schon länger dabei sind und nur aus dem alten Papierordner übertragen werden.</li>
+                <li><div class="font-bold text-slate-900">Daten vom Papier abtippen</div>Rechts die Felder ausfüllen. Pflicht sind nur <strong>Vorname, Nachname und IBAN</strong> (die Kontonummer). Neben der IBAN zeigt das Portal sofort an, ob sie stimmt.
+                  <br /><span class="text-sm">Bei <strong>Altbestand</strong>: Tragen Sie bei „Bereits eingezogene Jahre“ ein, für welche Jahre schon abgebucht wurde (z.&nbsp;B. <em>2024, 2025</em>). So wird nichts doppelt abgebucht.</span></li>
+                <li><div class="font-bold text-slate-900">Speichern</div>Auf <span class="replica px-3 py-1 rounded-xl bg-purple-700 text-white text-xs font-bold">💾 Als Mitglied speichern &amp; im Drive archivieren</span> klicken. Das Mitglied erscheint in der Liste. Bei neuen Anträgen geht es dann wie gewohnt mit <a href="#schritt2" class="underline font-semibold text-[#1B4D3E]">Schritt 2</a> weiter.</li>
+              </ol>
+              <p class="text-sm rounded-lg bg-slate-50 border border-slate-200 p-3">💡 Den Papierantrag selbst bitte trotzdem aufheben und in den Vereinsordner legen.</p>
+            </div>
+          </details>
+
+          <!-- Leeres Formular -->
+          <details class="group bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 hover:bg-slate-50">
+              <span class="font-bold text-slate-900">🖨️ Ich brauche leere Antragsformulare zum Auslegen</span>
+              <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span>
+            </summary>
+            <div class="px-5 pb-5 pt-1 text-slate-600 space-y-2">
+              <p>Oben auf <span class="replica px-3 py-1 rounded-lg bg-white text-slate-700 border border-slate-300 text-xs font-bold">🖨️ Vorlage drucken</span> klicken. Es öffnet sich ein fertiges Formular, das Sie ganz normal ausdrucken können.</p>
+              <p>Ausgefüllte Formulare erfassen Sie danach wie oben unter „Papierantrag“ beschrieben.</p>
+            </div>
+          </details>
+
+          <!-- Kündigung -->
+          <details id="aufgaben-kuendigung" class="group bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 hover:bg-slate-50">
+              <span class="font-bold text-slate-900">🚪 Ein Mitglied möchte austreten (z.&nbsp;B. weil das Kind in die Schule kommt)</span>
+              <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span>
+            </summary>
+            <div class="px-5 pb-5 pt-1 text-slate-600 space-y-4">
+              <ol class="step-list space-y-4">
+                <li><div class="font-bold text-slate-900">Mitglied suchen</div>Den Namen oben ins Suchfeld tippen.</li>
+                <li><div class="font-bold text-slate-900">Ganz rechts in der Zeile auf <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">✏️ Bearbeiten / Kündigung</span> klicken.</div></li>
+                <li><div class="font-bold text-slate-900">Im roten Kasten das Häkchen setzen</div><span class="replica px-2 py-0.5 rounded bg-rose-50 text-rose-800 text-xs font-bold border border-rose-200">☑ Jetzt kündigen &amp; SEPA sperren</span>
+                  <br />Falls das Mitglied schriftlich gekündigt hat, können Sie das Schreiben (als PDF) direkt darunter auswählen – es wird automatisch abgelegt.</li>
+                <li><div class="font-bold text-slate-900">Bestätigung per E-Mail</div>Das Häkchen „Kündigungsbestätigung per E-Mail senden“ ist schon gesetzt – lassen Sie es so. Mit „Vorschau ansehen“ können Sie den Text vorher lesen.</li>
+                <li><div class="font-bold text-slate-900">Auf <span class="replica px-3 py-1 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold">💾 Änderungen speichern</span> klicken.</div>
+                  Die Zeile wird grau und es wird <strong>nie wieder</strong> etwas von diesem Konto abgebucht.</li>
+              </ol>
+            </div>
+          </details>
+
+          <!-- Daten ändern -->
+          <details id="aufgaben-aendern" class="group bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 hover:bg-slate-50">
+              <span class="font-bold text-slate-900">✏️ Neue Bankverbindung, neue E-Mail-Adresse oder anderer Beitrag</span>
+              <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span>
+            </summary>
+            <div class="px-5 pb-5 pt-1 text-slate-600 space-y-3">
+              <ol class="step-list space-y-4">
+                <li>Mitglied suchen und auf <span class="replica px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">✏️ Bearbeiten / Kündigung</span> klicken.</li>
+                <li>Das passende Feld ändern (z.&nbsp;B. „IBAN (bei Kontowechsel)“ oder „Jahresbeitrag“). Den <strong>roten Kündigungs-Kasten nicht anfassen</strong>.</li>
+                <li>Unter „Notizen“ kurz vermerken, was und warum Sie es geändert haben – z.&nbsp;B. <em>„Neue IBAN per Mail am 03.02.“</em>.</li>
+                <li>Auf <span class="replica px-3 py-1 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold">💾 Änderungen speichern</span> klicken.</li>
+              </ol>
+              <p class="text-sm rounded-lg bg-slate-50 border border-slate-200 p-3">💡 Ist die neue Kontonummer falsch eingetippt, meldet sich das Portal sofort und speichert nicht. Prüfen Sie dann die Ziffern noch einmal.</p>
+            </div>
+          </details>
+
+          <!-- Dateien finden -->
+          <details class="group bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 hover:bg-slate-50">
+              <span class="font-bold text-slate-900">📁 Wo finde ich einen bestimmten Antrag oder eine alte Bank-Datei?</span>
+              <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span>
+            </summary>
+            <div class="px-5 pb-5 pt-1 text-slate-600 space-y-3">
+              <p><strong>Einzelner Antrag:</strong> In der Zeile des Mitglieds bei „Schritt 1“ auf „Öffnen ↗“ klicken.</p>
+              <p><strong>Alle Dateien:</strong> Oben auf <span class="replica px-3 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">📁 Google Drive Ordner</span> klicken. Dort gibt es Links zu:</p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>📊 der Mitglieder-Tabelle</li>
+                <li>📄 allen eingegangenen Anträgen</li>
+                <li>✉️ allen verschickten Willkommens-Mails</li>
+                <li>🚪 allen Kündigungen</li>
+                <li>🏦 allen Bank-Dateien der Beitragseinzüge (sortiert nach Jahr)</li>
+              </ul>
+              <p class="text-sm">Alle Dateien sind automatisch nach dem Muster <em>Datum_Nachname_Vorname_Art</em> benannt, z.&nbsp;B. <code class="px-1 rounded bg-slate-100 text-xs">2026-11-05_Muster_Erika_Mitgliedsantrag.pdf</code>.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 10. BITTE NICHT                                                        -->
+      <!-- ===================================================================== -->
+      <section id="finger-weg" data-toc="✋ Bitte nicht anfassen" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">✋ Bitte nicht anfassen</h2>
+          <p class="mt-2 text-slate-600">Es gibt nur wenige Dinge, die Sie vermeiden sollten. Damit läuft alles reibungslos:</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl border border-rose-200 p-4">
+            <div class="font-bold text-slate-900">🗂️ Dateien im Google Drive nicht umbenennen, verschieben oder löschen</div>
+            <div class="text-sm text-slate-600 mt-1">Das Portal findet die Dateien anhand ihres Namens und Ordners. Anschauen und herunterladen ist natürlich jederzeit erlaubt.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-rose-200 p-4">
+            <div class="font-bold text-slate-900">📊 Die Mitglieder-Tabelle nicht direkt bearbeiten</div>
+            <div class="text-sm text-slate-600 mt-1">Bitte alle Änderungen über das Portal machen (✏️ Bearbeiten). Vor allem keine Zeilen oder Spalten löschen oder verschieben.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-rose-200 p-4">
+            <div class="font-bold text-slate-900">🔧 Alles, wo „Gaston“ oder „Fernwartung“ dransteht</div>
+            <div class="text-sm text-slate-600 mt-1">Diese Bereiche sind für die technische Betreuung gedacht. Sie brauchen sie nicht.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-rose-200 p-4">
+            <div class="font-bold text-slate-900">🧪 „Offline-Testansicht“ ist nicht echt</div>
+            <div class="text-sm text-slate-600 mt-1">Steht oben neben „Vorstands-Portal“ ein <strong>gelber</strong> Hinweis „Offline-Testansicht“, sehen Sie nur Beispieldaten. Nichts davon ist echt! Klicken Sie auf 🔒 und melden Sie sich richtig an. Richtig angemeldet steht dort in Grün „Live verbunden“.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 11. PROBLEME                                                           -->
+      <!-- ===================================================================== -->
+      <section id="probleme" data-toc="🆘 Wenn etwas nicht klappt" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🆘 Wenn etwas nicht klappt</h2>
+          <p class="mt-2 text-slate-600">Die häufigsten Fragen – und was Sie tun können. <strong>Erste Hilfe für fast alles:</strong> auf <span class="replica px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold">↻ Aktualisieren</span> klicken oder die Seite neu laden.</p>
+        </div>
+
+        <div class="space-y-3">
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Die Anmeldung klappt nicht. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600 space-y-2">
+              <p>Prüfen Sie, ob die Feststelltaste (⇪ Großschreibung) aktiv ist. Ansonsten nutzen Sie den <strong>📧 Einmal-PIN</strong> per E-Mail (siehe <a href="#anmelden" class="underline text-[#1B4D3E]">Anmelden</a>).</p>
+              <p>Steht dort „Zu viele Fehlversuche“, warten Sie 30 Minuten.</p>
+            </div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Ich wurde plötzlich abgemeldet („Sitzung abgelaufen“). <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Das ist normal und passiert spätestens nach 30 Tagen aus Sicherheitsgründen. Einfach wieder anmelden – es geht nichts verloren.</div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Ein Elternteil sagt, es hat sich angemeldet – aber ich sehe es nicht in der Liste. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600 space-y-2">
+              <p>1. Klicken Sie auf <strong>↻ Aktualisieren</strong> und schauen Sie unter dem Filter <strong>„Alle“</strong> (nicht nur „Neue Anträge“). Leeren Sie auch das Suchfeld.</p>
+              <p>2. Immer noch nicht da? Schauen Sie ins Vereins-Postfach, ob die Eltern den Antrag per E-Mail geschickt haben. Dann können Sie ihn über <a href="#aufgaben-papier" class="underline text-[#1B4D3E]">📷 Papierantrag erfassen</a> von Hand eintragen.</p>
+            </div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Unten rechts erscheint „Verbindungsproblem“ oder eine Fehlermeldung. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Prüfen Sie, ob Ihr Internet funktioniert, und versuchen Sie es nach einer Minute erneut. Bleibt der Fehler, machen Sie ein Foto oder einen Screenshot der Meldung und schicken Sie ihn an Gaston.</div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Ein Mitglied fehlt in der Liste für den Beitragseinzug. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Das Portal lässt nur Mitglieder zu, bei denen <strong>Schritt 1 und 2 grün</strong> sind und die Kontonummer stimmt. Schauen Sie neben dem Namen: Dort steht der Grund (z.&nbsp;B. „🔒 Noch nicht freigegeben“ oder „⚠️ IBAN-Prüfsumme ungültig“). Erledigen Sie den fehlenden Schritt, dann ist das Mitglied beim nächsten Mal dabei.</div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Die Bank hat die Datei abgelehnt. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Bitte <strong>keine neue Datei erstellen</strong>. Notieren Sie (oder fotografieren Sie) die Fehlermeldung der Bank und melden Sie sich bei Gaston. Die ursprüngliche Datei liegt sicher im Downloads-Ordner und im Google-Drive-Archiv.</div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Auf dem Kontoauszug ist eine Lastschrift „zurückgekommen“. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Das nennt man Rücklastschrift – meist ist das Konto nicht gedeckt, wurde aufgelöst oder das Mitglied hat widersprochen. Schreiben Sie dem Mitglied freundlich und fragen Sie nach. Bei einer neuen Kontonummer tragen Sie diese über <a href="#aufgaben-aendern" class="underline text-[#1B4D3E]">✏️ Bearbeiten</a> ein und vermerken den Vorgang unter „Notizen“. Wie der offene Beitrag nachgeholt wird (z.&nbsp;B. per Überweisung), klären Sie am besten im Vorstand.</div>
+          </details>
+          <details class="bg-white rounded-xl border border-[#E6E1D5]">
+            <summary class="px-5 py-4 flex items-center justify-between gap-3 font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">Ich habe aus Versehen etwas falsch eingetragen. <span class="faq-chevron text-slate-400 text-xl transition-transform">›</span></summary>
+            <div class="px-5 pb-4 text-slate-600">Kein Grund zur Sorge. Daten wie Name, Beitrag oder Kontonummer können Sie jederzeit über <strong>✏️ Bearbeiten / Kündigung</strong> korrigieren. Eine schon verschickte E-Mail lässt sich zwar nicht zurückholen – schreiben Sie dem Mitglied in dem Fall einfach eine kurze Korrektur. Bei allem anderen hilft Gaston.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 12. JAHRESKALENDER                                                     -->
+      <!-- ===================================================================== -->
+      <section id="kalender" data-toc="📅 Was ist wann zu tun?" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">📅 Was ist wann zu tun?</h2>
+          <p class="mt-2 text-slate-600">Ihr Jahr als Vorstand auf einen Blick.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-700">Regelmäßig (z.&nbsp;B. 1× pro Woche)</div>
+            <div class="font-bold text-slate-900 mt-1">Neue Anträge bearbeiten</div>
+            <div class="text-sm text-slate-600 mt-1">Portal öffnen → „🔔 Neue Anträge“ → Schritt 1 und 2 erledigen. Dauert ca. 2 Minuten pro Mitglied.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-sky-300 p-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-sky-700">Anfang März</div>
+            <div class="font-bold text-slate-900 mt-1">Jahresbeiträge einziehen</div>
+            <div class="text-sm text-slate-600 mt-1">Schritt 3 – Fälligkeitstag 15. März. Danach den Kontoauszug auf Rücklastschriften prüfen.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-700">Sommer</div>
+            <div class="font-bold text-slate-900 mt-1">Kündigungen wegen Einschulung</div>
+            <div class="text-sm text-slate-600 mt-1">Viele Familien verlassen die Kita. Tragen Sie eingehende Kündigungen wie unter <a href="#aufgaben-kuendigung" class="underline text-[#1B4D3E]">🚪 Austritt</a> beschrieben ein.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-[#E6E1D5] p-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-purple-700">Bei Festen &amp; Elternabenden</div>
+            <div class="font-bold text-slate-900 mt-1">Papieranträge</div>
+            <div class="text-sm text-slate-600 mt-1">Leere Formulare über „🖨️ Vorlage drucken“ ausdrucken, ausgefüllte über „📷 Papierantrag erfassen“ eintragen.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 13. WÖRTERBUCH                                                         -->
+      <!-- ===================================================================== -->
+      <section id="woerterbuch" data-toc="📚 Kleines Wörterbuch" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">📚 Kleines Wörterbuch</h2>
+          <p class="mt-2 text-slate-600">Begriffe, die Ihnen im Portal begegnen – einfach erklärt.</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-[#E6E1D5] overflow-hidden">
+          <dl class="divide-y divide-slate-100">
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">SEPA-Lastschrift</dt><dd class="text-slate-600">Der Verein bucht Geld vom Konto des Mitglieds ab – mit dessen Erlaubnis. So zahlen alle ihren Beitrag, ohne selbst überweisen zu müssen.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Mandat / SEPA-Mandat</dt><dd class="text-slate-600">Die unterschriebene Erlaubnis des Mitglieds, dass wir abbuchen dürfen. Sie steht im Mitgliedsantrag.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Mandatsreferenz</dt><dd class="text-slate-600">Eine Art Kundennummer für jedes Mitglied, z.&nbsp;B. <em>WW-2026-1234</em>. Wird automatisch vergeben.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Gläubiger-ID</dt><dd class="text-slate-600">Die „Ausweisnummer“ unseres Vereins für Lastschriften (<code class="text-xs">DE83ZZZ00002910027</code>). Steht automatisch überall drin.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">IBAN</dt><dd class="text-slate-600">Die Kontonummer, beginnt in Deutschland mit „DE“ und hat 22 Zeichen.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Vorab-Mail / Vorabinformation</dt><dd class="text-slate-600">Die E-Mail aus Schritt 2, mit der wir dem Mitglied vor der ersten Abbuchung sagen, wann und wie viel abgebucht wird. Ist gesetzlich vorgeschrieben.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">PDF</dt><dd class="text-slate-600">Ein Dateiformat für Dokumente, das überall gleich aussieht – wie ein digitales Blatt Papier. Der unterschriebene Mitgliedsantrag ist ein PDF.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">XML-Datei / pain.008</dt><dd class="text-slate-600">Die Datei für die Bank aus Schritt 3. Sie enthält alle Abbuchungen auf einmal. Öffnen müssen Sie sie nie – nur bei der Bank hochladen.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Google Drive</dt><dd class="text-slate-600">Ein sicherer Online-Aktenschrank des Vereins. Hier legt das Portal alle Dokumente automatisch ab.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Google-Tabelle</dt><dd class="text-slate-600">Die Mitgliederliste im Hintergrund – wie eine Excel-Tabelle. Das Portal liest und schreibt sie für Sie.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Vereins-Postfach</dt><dd class="text-slate-600">Das E-Mail-Konto des Vereins: <span data-verein-email>foerdervereinweserwichtel@gmail.com</span>.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">TAN</dt><dd class="text-slate-600">Der Bestätigungscode beim Online-Banking, den Sie z.&nbsp;B. per Banking-App bekommen.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Browser</dt><dd class="text-slate-600">Das Programm, mit dem Sie Internetseiten öffnen – z.&nbsp;B. Safari, Chrome, Firefox oder Edge.</dd></div>
+            <div class="p-4 sm:grid sm:grid-cols-[200px_1fr] sm:gap-4"><dt class="font-bold text-slate-900">Rücklastschrift</dt><dd class="text-slate-600">Eine Abbuchung, die nicht geklappt hat und an uns zurückgebucht wurde.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- 14. HILFE                                                              -->
+      <!-- ===================================================================== -->
+      <section id="hilfe" data-toc="🤝 Hilfe & Ansprechpartner" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">🤝 Hilfe &amp; Ansprechpartner</h2>
+          <p class="mt-2 text-slate-600">Sie sind nicht allein. Fragen ist ausdrücklich erwünscht!</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl border border-[#E6E1D5] p-5">
+            <div class="text-2xl">🔧</div>
+            <div class="font-bold text-slate-900 mt-1">Technische Fragen &amp; Fehler</div>
+            <div class="text-slate-600 mt-1"><strong>Gaston</strong> betreut die Website und das Portal. Am besten mit einem Screenshot oder Foto der Meldung.</div>
+          </div>
+          <div class="bg-white rounded-xl border border-[#E6E1D5] p-5">
+            <div class="text-2xl">👥</div>
+            <div class="font-bold text-slate-900 mt-1">Fragen zu Mitgliedern &amp; Beiträgen</div>
+            <ul class="text-slate-600 mt-1 space-y-0.5" id="boardMembersList">
+              <li><strong>Kanchan Noack</strong> – Vorstand</li>
+              <li><strong>Tanja Ganser</strong> – Vorstand</li>
+              <li><strong>Thomas Land</strong> – Schatzmeister</li>
+            </ul>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-[#1B4D3E] text-white p-6 text-center">
+          <div class="text-3xl">💚</div>
+          <p class="mt-2 font-bold text-lg">Danke, dass Sie sich für unsere Kita-Kinder engagieren!</p>
+          <a href="admin.html" class="no-print mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-white text-[#1B4D3E] font-bold hover:bg-emerald-50 transition-colors">← Zurück zum Vorstands-Portal</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/config.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      var config = window.APP_CONFIG || {};
+      var TOKEN_KEY = 'ww_admin_session_token';
+
+      /**
+       * 1) Sitzung beim Google-Server bestätigen.
+       *    Ist das gespeicherte Token abgelaufen oder ungültig, wird es entfernt
+       *    und zur Anmeldung weitergeleitet. Bei Netzwerkproblemen (offline)
+       *    bleibt die Anleitung lesbar.
+       */
+      function verifySession() {
+        var token = '';
+        var isDemo = false;
+        try {
+          token = localStorage.getItem(TOKEN_KEY) || '';
+          isDemo = sessionStorage.getItem('ww_admin_demo_active') === 'true';
+        } catch (e) {}
+        if (isDemo || !token || !config.DATABASE_WEBHOOK_URL || window.location.protocol === 'file:') return;
+
+        fetch(config.DATABASE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'verifySession', token: token })
+        })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) {
+            if (data && (data.result === 'unauthorized' || data.status === 'unauthorized')) {
+              try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+              window.location.replace('admin.html?next=anleitung');
+            }
+          })
+          .catch(function () { /* offline: Anleitung bleibt lesbar */ });
+      }
+
+      /**
+       * 2) Inhaltsverzeichnis automatisch aus den Abschnitten erzeugen
+       *    und den aktuell sichtbaren Abschnitt hervorheben.
+       */
+      function buildToc() {
+        var sections = Array.prototype.slice.call(document.querySelectorAll('section[data-toc]'));
+        var desktop = document.querySelector('[data-toc-desktop]');
+        var mobile = document.querySelector('[data-toc-mobile]');
+        var desktopLinks = {};
+
+        sections.forEach(function (sec) {
+          var label = sec.getAttribute('data-toc');
+          if (desktop) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = '#' + sec.id;
+            a.textContent = label;
+            a.className = 'toc-link block px-3 py-1.5 rounded-r-lg border-l-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors';
+            li.appendChild(a);
+            desktop.appendChild(li);
+            desktopLinks[sec.id] = a;
+          }
+          if (mobile) {
+            var mli = document.createElement('li');
+            var ma = document.createElement('a');
+            ma.href = '#' + sec.id;
+            ma.textContent = label;
+            ma.className = 'block py-1 text-slate-700 hover:text-[#1B4D3E]';
+            ma.addEventListener('click', function () {
+              var d = mobile.closest('details');
+              if (d) d.open = false;
+            });
+            mli.appendChild(ma);
+            mobile.appendChild(mli);
+          }
+        });
+
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                Object.keys(desktopLinks).forEach(function (id) {
+                  desktopLinks[id].classList.toggle('is-active', id === entry.target.id);
+                });
+              }
+            });
+          }, { rootMargin: '-30% 0px -60% 0px' });
+          sections.forEach(function (sec) { observer.observe(sec); });
+        }
+      }
+
+      /**
+       * 3) Sprungmarken auf zugeklappte Aufgaben automatisch öffnen.
+       */
+      function openDetailsForHash() {
+        var id = (window.location.hash || '').slice(1);
+        if (!id) return;
+        var target = document.getElementById(id);
+        if (target && target.tagName === 'DETAILS') {
+          target.open = true;
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      /**
+       * 4) Vorstandsliste aus der zentralen Konfiguration übernehmen.
+       */
+      function renderBoardMembers() {
+        var list = document.getElementById('boardMembersList');
+        if (!list || !Array.isArray(config.BOARD_MEMBERS) || !config.BOARD_MEMBERS.length) return;
+        list.innerHTML = '';
+        config.BOARD_MEMBERS.forEach(function (m) {
+          var li = document.createElement('li');
+          var strong = document.createElement('strong');
+          strong.textContent = m.name;
+          li.appendChild(strong);
+          li.appendChild(document.createTextNode(' – ' + m.role));
+          list.appendChild(li);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        verifySession();
+        buildToc();
+        renderBoardMembers();
+        openDetailsForHash();
+        window.addEventListener('hashchange', openDetailsForHash);
+
+        var printBtn = document.getElementById('printGuideBtn');
+        if (printBtn) {
+          printBtn.addEventListener('click', function () {
+            document.querySelectorAll('details').forEach(function (d) { d.open = true; });
+            window.print();
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

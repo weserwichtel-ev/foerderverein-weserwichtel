@@ -363,6 +363,8 @@
       el.loginOverlay.classList.add('hidden');
       state.isAuthenticated = true;
       fetchMembers();
+    } else if (sessionStorage.getItem('ww_admin_demo_active') === 'true') {
+      enterDemoMode();
     }
   }
 
@@ -480,6 +482,12 @@
         state.isAuthenticated = true;
         state.isDemoMode = false;
         localStorage.setItem('ww_admin_session_token', res.token);
+        try { sessionStorage.removeItem('ww_admin_demo_active'); } catch (e) {}
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('next') === 'anleitung') {
+          window.location.href = 'admin-anleitung.html';
+          return;
+        }
         el.loginPasswordInput.value = '';
         el.loginOverlay.classList.add('hidden');
         showToast('Erfolgreich mit Vereins-Tresor verbunden!', 'success');
@@ -536,6 +544,12 @@
   function enterDemoMode() {
     state.isDemoMode = true;
     state.isAuthenticated = true;
+    try { sessionStorage.setItem('ww_admin_demo_active', 'true'); } catch (e) {}
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('next') === 'anleitung') {
+      window.location.href = 'admin-anleitung.html';
+      return;
+    }
     const saved = localStorage.getItem('ww_admin_demo_members_v2');
     if (saved) {
       try {
@@ -556,6 +570,7 @@
     state.isAuthenticated = false;
     state.isDemoMode = false;
     localStorage.removeItem('ww_admin_session_token');
+    try { sessionStorage.removeItem('ww_admin_demo_active'); } catch (e) {}
     el.loginOverlay.classList.remove('hidden');
     if (reasonMsg && typeof reasonMsg === 'string') {
       el.loginErrorBox.textContent = reasonMsg;
