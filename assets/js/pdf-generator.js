@@ -385,7 +385,7 @@
     const config = window.APP_CONFIG || {
       ASSOCIATION_NAME: 'Förderverein der Kita Weserwichtel e.V.',
       CREDITOR_ID: 'DE83ZZZ00002910027',
-      RECIPIENT_EMAIL: 'info@foerderverein-weserwichtel.de',
+      RECIPIENT_EMAIL: 'foerdervereinweserwichtel@gmail.com',
       CUSTOM_DOMAIN_NAME: 'foerderverein-weserwichtel.de'
     };
 
@@ -696,7 +696,7 @@
     doc.setTextColor(51, 65, 85);
     doc.text('📬 ABGABE:', margin + 4, y + 5.5);
     doc.setFont('helvetica', 'normal');
-    doc.text('Ausgefüllt im Kita-Briefkasten einwerfen, den Erzieher*innen übergeben oder per Foto an: info@foerderverein-weserwichtel.de', margin + 22, y + 5.5);
+    doc.text(`Ausgefüllt im Kita-Briefkasten einwerfen, den Erzieher*innen übergeben oder per Foto an: ${config.RECIPIENT_EMAIL || 'foerdervereinweserwichtel@gmail.com'}`, margin + 22, y + 5.5);
 
     const fileName = 'Vorlage_Mitgliedsantrag_Weserwichtel_Druckversion.pdf';
     const blob = doc.output('blob');

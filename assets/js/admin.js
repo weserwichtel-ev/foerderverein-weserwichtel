@@ -26,11 +26,11 @@
     BANK_BIC: "GENODEF1SLR",
     REGISTER_COURT: "Amtsgericht Charlottenburg (Berlin)",
     REGISTER_NUMBER: "VR 42469 B",
-    CUSTOM_DOMAIN_ACTIVE: true,
+    CUSTOM_DOMAIN_ACTIVE: false,
     CUSTOM_DOMAIN_NAME: "foerderverein-weserwichtel.de",
     CUSTOM_DOMAIN_EMAIL: "info@foerderverein-weserwichtel.de",
     VEREIN_GMAIL: "foerdervereinweserwichtel@gmail.com",
-    RECIPIENT_EMAIL: "info@foerderverein-weserwichtel.de",
+    RECIPIENT_EMAIL: "foerdervereinweserwichtel@gmail.com",
     DATABASE_WEBHOOK_URL: "",
     VERSION: "2.0.0"
   };

@@ -6,21 +6,14 @@
  * This file contains ONLY public association details and the endpoint URL.
  * No passwords, tokens, or private Google Drive IDs are ever stored in client code.
  *
- * DOMAIN READINESS SWITCH:
- * While waiting for the custom domain (foerderverein-weserwichtel.de) to be purchased,
- * CUSTOM_DOMAIN_ACTIVE is set to `false` so all emails and replies go directly to
- * the working Gmail account (foerdervereinweserwichtel@gmail.com) without bouncing.
- * Once the domain & free Infomaniak email forwarding are active, simply set
- * CUSTOM_DOMAIN_ACTIVE to `true` (or access via foerderverein-weserwichtel.de).
+ * EMAIL CONFIGURATION:
+ * Website runs on foerderverein-weserwichtel.de, while all email communication
+ * and Google Apps Script automations remain on foerdervereinweserwichtel@gmail.com.
+ * Set CUSTOM_DOMAIN_ACTIVE to `true` only if switching Reply-To to info@foerderverein-weserwichtel.de.
  */
 
-const _isCustomDomainHost =
-  typeof window !== "undefined" &&
-  window.location &&
-  window.location.hostname.toLowerCase().includes("foerderverein-weserwichtel.de");
-
-// >>> SCHALTER SOBALD DIE DOMAIN GEKAUFT IST: Auf `true` setzen <<<
-const CUSTOM_DOMAIN_ACTIVE = true || _isCustomDomainHost;
+// >>> E-MAIL-SCHALTER: `false` = Alle E-Mails & Automationen laufen über foerdervereinweserwichtel@gmail.com <<<
+const CUSTOM_DOMAIN_ACTIVE = false;
 
 const VEREIN_GMAIL_ADDRESS = "foerdervereinweserwichtel@gmail.com";
 const CUSTOM_DOMAIN_EMAIL_ADDRESS = "info@foerderverein-weserwichtel.de";
