@@ -561,16 +561,7 @@
     doc.text('Name des Kindes:', c2, rowY);
     drawDottedLine(c2 + 26, rowY + 0.5, innerRight);
 
-    // Row 5: Kita-Gruppe & Beitrag
-    rowY += 8.5;
-    const groupStartX = c1;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Kita-Gruppe:', groupStartX, rowY);
-    drawCheckbox(groupStartX + 21, rowY, false, 'Zwerge');
-    drawCheckbox(groupStartX + 41, rowY, false, 'Wichtel');
-    drawCheckbox(groupStartX + 61, rowY, false, 'Riesen');
-
-    // Row 6: Mitgliedsbeitrag (12 €, 24 €, freiwillig höher)
+    // Row 5: Mitgliedsbeitrag (12 €, 24 €, freiwillig höher)
     rowY += 8.5;
     doc.setFont('helvetica', 'bold');
     doc.text('Jahresbeitrag *:', c1, rowY);
