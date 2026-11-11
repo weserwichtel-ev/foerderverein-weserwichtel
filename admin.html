@@ -605,6 +605,25 @@
           <input type="text" id="editNotes" class="w-full px-3 py-2 border border-slate-300 rounded-lg" />
         </div>
 
+        <!-- Einwilligungen & Engagement (Spalten U, V, W im Google Sheet) -->
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <span class="block font-bold text-slate-700 text-xs">📬 Einwilligungen & Engagement (Google-Tabelle Spalten U–W):</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <label class="inline-flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-emerald-400">
+              <input type="checkbox" id="editNewsletterCheck" class="rounded border-slate-300 text-[#1B4D3E]" />
+              <span class="font-medium text-slate-800">📬 Mailverteiler (Newsletter)</span>
+            </label>
+            <label class="inline-flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-emerald-400">
+              <input type="checkbox" id="editVolunteerCheck" class="rounded border-slate-300 text-[#1B4D3E]" />
+              <span class="font-medium text-slate-800">🤝 Aktionen-Mithilfe</span>
+            </label>
+            <label class="inline-flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-emerald-400">
+              <input type="checkbox" id="editEmailCommsCheck" class="rounded border-slate-300 text-[#1B4D3E]" />
+              <span class="font-medium text-slate-800">✉️ E-Mail-Mitteilungen</span>
+            </label>
+          </div>
+        </div>
+
         <!-- Guided Cancellation Box -->
         <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
           <div class="flex items-center justify-between">
@@ -959,6 +978,25 @@
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Notizen:</label>
               <input type="text" id="paperNotes" placeholder="z. B. Handschriftlicher Antrag am Sommerfest erhalten" class="w-full text-xs px-2.5 py-1.5 border border-slate-300 rounded-lg" />
+            </div>
+
+            <!-- Angekreuzte Optionen auf dem Papierantrag -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <span class="block text-[11px] font-bold text-slate-700">Auf dem Antrag angekreuzt (Spalten U–W):</span>
+              <div class="flex flex-wrap gap-3 text-xs">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="paperNewsletterCheck" class="rounded border-slate-300 text-purple-700" />
+                  <span>📬 Mailverteiler (Newsletter)</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="paperVolunteerCheck" class="rounded border-slate-300 text-purple-700" />
+                  <span>🤝 Aktionen-Mithilfe</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="paperEmailCommsCheck" checked class="rounded border-slate-300 text-purple-700" />
+                  <span>✉️ E-Mail-Mitteilungen</span>
+                </label>
+              </div>
             </div>
           </div>
 

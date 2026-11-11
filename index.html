@@ -476,12 +476,52 @@
           </div>
 
         </form>
+
+        <!-- Inline Wichtel Thank-You State (Shown on the page after completing submission) -->
+        <div id="inlineThankYouCard" class="hidden p-6 sm:p-10 text-center space-y-5 bg-gradient-to-b from-[#FDFBF7] to-[#E8F5E9]/40">
+          <div class="relative mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#F7F4EC] border-2 border-[#E6E1D5] shadow-md flex items-center justify-center p-3">
+            <img src="assets/img/wichtel-icon.svg" alt="Weserwichtel sagt Danke" class="w-full h-full object-contain drop-shadow-sm" />
+            <span class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#1B4D3E] text-white flex items-center justify-center text-sm font-bold shadow">✓</span>
+          </div>
+          <div class="space-y-2 max-w-lg mx-auto">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E8F5E9] text-[#1B4D3E] border border-[#C0C9C3]">
+              🎉 Mitgliedsantrag erfolgreich übermittelt
+            </span>
+            <h3 id="inlineThankYouTitle" class="text-2xl sm:text-3xl font-extrabold text-[#1B4D3E]">
+              Herzlichen Dank & Willkommen bei den Weserwichteln!
+            </h3>
+            <p class="text-xs sm:text-sm text-[#404945] leading-relaxed">
+              Ihr digital unterschriebener Mitgliedsantrag wurde erfolgreich an den <strong>Förderverein der Kita Weserwichtel e.V.</strong> übermittelt. Gemeinsam machen wir für unsere Kita-Kinder viel möglich!
+            </p>
+          </div>
+          <div class="max-w-md mx-auto p-4 rounded-xl bg-white border border-[#E6E1D5] text-xs text-left space-y-1.5 shadow-2xs">
+            <div class="flex justify-between gap-2">
+              <span class="text-[#707974]">Mandatsreferenz:</span>
+              <span id="inlineThankYouMandate" class="font-mono font-bold text-[#121c2a]">WW-2026-0000</span>
+            </div>
+            <div class="flex justify-between gap-2">
+              <span class="text-[#707974]">Status:</span>
+              <span class="font-bold text-[#1B4D3E]">✓ Beim Vorstand eingegangen</span>
+            </div>
+            <p class="text-[11px] text-[#57605b] pt-1.5 border-t border-[#E6E1D5]">
+              ℹ️ Vor dem ersten SEPA-Lastschrifteinzug erhalten Sie rechtzeitig eine separate Vorabinformation per E-Mail.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button type="button" id="inlineDownloadPdfAgainBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] text-white text-xs font-bold shadow-sm transition-colors">
+              <span>💾 Mein PDF für meine Unterlagen speichern</span>
+            </button>
+            <button type="button" id="inlineNewFormBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#D4CEBE] bg-white hover:bg-[#F7F4EC] text-[#404945] text-xs font-semibold transition-colors">
+              <span>Weiteren Antrag ausfüllen</span>
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
   </main>
 
-  <!-- Calm, Step-by-Step Success & PDF Delivery Modal -->
+  <!-- Calm, Step-by-Step Success & PDF Delivery Modal + Wichtel Thank-You Screen -->
   <div id="successModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-7 shadow-2xl border border-[#E6E1D5] text-left relative animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] sm:max-h-[90vh] overflow-y-auto overscroll-contain">
       
@@ -495,93 +535,163 @@
         </svg>
       </button>
 
-      <div class="flex items-center gap-3 mb-3 pr-8">
-        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-[#E8F5E9] text-[#1B4D3E] rounded-full flex items-center justify-center text-xl font-bold shrink-0">
-          ✓
-        </div>
-        <div>
-          <h3 class="text-base sm:text-xl font-bold text-[#121c2a] leading-tight">Fast geschafft! Ihr PDF ist fertig.</h3>
-          <p class="text-xs text-[#57605b] mt-0.5">Wählen Sie einfach Ihren bevorzugten Weg zum Versenden:</p>
-        </div>
-      </div>
-
-      <!-- Option A: Native Mobile Share Sheet (Primary on Smartphones) -->
-      <div id="nativeShareSection" class="mt-4 p-4 rounded-xl bg-[#E8F5E9] border-2 border-[#1B4D3E] hidden">
-        <div class="flex items-center justify-between gap-2 mb-1.5">
-          <span class="text-xs font-bold text-[#003629] uppercase tracking-wide">📲 Empfohlen fürs Smartphone</span>
-          <span class="text-[10px] font-semibold bg-[#1B4D3E] text-white px-2 py-0.5 rounded-full">Mit PDF-Anhang</span>
-        </div>
-        <p class="text-xs text-[#404945] leading-relaxed mb-3">
-          Tippen Sie unten auf den Button: Ihr Smartphone öffnet direkt das Teilen-Menü mit <strong>Mail / Gmail / WhatsApp</strong>. Das PDF ist dabei <strong>bereits fertig angehängt!</strong>
-        </p>
-        <button type="button" id="modalNativeShareBtn" class="w-full inline-flex justify-center items-center gap-2 py-3 px-4 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] active:bg-[#002117] text-white font-bold text-sm shadow-md transition-all">
-          <span>📤 PDF direkt teilen / per E-Mail senden</span>
-        </button>
-      </div>
-
-      <!-- Option B: Step-by-Step for PC / Laptop / Browser Download -->
-      <div class="mt-4 space-y-3 text-xs">
-        <div class="flex items-center gap-2 my-1">
-          <span id="manualStepsDividerLabel" class="text-[11px] font-bold text-[#707974] uppercase tracking-wider">Alternativ: Manuell per Download</span>
-          <div class="flex-grow h-px bg-[#E6E1D5]"></div>
-        </div>
-
-        <!-- Step 1: PDF Download on Click -->
-        <div class="p-4 rounded-xl bg-[#F7F4EC] border border-[#E6E1D5]">
-          <div class="flex items-start justify-between gap-2">
-            <div class="min-w-0 pr-2">
-              <p class="font-bold text-[#1F2937]">Schritt 1: PDF auf Ihr Gerät herunterladen</p>
-              <p class="text-[#707974] font-mono text-[11px] mt-0.5 truncate" id="downloadedFileName">Mitgliedsantrag_Weserwichtel.pdf</p>
-            </div>
-            <span id="step1StatusBadge" class="text-[11px] font-semibold text-[#D97706] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full shrink-0">Bereit</span>
+      <!-- =================================================================== -->
+      <!-- VIEW 1: PDF HERUNTERLADEN / PER E-MAIL SENDEN                        -->
+      <!-- =================================================================== -->
+      <div id="modalDeliveryStepView">
+        <div class="flex items-center gap-3.5 mb-3 pr-8">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#F7F4EC] border border-[#E6E1D5] rounded-2xl flex items-center justify-center p-1.5 shrink-0 shadow-2xs">
+            <img src="assets/img/wichtel-icon.svg" alt="Weserwichtel" class="w-full h-full object-contain" />
           </div>
-          <p class="text-[11px] text-[#57605b] mt-2">
-            Klicken Sie hier, um das fertige PDF in Ihrem Download-Ordner zu speichern.
+          <div>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E8F5E9] text-[#1B4D3E] mb-0.5">
+              ✓ Daten & PDF an Förderverein übermittelt
+            </span>
+            <h3 class="text-base sm:text-xl font-bold text-[#121c2a] leading-tight">Fast geschafft! Ihr PDF ist fertig.</h3>
+            <p class="text-xs text-[#57605b] mt-0.5">Speichern Sie Ihr Exemplar oder senden Sie es zusätzlich per E-Mail:</p>
+          </div>
+        </div>
+
+        <!-- Option A: Native Mobile Share Sheet (Primary on Smartphones) -->
+        <div id="nativeShareSection" class="mt-4 p-4 rounded-xl bg-[#E8F5E9] border-2 border-[#1B4D3E] hidden">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span class="text-xs font-bold text-[#003629] uppercase tracking-wide">📲 Empfohlen fürs Smartphone</span>
+            <span class="text-[10px] font-semibold bg-[#1B4D3E] text-white px-2 py-0.5 rounded-full">Mit PDF-Anhang</span>
+          </div>
+          <p class="text-xs text-[#404945] leading-relaxed mb-3">
+            Tippen Sie unten auf den Button: Ihr Smartphone öffnet direkt das Teilen-Menü mit <strong>Mail / Gmail / WhatsApp</strong>. Das PDF ist dabei <strong>bereits fertig angehängt!</strong>
           </p>
-          <button type="button" id="modalPdfBtn" class="mt-3 w-full inline-flex justify-center items-center gap-2 py-2.5 px-3 rounded-lg bg-[#1B4D3E] hover:bg-[#14382D] text-white font-bold text-xs shadow-sm transition-all">
-            <span>💾 Jetzt PDF-Datei herunterladen</span>
+          <button type="button" id="modalNativeShareBtn" class="w-full inline-flex justify-center items-center gap-2 py-3 px-4 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] active:bg-[#002117] text-white font-bold text-sm shadow-md transition-all">
+            <span>📤 PDF direkt teilen / per E-Mail senden</span>
           </button>
         </div>
 
-        <!-- Step 2: Open Email & Attach PDF -->
-        <div class="p-4 rounded-xl bg-[#FEF3C7]/40 border border-[#FDE68A]">
-          <p class="font-bold text-[#121c2a]">Schritt 2: E-Mail öffnen & PDF anhängen</p>
-          <p class="text-[#404945] mt-1 leading-relaxed">
-            Fügen Sie die heruntergeladene PDF-Datei in Ihrem E-Mail-Programm über das <strong>Büroklammer-Symbol (📎)</strong> als Anhang hinzu.
-          </p>
+        <!-- Option B: Step-by-Step for PC / Laptop / Browser Download -->
+        <div class="mt-4 space-y-3 text-xs">
+          <div class="flex items-center gap-2 my-1">
+            <span id="manualStepsDividerLabel" class="text-[11px] font-bold text-[#707974] uppercase tracking-wider">PDF speichern & per E-Mail senden</span>
+            <div class="flex-grow h-px bg-[#E6E1D5]"></div>
+          </div>
 
-          <!-- Copyable Recipient Email Box -->
-          <div class="mt-2.5 flex items-center justify-between gap-2 bg-white border border-[#E6E1D5] rounded-lg px-3 py-2">
-            <span class="font-mono text-[11px] text-[#121c2a] break-all select-all" id="recipientEmailText" data-verein-email>foerdervereinweserwichtel@gmail.com</span>
-            <button type="button" id="copyEmailBtn" class="shrink-0 text-[11px] font-semibold text-[#1B4D3E] hover:text-[#003629] bg-[#E8F5E9] hover:bg-[#D1E7DD] px-2.5 py-1 rounded border border-[#C0C9C3] transition-colors">
-              📋 Kopieren
+          <!-- Step 1: PDF Download on Click -->
+          <div class="p-4 rounded-xl bg-[#F7F4EC] border border-[#E6E1D5]">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 pr-2">
+                <p class="font-bold text-[#1F2937]">Schritt 1: PDF auf Ihr Gerät herunterladen</p>
+                <p class="text-[#707974] font-mono text-[11px] mt-0.5 truncate" id="downloadedFileName">Mitgliedsantrag_Weserwichtel.pdf</p>
+              </div>
+              <span id="step1StatusBadge" class="text-[11px] font-semibold text-[#D97706] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full shrink-0">Bereit</span>
+            </div>
+            <p class="text-[11px] text-[#57605b] mt-2">
+              Klicken Sie hier, um das fertige PDF in Ihrem Download-Ordner zu speichern.
+            </p>
+            <button type="button" id="modalPdfBtn" class="mt-3 w-full inline-flex justify-center items-center gap-2 py-2.5 px-3 rounded-lg bg-[#1B4D3E] hover:bg-[#14382D] text-white font-bold text-xs shadow-sm transition-all">
+              <span>💾 Jetzt PDF-Datei herunterladen</span>
             </button>
           </div>
 
-          <!-- Quick One-Click Mail Provider Options -->
-          <div class="mt-3.5 pt-3 border-t border-[#E6E1D5]">
-            <p class="text-[11px] font-semibold text-[#1F2937] mb-2">E-Mail-Vorlage direkt öffnen:</p>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <button type="button" id="modalMailDefaultBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
-                <span>✉️</span>
-                <span>Mail-App</span>
-              </button>
-              <button type="button" id="modalMailGmailBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
-                <span class="text-rose-600 font-bold">M</span>
-                <span>Gmail</span>
-              </button>
-              <button type="button" id="modalMailProtonBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
-                <span class="text-purple-600 font-bold">P</span>
-                <span>Proton</span>
-              </button>
-              <button type="button" id="modalMailOutlookBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
-                <span class="text-sky-600 font-bold">O</span>
-                <span>Outlook</span>
+          <!-- Step 2: Open Email & Attach PDF -->
+          <div class="p-4 rounded-xl bg-[#FEF3C7]/40 border border-[#FDE68A]">
+            <p class="font-bold text-[#121c2a]">Schritt 2: E-Mail öffnen & PDF anhängen</p>
+            <p class="text-[#404945] mt-1 leading-relaxed">
+              Fügen Sie die heruntergeladene PDF-Datei in Ihrem E-Mail-Programm über das <strong>Büroklammer-Symbol (📎)</strong> als Anhang hinzu.
+            </p>
+
+            <!-- Copyable Recipient Email Box -->
+            <div class="mt-2.5 flex items-center justify-between gap-2 bg-white border border-[#E6E1D5] rounded-lg px-3 py-2">
+              <span class="font-mono text-[11px] text-[#121c2a] break-all select-all" id="recipientEmailText" data-verein-email>foerdervereinweserwichtel@gmail.com</span>
+              <button type="button" id="copyEmailBtn" class="shrink-0 text-[11px] font-semibold text-[#1B4D3E] hover:text-[#003629] bg-[#E8F5E9] hover:bg-[#D1E7DD] px-2.5 py-1 rounded border border-[#C0C9C3] transition-colors">
+                📋 Kopieren
               </button>
             </div>
+
+            <!-- Quick One-Click Mail Provider Options -->
+            <div class="mt-3.5 pt-3 border-t border-[#E6E1D5]">
+              <p class="text-[11px] font-semibold text-[#1F2937] mb-2">E-Mail-Vorlage direkt öffnen:</p>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button type="button" id="modalMailDefaultBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                  <span>✉️</span>
+                  <span>Mail-App</span>
+                </button>
+                <button type="button" id="modalMailGmailBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                  <span class="text-rose-600 font-bold">M</span>
+                  <span>Gmail</span>
+                </button>
+                <button type="button" id="modalMailProtonBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                  <span class="text-purple-600 font-bold">P</span>
+                  <span>Proton</span>
+                </button>
+                <button type="button" id="modalMailOutlookBtn" class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg border border-[#D4CEBE] bg-[#FFFFFF] hover:bg-[#F7F4EC] text-[#1F2937] text-[11px] font-semibold transition-colors shadow-sm">
+                  <span class="text-sky-600 font-bold">O</span>
+                  <span>Outlook</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Complete / Go to Wichtel Thank-You Screen Button -->
+          <div class="pt-2">
+            <button type="button" id="modalFinishToThankYouBtn" class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#E8F5E9] hover:bg-[#D1E7DD] text-[#1B4D3E] border border-[#C0C9C3] font-bold text-xs transition-all">
+              <span>🎉 Fertig – Antrag abschließen</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: WICHTEL THANK-YOU CELEBRATION WINDOW (AFTER SENDING PDF)     -->
+      <!-- =================================================================== -->
+      <div id="modalThankYouView" class="hidden text-center py-2 space-y-4">
+        <div class="relative mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-b from-[#FEF3C7]/70 to-[#E8F5E9] border-2 border-[#E6E1D5] shadow-md flex items-center justify-center p-3">
+          <img src="assets/img/wichtel-icon.svg" alt="Der Weserwichtel sagt Danke!" class="w-full h-full object-contain drop-shadow-sm" />
+          <span class="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-[#1B4D3E] text-white flex items-center justify-center text-base font-bold shadow-md">♥</span>
+        </div>
+
+        <div class="space-y-1.5 px-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-[#E8F5E9] text-[#1B4D3E] border border-[#C0C9C3]">
+            🎉 Geschafft! Ihr Antrag ist eingegangen
+          </span>
+          <h3 id="thankYouModalHeadline" class="text-xl sm:text-2xl font-extrabold text-[#1B4D3E] leading-tight pt-1">
+            Herzlichen Dank & Willkommen bei den Weserwichteln!
+          </h3>
+          <p class="text-xs sm:text-sm text-[#404945] leading-relaxed">
+            Schön, dass Sie den <strong>Förderverein der Kita Weserwichtel e.V.</strong> unterstützen! Mit Ihrem Beitrag ermöglichen wir wunderbare Ausflüge, Feste, Spielgeräte und Projekte für unsere Kita-Kinder.
+          </p>
+        </div>
+
+        <!-- Summary Box -->
+        <div class="p-4 rounded-xl bg-[#F7F4EC] border border-[#E6E1D5] text-left text-xs space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[#707974]">Mitglied:</span>
+            <span id="thankYouMemberName" class="font-bold text-[#121c2a]">–</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[#707974]">Mandatsreferenz:</span>
+            <span id="thankYouMandateRef" class="font-mono font-bold text-[#1B4D3E]">WW-2026-0000</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[#707974]">Jahresbeitrag:</span>
+            <span id="thankYouFeeAmount" class="font-bold text-[#121c2a]">24,00 € / Jahr</span>
+          </div>
+          <div class="pt-2 border-t border-[#E6E1D5] text-[11px] text-[#57605b] leading-relaxed">
+            <strong>Wie geht es weiter?</strong> Unser Vorstand prüft Ihren Antrag. Rechtzeitig vor dem ersten SEPA-Lastschrifteinzug erhalten Sie eine separate Vorabinformation per E-Mail.
           </div>
         </div>
 
+        <div class="space-y-2 pt-1">
+          <button type="button" id="thankYouDoneBtn" class="w-full inline-flex justify-center items-center gap-2 py-3 px-4 rounded-xl bg-[#1B4D3E] hover:bg-[#14382D] text-white font-bold text-sm shadow-md transition-all">
+            <span>✓ Wunderbar, schließen</span>
+          </button>
+          <div class="flex items-center justify-center gap-4 pt-1">
+            <button type="button" id="thankYouDownloadAgainBtn" class="text-[11px] font-semibold text-[#1B4D3E] hover:underline">
+              💾 PDF noch einmal herunterladen
+            </button>
+            <span class="text-[#D4CEBE]">•</span>
+            <button type="button" id="thankYouBackToStepsBtn" class="text-[11px] font-medium text-[#707974] hover:text-[#121c2a] hover:underline">
+              ← Zurück zu den E-Mail-Optionen
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>

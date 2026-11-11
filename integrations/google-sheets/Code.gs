@@ -38,7 +38,10 @@ const SHEET_HEADERS = [
   'PDF-Eingang per E-Mail',     // Q (17)
   'Notizen',                    // R (18)
   'Mandatsreferenz',            // S (19)
-  'Eingezogene Beitragsjahre'   // T (20)
+  'Eingezogene Beitragsjahre',  // T (20)
+  'Mailverteiler (Newsletter)', // U (21)
+  'Aktionen-Mithilfe',          // V (22)
+  'E-Mail-Mitteilungen'         // W (23)
 ];
 
 const VEREIN_GMAIL = 'foerdervereinweserwichtel@gmail.com';
@@ -404,11 +407,19 @@ function ensureVereinFolderStructure(targetYear) {
     }
   }
 
-  // 3. Unterordner sicherstellen (Auto-Healing)
+  // 3. Unterordner sicherstellen (Auto-Healing inkl. Jahresordnern 2026, 2027, ...)
   const mitgliederFolder = getOrCreateSubfolder(rootFolder, FOLDER_NAMES.MITGLIEDER);
-  const antragsPdfsFolder = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.ANTRAGS_PDFS);
-  const preNotifsFolder = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.PRE_NOTIFS);
-  const kuendigungenFolder = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.KUENDIGUNGEN);
+  const antragsPdfsRoot = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.ANTRAGS_PDFS);
+  const antragsPdfsYearFolder = getOrCreateSubfolder(antragsPdfsRoot, yearStr);
+  const preNotifsRoot = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.PRE_NOTIFS);
+  const preNotifsYearFolder = getOrCreateSubfolder(preNotifsRoot, yearStr);
+  const kuendigungenRoot = getOrCreateSubfolder(mitgliederFolder, FOLDER_NAMES.KUENDIGUNGEN);
+  const kuendigungenYearFolder = getOrCreateSubfolder(kuendigungenRoot, yearStr);
+
+  // Lose herumliegende PDFs/Belege automatisch in den passenden Jahresordner (z. B. 2026/) einsortieren & .DS_Store entfernen
+  organizeLooseFilesIntoYearFolders_(antragsPdfsRoot, yearStr);
+  organizeLooseFilesIntoYearFolders_(preNotifsRoot, yearStr);
+  organizeLooseFilesIntoYearFolders_(kuendigungenRoot, yearStr);
 
   const finanzenFolder = getOrCreateSubfolder(rootFolder, FOLDER_NAMES.FINANZEN);
   const yearFolder = getOrCreateSubfolder(finanzenFolder, yearStr);
@@ -418,18 +429,22 @@ function ensureVereinFolderStructure(targetYear) {
   return {
     root: rootFolder,
     mitglieder: mitgliederFolder,
-    antragsPdfs: antragsPdfsFolder,
-    preNotifs: preNotifsFolder,
-    kuendigungen: kuendigungenFolder,
+    antragsPdfsRoot: antragsPdfsRoot,
+    antragsPdfs: antragsPdfsYearFolder,
+    preNotifsRoot: preNotifsRoot,
+    preNotifs: preNotifsYearFolder,
+    kuendigungenRoot: kuendigungenRoot,
+    kuendigungen: kuendigungenYearFolder,
     finanzen: finanzenFolder,
     yearFolder: yearFolder,
     sepaArchiv: sepaArchivFolder,
     urls: {
       root: rootFolder.getUrl(),
       mitglieder: mitgliederFolder.getUrl(),
-      antragsPdfs: antragsPdfsFolder.getUrl(),
-      preNotifs: preNotifsFolder.getUrl(),
-      kuendigungen: kuendigungenFolder.getUrl(),
+      antragsPdfs: antragsPdfsYearFolder.getUrl(),
+      antragsPdfsRoot: antragsPdfsRoot.getUrl(),
+      preNotifs: preNotifsYearFolder.getUrl(),
+      kuendigungen: kuendigungenYearFolder.getUrl(),
       sepaArchiv: sepaArchivFolder.getUrl(),
       sheet: SpreadsheetApp.getActiveSpreadsheet().getUrl()
     }
@@ -442,6 +457,54 @@ function getOrCreateSubfolder(parentFolder, childName) {
     return iter.next();
   }
   return parentFolder.createFolder(childName);
+}
+
+/**
+ * Sortiert lose Dateien im übergeordneten Ordner (z. B. Eingegangene_Mitgliedsantraege_PDFs)
+ * anhand des Datums-Präfixes (JJJJ-MM-TT_...) automatisch in den jeweiligen Jahres-Unterordner (z. B. 2026/)
+ * und entfernt störende macOS .DS_Store-Dateien.
+ */
+function organizeLooseFilesIntoYearFolders_(parentFolder, fallbackYear) {
+  try {
+    const files = parentFolder.getFiles();
+    while (files.hasNext()) {
+      const file = files.next();
+      const name = String(file.getName() || '');
+
+      // Entferne macOS .DS_Store Systemdateien automatisch in den Papierkorb
+      if (name === '.DS_Store') {
+        try {
+          file.setTrashed(true);
+        } catch (e) {}
+        continue;
+      }
+      if (name === '.keep' || name.startsWith('README')) {
+        continue;
+      }
+
+      // Ermittle das Jahr aus dem Dateinamen (z. B. 2026-11-10_...) oder dem Erstellungsdatum
+      let fileYear = String(fallbackYear || new Date().getFullYear());
+      const yearMatch = name.match(/^(20\d{2})-\d{2}-\d{2}_/);
+      if (yearMatch && yearMatch[1]) {
+        fileYear = yearMatch[1];
+      } else {
+        try {
+          const created = file.getDateCreated();
+          if (created) fileYear = String(created.getFullYear());
+        } catch (e) {}
+      }
+
+      const targetYearFolder = getOrCreateSubfolder(parentFolder, fileYear);
+      try {
+        if (typeof file.moveTo === 'function') {
+          file.moveTo(targetYearFolder);
+        } else {
+          targetYearFolder.addFile(file);
+          parentFolder.removeFile(file);
+        }
+      } catch (moveErr) {}
+    }
+  } catch (e) {}
 }
 
 function handleHealFolders(data) {
@@ -477,7 +540,7 @@ function handleGetMembers() {
 
   const numCols = Math.max(sheet.getLastColumn(), SHEET_HEADERS.length);
   const data = sheet.getRange(2, 1, lastRow - 1, numCols).getValues();
-  const drivePdfFiles = listFilesInFolder(folders.antragsPdfs);
+  const drivePdfFiles = listFilesInFolder(folders.antragsPdfsRoot || folders.antragsPdfs);
 
   const members = data.map((row, index) => {
     const rowNumber = index + 2;
@@ -492,6 +555,10 @@ function handleGetMembers() {
     // PDF-Abgleich mit dem erzwungenen Ordner 'Eingegangene_Mitgliedsantraege_PDFs'
     const matched = matchPdfForMember(lastName, firstName, mandateRef, drivePdfFiles);
     const rawPdfCol = String(row[16] || '').trim();
+    const notesStr = String(row[17] || '').trim();
+    const newsletter = parseSheetBool(row[20], notesStr, 'Mailverteiler: Ja');
+    const volunteerActions = parseSheetBool(row[21], notesStr, 'Aktionen: Ja');
+    const emailNotifications = parseSheetBool(row[22], notesStr, 'E-Mail-Mitteilungen: Ja');
 
     return {
       id: id,
@@ -517,7 +584,10 @@ function handleGetMembers() {
       matchedPdfUrl: matched ? matched.url : null,
       mandateRef: mandateRef,
       paidYears: paidYears,
-      notes: String(row[17] || '').trim()
+      newsletter: newsletter,
+      volunteerActions: volunteerActions,
+      emailNotifications: emailNotifications,
+      notes: notesStr
     };
   });
 
@@ -532,7 +602,9 @@ function handleGetMembers() {
 
 function listFilesInFolder(folder) {
   const list = [];
+  if (!folder) return list;
   try {
+    // 1. Dateien direkt im Ordner erfassen
     const files = folder.getFiles();
     while (files.hasNext()) {
       const f = files.next();
@@ -541,6 +613,20 @@ function listFilesInFolder(folder) {
         url: f.getUrl(),
         id: f.getId()
       });
+    }
+    // 2. Dateien in allen Jahres-Unterordnern (z. B. 2026/, 2027/, ...) erfassen
+    const subFolders = folder.getFolders();
+    while (subFolders.hasNext()) {
+      const sub = subFolders.next();
+      const subFiles = sub.getFiles();
+      while (subFiles.hasNext()) {
+        const sf = subFiles.next();
+        list.push({
+          name: sf.getName(),
+          url: sf.getUrl(),
+          id: sf.getId()
+        });
+      }
     }
   } catch (e) {}
   return list;
@@ -578,10 +664,14 @@ function handleNewRegistration(data) {
   const fee = data.contributionAmount ? parseFloat(data.contributionAmount).toFixed(2) : '24.00';
   const mandateRef = String(data.mandateRef || ('WW-' + now.getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000))).trim();
 
+  const optNewsletter = Boolean(data.newsletter);
+  const optVolunteer = Boolean(data.volunteerActions);
+  const optEmailComms = Boolean(data.emailNotifications);
+
   const optFlags = [];
-  if (data.volunteerActions) optFlags.push('Aktionen: Ja');
-  if (data.newsletter) optFlags.push('Mailverteiler: Ja');
-  if (data.emailNotifications) optFlags.push('E-Mail-Mitteilungen: Ja');
+  if (optNewsletter) optFlags.push('Mailverteiler: Ja');
+  if (optVolunteer) optFlags.push('Aktionen: Ja');
+  if (optEmailComms) optFlags.push('E-Mail-Mitteilungen: Ja');
 
   let pdfStatusText = 'Wartet auf E-Mail';
   let savedPdfName = '';
@@ -602,34 +692,39 @@ function handleNewRegistration(data) {
   }
 
   const newRow = [
-    timestampStr,                                         // A: Eingangsdatum
-    'Neu eingegangen',                                    // B: Status
-    lastName,                                             // C: Nachname
-    firstName,                                            // D: Vorname
-    String(data.email || '').trim(),                      // E: E-Mail
-    String(data.phone || '').trim(),                      // F: Telefon
-    addressStr,                                           // G: Straße & Hausnr.
-    cityStr,                                              // H: PLZ & Ort
-    String(data.birthDate || '').trim(),                  // I: Geburtsdatum
-    String(data.childName || '').trim(),                  // J: Name des Kindes
-    String(data.childGroup || '').trim(),                 // K: Kita-Gruppe
-    fee,                                                  // L: Jahresbeitrag (€)
-    String(data.accountHolder || (firstName + ' ' + lastName)).trim(), // M: Kontoinhaber
-    String(data.iban || '').trim(),                       // N: IBAN
-    String(data.bic || '').trim(),                        // O: BIC
-    String(data.bankName || '').trim(),                   // P: Kreditinstitut
-    pdfStatusText,                                        // Q: PDF-Status
-    [savedPdfName ? ('Auto-Archiv: ' + savedPdfName) : '', optFlags.join(' | ')].filter(Boolean).join(' · '), // R: Notizen
-    mandateRef,                                           // S: Mandatsreferenz
-    ''                                                    // T: Eingezogene Beitragsjahre
+    timestampStr,                                         // A (1): Eingangsdatum
+    'Neu eingegangen',                                    // B (2): Status
+    lastName,                                             // C (3): Nachname
+    firstName,                                            // D (4): Vorname
+    String(data.email || '').trim(),                      // E (5): E-Mail
+    String(data.phone || '').trim(),                      // F (6): Telefon
+    addressStr,                                           // G (7): Straße & Hausnr.
+    cityStr,                                              // H (8): PLZ & Ort
+    String(data.birthDate || '').trim(),                  // I (9): Geburtsdatum
+    String(data.childName || '').trim(),                  // J (10): Name des Kindes
+    String(data.childGroup || '').trim(),                 // K (11): Kita-Gruppe
+    fee,                                                  // L (12): Jahresbeitrag (€)
+    String(data.accountHolder || (firstName + ' ' + lastName)).trim(), // M (13): Kontoinhaber
+    String(data.iban || '').trim(),                       // N (14): IBAN
+    String(data.bic || '').trim(),                        // O (15): BIC
+    String(data.bankName || '').trim(),                   // P (16): Kreditinstitut
+    pdfStatusText,                                        // Q (17): PDF-Status
+    [savedPdfName ? ('Auto-Archiv: ' + savedPdfName) : '', optFlags.join(' | ')].filter(Boolean).join(' · '), // R (18): Notizen
+    mandateRef,                                           // S (19): Mandatsreferenz
+    '',                                                   // T (20): Eingezogene Beitragsjahre
+    optNewsletter,                                        // U (21): Mailverteiler (Newsletter)
+    optVolunteer,                                         // V (22): Aktionen-Mithilfe
+    optEmailComms                                         // W (23): E-Mail-Mitteilungen
   ];
 
   sheet.appendRow(newRow);
+  const insertedRow = sheet.getLastRow();
+  styleMemberCheckboxRow_(sheet, insertedRow);
   appendSystemLog('NEW_REGISTRATION', 'Neuer Mitgliedsantrag: ' + firstName + ' ' + lastName + ' (' + mandateRef + ')', savedPdfName || 'Ohne Direkt-PDF');
 
   return jsonResponse({
     result: 'success',
-    row: sheet.getLastRow(),
+    row: insertedRow,
     mandateRef: mandateRef,
     pdfAutoFiled: Boolean(savedPdfName),
     message: 'Mitgliedsantrag erfolgreich gespeichert.'
@@ -643,7 +738,7 @@ function handleNewRegistration(data) {
  */
 function handleScanInboxForPdfs() {
   const folders = ensureVereinFolderStructure(new Date().getFullYear());
-  const existingFiles = listFilesInFolder(folders.antragsPdfs);
+  const existingFiles = listFilesInFolder(folders.antragsPdfsRoot || folders.antragsPdfs);
   const sheet = ensureMainSheetHeaders();
   const lastRow = sheet.getLastRow();
 
@@ -689,7 +784,11 @@ function handleScanInboxForPdfs() {
           if (emailMatch || nameMatch) {
             const lockedName = buildLockedPdfFilename(msgDateIso, rLastName, rFirstName, 'Mitgliedsantrag');
             const blob = att.copyBlob().setName(lockedName);
-            const createdFile = folders.antragsPdfs.createFile(blob);
+            const msgYear = msgDateIso.slice(0, 4) || String(new Date().getFullYear());
+            const targetYearFolder = folders.antragsPdfsRoot
+              ? getOrCreateSubfolder(folders.antragsPdfsRoot, msgYear)
+              : folders.antragsPdfs;
+            const createdFile = targetYearFolder.createFile(blob);
 
             existingFiles.push({ name: lockedName, url: createdFile.getUrl(), id: createdFile.getId() });
             sheet.getRange(i + 2, 17).setValue('Geprüft & Archiviert');
@@ -910,6 +1009,18 @@ function handleUpdateOrCancelMember(data) {
   if (data.paidYears !== undefined) {
     const yrs = Array.isArray(data.paidYears) ? data.paidYears.join(', ') : String(data.paidYears);
     sheet.getRange(targetRow, 20).setValue(yrs);
+  }
+  if (data.newsletter !== undefined) {
+    sheet.getRange(targetRow, 21).setValue(Boolean(data.newsletter));
+  }
+  if (data.volunteerActions !== undefined) {
+    sheet.getRange(targetRow, 22).setValue(Boolean(data.volunteerActions));
+  }
+  if (data.emailNotifications !== undefined) {
+    sheet.getRange(targetRow, 23).setValue(Boolean(data.emailNotifications));
+  }
+  if (data.newsletter !== undefined || data.volunteerActions !== undefined || data.emailNotifications !== undefined) {
+    styleMemberCheckboxRow_(sheet, targetRow);
   }
 
   let cancellationFileUrl = '';
@@ -1189,6 +1300,10 @@ function handleCreatePaperMember(data) {
   const defaultNote = isOld ? 'Papierantrag aus Altbestand erfasst' : 'Handschriftlicher Papierantrag erfasst';
   const notes = data.notes ? String(data.notes).trim() : defaultNote;
 
+  const optNewsletter = Boolean(data.newsletter);
+  const optVolunteer = Boolean(data.volunteerActions);
+  const optEmailComms = Boolean(data.emailNotifications);
+
   const newRow = [
     timestampStr,                                         // A: Eingangsdatum
     status,                                               // B: Status
@@ -1209,15 +1324,20 @@ function handleCreatePaperMember(data) {
     pdfStatusText,                                        // Q: PDF-Status
     savedFileName ? (notes + ' (Archiv: ' + savedFileName + ')') : notes, // R: Notizen
     mandateRef,                                           // S: Mandatsreferenz
-    collectedYears                                        // T: Eingezogene Beitragsjahre
+    collectedYears,                                       // T: Eingezogene Beitragsjahre
+    optNewsletter,                                        // U: Mailverteiler (Newsletter)
+    optVolunteer,                                         // V: Aktionen-Mithilfe
+    optEmailComms                                         // W: E-Mail-Mitteilungen
   ];
 
   sheet.appendRow(newRow);
+  const insertedRow = sheet.getLastRow();
+  styleMemberCheckboxRow_(sheet, insertedRow);
   appendSystemLog('PAPER_MEMBER_CREATED', 'Papierantrag erfasst: ' + firstName + ' ' + lastName + ' (' + mandateRef + ')', savedFileName || 'Ohne Anhang');
 
   return jsonResponse({
     result: 'success',
-    row: sheet.getLastRow(),
+    row: insertedRow,
     mandateRef: mandateRef,
     fileName: savedFileName,
     message: 'Papierantrag erfolgreich im Google Drive archiviert und in Mitgliederliste eingetragen.'
@@ -1273,11 +1393,88 @@ function ensureMainSheetHeaders() {
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(SHEET_HEADERS);
     formatSheetHeader(sheet);
-  } else if (sheet.getLastColumn() < SHEET_HEADERS.length) {
-    // Ergänze neue Spalten S (Mandatsreferenz) und T (Eingezogene Beitragsjahre) nahtlos
+  } else if (
+    sheet.getLastColumn() < SHEET_HEADERS.length ||
+    String(sheet.getRange(1, SHEET_HEADERS.length).getValue() || '').trim() !== SHEET_HEADERS[SHEET_HEADERS.length - 1]
+  ) {
+    // Ergänze neue Spalten (inkl. U: Mailverteiler, V: Aktionen-Mithilfe, W: E-Mail-Mitteilungen) nahtlos
     sheet.getRange(1, 1, 1, SHEET_HEADERS.length).setValues([SHEET_HEADERS]);
+    formatSheetHeader(sheet);
+    try {
+      sheet.setColumnWidth(21, 175);
+      sheet.setColumnWidth(22, 150);
+      sheet.setColumnWidth(23, 165);
+      backfillConsentCheckboxes_(sheet);
+    } catch (e) {}
   }
   return sheet;
+}
+
+/**
+ * Wertet einen Checkbox-/Textwert aus der Tabelle aus und nutzt bei älteren Zeilen
+ * automatisch die Text-Marker in Spalte R (Notizen) als Fallback.
+ */
+function parseSheetBool(cellVal, notesText, notesMarker) {
+  if (cellVal === true) return true;
+  if (cellVal === false) {
+    if (notesMarker && String(notesText || '').indexOf(notesMarker) !== -1) return true;
+    return false;
+  }
+  const normalized = String(cellVal || '').trim().toLowerCase();
+  if (normalized === 'true' || normalized === 'wahr' || normalized === 'ja' || normalized === '1' || normalized === 'x' || normalized === '✓') {
+    return true;
+  }
+  if (normalized === 'false' || normalized === 'falsch' || normalized === 'nein' || normalized === '0') {
+    if (notesMarker && String(notesText || '').indexOf(notesMarker) !== -1) return true;
+    return false;
+  }
+  if (notesMarker && String(notesText || '').indexOf(notesMarker) !== -1) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Formatiert die Spalten U, V, W (21..23) einer Mitgliedszeile als echte klickbare Google-Sheets-Checkboxen.
+ */
+function styleMemberCheckboxRow_(sheet, rowNumber) {
+  try {
+    if (!rowNumber || rowNumber < 2) return;
+    const range = sheet.getRange(rowNumber, 21, 1, 3);
+    range.insertCheckboxes();
+    range.setHorizontalAlignment('center');
+  } catch (e) {}
+}
+
+/**
+ * Migriert bestehende Zeilen in Spalte U–W anhand der bisherigen Einträge in Spalte R (Notizen)
+ * und wandelt U2:W in echte klickbare Google-Sheets-Checkboxen um.
+ */
+function backfillConsentCheckboxes_(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+  const numRows = lastRow - 1;
+  const notesValues = sheet.getRange(2, 18, numRows, 1).getValues();
+  const existingCheckValues = sheet.getRange(2, 21, numRows, 3).getValues();
+  const updatedCheckValues = [];
+
+  for (let i = 0; i < numRows; i++) {
+    const notesStr = String(notesValues[i][0] || '');
+    const curU = existingCheckValues[i][0];
+    const curV = existingCheckValues[i][1];
+    const curW = existingCheckValues[i][2];
+
+    updatedCheckValues.push([
+      parseSheetBool(curU, notesStr, 'Mailverteiler: Ja'),
+      parseSheetBool(curV, notesStr, 'Aktionen: Ja'),
+      parseSheetBool(curW, notesStr, 'E-Mail-Mitteilungen: Ja')
+    ]);
+  }
+
+  const checkRange = sheet.getRange(2, 21, numRows, 3);
+  checkRange.setValues(updatedCheckValues);
+  checkRange.insertCheckboxes();
+  checkRange.setHorizontalAlignment('center');
 }
 
 function findMemberRow(sheet, rowNumber, email) {
@@ -1419,8 +1616,10 @@ function formatSheetProfessional() {
   sheet.getRange('Q2:Q').setDataValidation(pdfRule);
 
   sheet.getRange('L2:L').setNumberFormat('#,##0.00 "€"');
-  const widths = [155, 130, 130, 130, 210, 120, 170, 130, 105, 150, 110, 120, 160, 210, 110, 160, 175, 220, 140, 160];
+  const widths = [155, 130, 130, 130, 210, 120, 170, 130, 105, 150, 110, 120, 160, 210, 110, 160, 175, 220, 140, 160, 175, 150, 165];
   widths.forEach((w, idx) => sheet.setColumnWidth(idx + 1, w));
 
-  SpreadsheetApp.getUi().alert('✅ Tabelle & Spalten (inkl. Mandatsreferenz & Beitragsjahre) erfolgreich formatiert!');
+  backfillConsentCheckboxes_(sheet);
+
+  SpreadsheetApp.getUi().alert('✅ Tabelle & Spalten (inkl. Mandatsreferenz, Beitragsjahre & Checkboxen für Newsletter/Aktionen/E-Mail) erfolgreich formatiert!');
 }

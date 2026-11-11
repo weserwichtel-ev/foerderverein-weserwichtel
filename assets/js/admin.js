@@ -260,6 +260,9 @@
     editEmail: document.getElementById('editEmail'),
     editIban: document.getElementById('editIban'),
     editNotes: document.getElementById('editNotes'),
+    editNewsletterCheck: document.getElementById('editNewsletterCheck'),
+    editVolunteerCheck: document.getElementById('editVolunteerCheck'),
+    editEmailCommsCheck: document.getElementById('editEmailCommsCheck'),
     editCancelCheck: document.getElementById('editCancelCheck'),
     editCancellationPdfInput: document.getElementById('editCancellationPdfInput'),
     manageCancelEmailPrompt: document.getElementById('manageCancelEmailPrompt'),
@@ -330,6 +333,9 @@
     paperEntryDate: document.getElementById('paperEntryDate'),
     paperPaidYears: document.getElementById('paperPaidYears'),
     paperNotes: document.getElementById('paperNotes'),
+    paperNewsletterCheck: document.getElementById('paperNewsletterCheck'),
+    paperVolunteerCheck: document.getElementById('paperVolunteerCheck'),
+    paperEmailCommsCheck: document.getElementById('paperEmailCommsCheck'),
     savePaperMemberBtn: document.getElementById('savePaperMemberBtn'),
 
     // Toast
@@ -892,11 +898,24 @@
         `;
       }
 
+      const consents = resolveMemberConsents(member);
+      const consentBadges = [];
+      if (consents.newsletter) {
+        consentBadges.push('<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold" title="Mailverteiler / Newsletter gewünscht (Spalte U)">📬 Newsletter</span>');
+      }
+      if (consents.volunteerActions) {
+        consentBadges.push('<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold" title="Hilft gerne bei Festen & Aktionen (Spalte V)">🤝 Aktionen</span>');
+      }
+      if (consents.emailNotifications) {
+        consentBadges.push('<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-medium" title="Vereinsmitteilungen per E-Mail (Spalte W)">✉️ E-Mail-Infos</span>');
+      }
+
       tr.innerHTML = `
         <td class="py-3.5 px-4">
           <div class="font-bold text-slate-900 text-xs">${escapeHtml(member.lastName)}, ${escapeHtml(member.firstName)}</div>
           <div class="text-[11px] text-slate-600">Kind: <strong>${escapeHtml(member.childName || '–')}</strong> (${escapeHtml(member.childGroup || 'Kita')})</div>
           <div class="text-[10px] text-slate-400 font-mono mt-0.5">${escapeHtml(member.email)}</div>
+          ${consentBadges.length ? `<div class="flex flex-wrap gap-1 mt-1">${consentBadges.join('')}</div>` : ''}
         </td>
         <td class="py-3.5 px-4">
           <div class="font-extrabold text-slate-900">${formatCurrency(member.fee)} <span class="text-[10px] font-normal text-slate-500">/ Jahr</span></div>
@@ -1565,6 +1584,25 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
   }
 
   /**
+   * Liest die 3 Einwilligungs-Checkboxen (Spalten U–W) aus dem Mitgliedsobjekt
+   * und nutzt bei älteren Einträgen automatisch die Text-Marker aus Notizen (Spalte R) als Fallback.
+   */
+  function resolveMemberConsents(member) {
+    if (!member) return { newsletter: false, volunteerActions: false, emailNotifications: false };
+    const notesStr = String(member.notes || '');
+    const newsletter = member.newsletter !== undefined
+      ? Boolean(member.newsletter)
+      : notesStr.includes('Mailverteiler: Ja');
+    const volunteerActions = member.volunteerActions !== undefined
+      ? Boolean(member.volunteerActions)
+      : notesStr.includes('Aktionen: Ja');
+    const emailNotifications = member.emailNotifications !== undefined
+      ? Boolean(member.emailNotifications)
+      : notesStr.includes('E-Mail-Mitteilungen: Ja');
+    return { newsletter, volunteerActions, emailNotifications };
+  }
+
+  /**
    * Guided Member Edit & Cancellation Modal
    */
   function openManageMemberModal(memberId) {
@@ -1581,6 +1619,12 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     el.editEmail.value = member.email || '';
     el.editIban.value = member.iban || '';
     el.editNotes.value = member.notes || '';
+
+    const consents = resolveMemberConsents(member);
+    if (el.editNewsletterCheck) el.editNewsletterCheck.checked = consents.newsletter;
+    if (el.editVolunteerCheck) el.editVolunteerCheck.checked = consents.volunteerActions;
+    if (el.editEmailCommsCheck) el.editEmailCommsCheck.checked = consents.emailNotifications;
+
     const isCancelled = (member.status === 'Gekündigt');
     el.editCancelCheck.checked = isCancelled;
     if (el.editCancellationPdfInput) el.editCancellationPdfInput.value = '';
@@ -1628,6 +1672,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     const sendCancelEmail = isCancelling && Boolean(el.manageSendCancelEmailCheck && el.manageSendCancelEmailCheck.checked);
     const { subject: cancelSubject, body: cancelBody } = buildCancellationEmailText(member);
     const todayStr = new Date().toLocaleDateString('de-DE');
+    const newsletterVal = Boolean(el.editNewsletterCheck && el.editNewsletterCheck.checked);
+    const volunteerVal = Boolean(el.editVolunteerCheck && el.editVolunteerCheck.checked);
+    const emailCommsVal = Boolean(el.editEmailCommsCheck && el.editEmailCommsCheck.checked);
 
     try {
       if (!state.isDemoMode) {
@@ -1642,6 +1689,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           fee: el.editFee.value,
           iban: newIban,
           notes: el.editNotes.value.trim(),
+          newsletter: newsletterVal,
+          volunteerActions: volunteerVal,
+          emailNotifications: emailCommsVal,
           isCancellation: isCancelling,
           cancellationPdfBase64: cancelPdfBase64,
           noteAddition: isCancelling ? 'Gekündigt / SEPA gesperrt' : '',
@@ -1660,6 +1710,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
       member.email = el.editEmail.value.trim();
       member.iban = newIban;
       member.notes = el.editNotes.value.trim();
+      member.newsletter = newsletterVal;
+      member.volunteerActions = volunteerVal;
+      member.emailNotifications = emailCommsVal;
       if (isCancelling) {
         member.status = 'Gekündigt';
         if (sendCancelEmail) {
@@ -1812,6 +1865,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     if (el.paperEntryDate) el.paperEntryDate.value = todayIso;
     if (el.paperFee) el.paperFee.value = '24';
     if (el.paperCity) el.paperCity.value = '12059 Berlin';
+    if (el.paperNewsletterCheck) el.paperNewsletterCheck.checked = false;
+    if (el.paperVolunteerCheck) el.paperVolunteerCheck.checked = false;
+    if (el.paperEmailCommsCheck) el.paperEmailCommsCheck.checked = true;
     if (el.paperIbanFeedback) {
       el.paperIbanFeedback.textContent = 'Prüfsumme wird berechnet...';
       el.paperIbanFeedback.className = 'text-[10px] font-bold text-slate-400';
@@ -2093,6 +2149,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
     const entryDate = el.paperEntryDate.value || new Date().toISOString().split('T')[0];
     const feeVal = parseFloat(el.paperFee.value || 24).toFixed(2);
     const paidYearsVal = el.paperPaidYears ? el.paperPaidYears.value.trim() : '';
+    const newsletterVal = Boolean(el.paperNewsletterCheck && el.paperNewsletterCheck.checked);
+    const volunteerVal = Boolean(el.paperVolunteerCheck && el.paperVolunteerCheck.checked);
+    const emailCommsVal = Boolean(el.paperEmailCommsCheck && el.paperEmailCommsCheck.checked);
 
     const origBtnHtml = el.savePaperMemberBtn.innerHTML;
     el.savePaperMemberBtn.disabled = true;
@@ -2124,6 +2183,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           entryDate: entryDate,
           collectedYears: paidYearsVal,
           notes: el.paperNotes.value.trim(),
+          newsletter: newsletterVal,
+          volunteerActions: volunteerVal,
+          emailNotifications: emailCommsVal,
           fileBase64: state.paperFile ? state.paperFile.base64 : '',
           mimeType: state.paperFile ? state.paperFile.mimeType : 'application/pdf'
         };
@@ -2162,6 +2224,9 @@ Amtsgericht Charlottenburg · ${config.REGISTER_NUMBER}`;
           matchedPdfUrl: state.paperFile ? '#pdf-preview' : null,
           mandateRef: createdMandateRef,
           paidYears: paidYearsVal ? paidYearsVal.split(',').map(s => s.trim()) : (isOld ? ['2024', '2025'] : []),
+          newsletter: newsletterVal,
+          volunteerActions: volunteerVal,
+          emailNotifications: emailCommsVal,
           notes: el.paperNotes.value.trim() || (isOld ? 'Papierantrag aus Altbestand erfasst' : 'Handschriftlicher Antrag erfasst')
         };
 

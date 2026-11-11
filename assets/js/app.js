@@ -93,9 +93,24 @@
   const consentPrivacy = document.getElementById('consentPrivacy');
   const consentError = document.getElementById('consentError');
 
-  // Modal Elements
+  // Modal & Wichtel Thank-You Elements
   const successModal = document.getElementById('successModal');
   const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalDeliveryStepView = document.getElementById('modalDeliveryStepView');
+  const modalThankYouView = document.getElementById('modalThankYouView');
+  const modalFinishToThankYouBtn = document.getElementById('modalFinishToThankYouBtn');
+  const thankYouModalHeadline = document.getElementById('thankYouModalHeadline');
+  const thankYouMemberName = document.getElementById('thankYouMemberName');
+  const thankYouMandateRef = document.getElementById('thankYouMandateRef');
+  const thankYouFeeAmount = document.getElementById('thankYouFeeAmount');
+  const thankYouDoneBtn = document.getElementById('thankYouDoneBtn');
+  const thankYouDownloadAgainBtn = document.getElementById('thankYouDownloadAgainBtn');
+  const thankYouBackToStepsBtn = document.getElementById('thankYouBackToStepsBtn');
+  const inlineThankYouCard = document.getElementById('inlineThankYouCard');
+  const inlineThankYouTitle = document.getElementById('inlineThankYouTitle');
+  const inlineThankYouMandate = document.getElementById('inlineThankYouMandate');
+  const inlineDownloadPdfAgainBtn = document.getElementById('inlineDownloadPdfAgainBtn');
+  const inlineNewFormBtn = document.getElementById('inlineNewFormBtn');
   const step1StatusBadge = document.getElementById('step1StatusBadge');
   const modalMailtoBtn = document.getElementById('modalMailtoBtn');
   const modalMailDefaultBtn = document.getElementById('modalMailDefaultBtn');
@@ -840,13 +855,38 @@
   }
 
   /**
-   * Modal control
+   * Modal & Wichtel Thank-You control
    */
   function openSuccessModal(fileName, pdfFile) {
     const fileNameDisplay = document.getElementById('downloadedFileName');
     if (fileNameDisplay) {
       fileNameDisplay.textContent = fileName;
     }
+
+    // Populate personalized Wichtel Thank-You details
+    if (lastGeneratedPdfData && lastGeneratedPdfData.formData) {
+      const fd = lastGeneratedPdfData.formData;
+      const fullName = `${fd.firstName || ''} ${fd.lastName || ''}`.trim();
+      const feeFormatted = `${Number(fd.contributionAmount || 24).toFixed(2).replace('.', ',')} € / Jahr`;
+      if (thankYouModalHeadline) {
+        thankYouModalHeadline.textContent = fd.firstName
+          ? `Herzlichen Dank, ${fd.firstName}!`
+          : 'Herzlichen Dank & Willkommen bei den Weserwichteln!';
+      }
+      if (thankYouMemberName) thankYouMemberName.textContent = fullName || '–';
+      if (thankYouMandateRef) thankYouMandateRef.textContent = fd.mandateRef || '–';
+      if (thankYouFeeAmount) thankYouFeeAmount.textContent = feeFormatted;
+      if (inlineThankYouTitle) {
+        inlineThankYouTitle.textContent = fd.firstName
+          ? `Herzlichen Dank, ${fd.firstName} – Willkommen bei den Weserwichteln!`
+          : 'Herzlichen Dank & Willkommen bei den Weserwichteln!';
+      }
+      if (inlineThankYouMandate) inlineThankYouMandate.textContent = fd.mandateRef || '–';
+    }
+
+    // Start on Delivery Step View
+    if (modalDeliveryStepView) modalDeliveryStepView.classList.remove('hidden');
+    if (modalThankYouView) modalThankYouView.classList.add('hidden');
 
     // Reset Step 1 button and badge for fresh modal open
     if (modalPdfBtn) {
@@ -876,10 +916,38 @@
     }
   }
 
+  function showWichtelThankYouView() {
+    if (modalDeliveryStepView) modalDeliveryStepView.classList.add('hidden');
+    if (modalThankYouView) modalThankYouView.classList.remove('hidden');
+    activateInlineThankYouCard();
+  }
+
+  function activateInlineThankYouCard() {
+    if (form && inlineThankYouCard) {
+      form.classList.add('hidden');
+      inlineThankYouCard.classList.remove('hidden');
+    }
+  }
+
   function closeSuccessModal() {
     if (successModal) {
       successModal.classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
+    }
+    if (lastGeneratedPdfData) {
+      activateInlineThankYouCard();
+    }
+  }
+
+  function triggerPdfDownload() {
+    if (lastGeneratedPdfResult && lastGeneratedPdfResult.doc) {
+      lastGeneratedPdfResult.doc.save(lastGeneratedPdfResult.fileName);
+    } else if (lastGeneratedPdfData && window.PDFGenerator) {
+      lastGeneratedPdfResult = window.PDFGenerator.generateMembershipPDF(
+        lastGeneratedPdfData.formData,
+        lastGeneratedPdfData.signatureDataUrl,
+        { autoDownload: true }
+      );
     }
   }
 
@@ -901,6 +969,48 @@
   function setupModalListeners() {
     if (modalCloseBtn) {
       modalCloseBtn.addEventListener('click', closeSuccessModal);
+    }
+
+    if (modalFinishToThankYouBtn) {
+      modalFinishToThankYouBtn.addEventListener('click', showWichtelThankYouView);
+    }
+
+    if (thankYouDoneBtn) {
+      thankYouDoneBtn.addEventListener('click', function () {
+        closeSuccessModal();
+        if (inlineThankYouCard) {
+          inlineThankYouCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+
+    if (thankYouDownloadAgainBtn) {
+      thankYouDownloadAgainBtn.addEventListener('click', triggerPdfDownload);
+    }
+
+    if (thankYouBackToStepsBtn) {
+      thankYouBackToStepsBtn.addEventListener('click', function () {
+        if (modalThankYouView) modalThankYouView.classList.add('hidden');
+        if (modalDeliveryStepView) modalDeliveryStepView.classList.remove('hidden');
+      });
+    }
+
+    if (inlineDownloadPdfAgainBtn) {
+      inlineDownloadPdfAgainBtn.addEventListener('click', triggerPdfDownload);
+    }
+
+    if (inlineNewFormBtn) {
+      inlineNewFormBtn.addEventListener('click', function () {
+        if (inlineThankYouCard) inlineThankYouCard.classList.add('hidden');
+        if (form) {
+          form.reset();
+          form.classList.remove('hidden');
+          if (window.SignatureController && typeof window.SignatureController.clear === 'function') {
+            window.SignatureController.clear();
+          }
+          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     }
 
     // Close modal when clicking backdrop
@@ -935,21 +1045,24 @@
 
         try {
           await navigator.share(shareData);
+          showWichtelThankYouView();
         } catch (err) {
           if (err && err.name !== 'AbortError') {
             console.warn('[App] Native share fallback to mailto:', err);
             if (lastMailtoUrl) window.location.href = lastMailtoUrl;
+            showWichtelThankYouView();
           }
         }
       });
     }
 
-    // Step 2: Open Mail Options
+    // Step 2: Open Mail Options -> Also transitions modal to Wichtel Thank-You Celebration View!
     // A) Default OS Mail client (Apple Mail, Thunderbird, Outlook desktop)
     function openDefaultMailApp() {
       if (lastMailtoUrl) {
         window.location.href = lastMailtoUrl;
       }
+      setTimeout(showWichtelThankYouView, 350);
     }
     if (modalMailtoBtn) modalMailtoBtn.addEventListener('click', openDefaultMailApp);
     if (modalMailDefaultBtn) modalMailDefaultBtn.addEventListener('click', openDefaultMailApp);
@@ -961,6 +1074,7 @@
         copyRecipientEmailToClipboard();
         const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(lastMailSubject)}&body=${encodeURIComponent(lastMailBodyPlain)}`;
         window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+        setTimeout(showWichtelThankYouView, 350);
       });
     }
 
@@ -971,6 +1085,7 @@
         copyRecipientEmailToClipboard();
         const protonUrl = `https://mail.proton.me/u/0/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(lastMailSubject)}&body=${encodeURIComponent(lastMailBodyPlain)}`;
         window.open(protonUrl, '_blank', 'noopener,noreferrer');
+        setTimeout(showWichtelThankYouView, 350);
       });
     }
 
@@ -981,21 +1096,14 @@
         copyRecipientEmailToClipboard();
         const outlookUrl = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(lastMailSubject)}&body=${encodeURIComponent(lastMailBodyPlain)}`;
         window.open(outlookUrl, '_blank', 'noopener,noreferrer');
+        setTimeout(showWichtelThankYouView, 350);
       });
     }
 
     // Step 1: Download PDF on explicit user click
     if (modalPdfBtn) {
       modalPdfBtn.addEventListener('click', function () {
-        if (lastGeneratedPdfResult && lastGeneratedPdfResult.doc) {
-          lastGeneratedPdfResult.doc.save(lastGeneratedPdfResult.fileName);
-        } else if (lastGeneratedPdfData && window.PDFGenerator) {
-          lastGeneratedPdfResult = window.PDFGenerator.generateMembershipPDF(
-            lastGeneratedPdfData.formData,
-            lastGeneratedPdfData.signatureDataUrl,
-            { autoDownload: true }
-          );
-        }
+        triggerPdfDownload();
 
         // Update UI to show it has been saved to device
         modalPdfBtn.innerHTML = '<span>✓ PDF gespeichert (erneut herunterladen)</span>';
