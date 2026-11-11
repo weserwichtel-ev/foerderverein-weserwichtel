@@ -570,12 +570,13 @@
     drawCheckbox(groupStartX + 41, rowY, false, 'Wichtel');
     drawCheckbox(groupStartX + 61, rowY, false, 'Riesen');
 
-    // Row 6: Mitgliedsbeitrag
+    // Row 6: Mitgliedsbeitrag (12 €, 24 €, freiwillig höher)
     rowY += 8.5;
     doc.setFont('helvetica', 'bold');
     doc.text('Jahresbeitrag *:', c1, rowY);
-    drawCheckbox(c1 + 27, rowY, true, 'Mindestbeitrag 24,00 € / Jahr');
-    const higherCbX = c1 + 81;
+    drawCheckbox(c1 + 26, rowY, false, '12,00 € (1 €/Monat)');
+    drawCheckbox(c1 + 64, rowY, false, '24,00 €');
+    const higherCbX = c1 + 86;
     drawCheckbox(higherCbX, rowY, false, 'Freiwillig höher:');
     const higherLineStart = higherCbX + 5.2 + doc.getTextWidth('Freiwillig höher:') + 2;
     const unitLabel = '€ / Jahr';

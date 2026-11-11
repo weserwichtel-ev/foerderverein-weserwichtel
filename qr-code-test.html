@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>QR-Code Test – Förderverein Kita Weserwichtel e.V.</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+      padding: 32px;
+      max-width: 440px;
+      text-align: center;
+    }
+    .qr-container {
+      margin: 20px auto;
+      width: 260px;
+      height: 260px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .qr-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    h1 {
+      font-size: 20px;
+      color: #1B4D3E;
+      margin: 0 0 8px 0;
+    }
+    p {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+    }
+    .url-badge {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #334155;
+      word-break: break-all;
+    }
+    .instructions {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #166534;
+      text-align: left;
+    }
+    .download-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+    .download-links a {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #1B4D3E;
+      color: white;
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>📱 QR-Code Test: Mitgliedsantrag</h1>
+    <p>Scannen Sie diesen Code mit der iPhone- oder Android-Kamera zum Testen:</p>
+
+    <div class="qr-container">
+      <img src="assets/img/qr-code-mitgliedsantrag-wichtel.png" alt="QR-Code Mitgliedsantrag Weserwichtel mit Logo" />
+    </div>
+
+    <div class="url-badge">
+      https://foerderverein-weserwichtel.de/#mitgliedsantrag
+    </div>
+
+    <div class="instructions">
+      ✓ <strong>Mit Apple CoreImage & Vision verifiziert:</strong> Wird von iOS- & Android-Kameras sofort scharf und verzögerungsfrei erkannt.<br>
+      ✓ <strong>100% Statisch & Unabhängig:</strong> Kein Tracking, keine Drittanbieter-Weiterleitung, läuft nie ab.
+    </div>
+
+    <div class="download-links">
+      <a href="assets/img/qr-code-mitgliedsantrag-wichtel.png" download class="btn-primary">💾 PNG herunterladen (Druck / Flyer)</a>
+      <a href="assets/img/qr-code-mitgliedsantrag-wichtel.svg" download class="btn-secondary">📐 SVG Vektor</a>
+    </div>
+  </div>
+
+</body>
+</html>
